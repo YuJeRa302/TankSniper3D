@@ -1,0 +1,171 @@
+using Assets.Source.Game.Scripts.States;
+using Assets.Source.Scripts.Models;
+using Assets.Source.Scripts.ScriptableObjects;
+using Assets.Source.Scripts.Upgrades;
+using TMPro;
+using UniRx;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Assets.Source.Scripts.Grid
+{
+    public class GridView : BaseView
+    {
+        public static readonly IMessageBroker Message = new MessageBroker();
+
+        [SerializeField] private Image _levelMainTankImage;
+        [SerializeField] private TMP_Text _levelMainTankText;
+        [SerializeField] private Vector3 _gridTankSpawnRotation;
+        [Space(20)]
+        [SerializeField] private Button _createGridItemButton;
+        [SerializeField] private Button _openUpgrade;
+        [Space(20)]
+        [SerializeField] private Transform _mainTankSpawnPoint;
+        [SerializeField] private Transform _gridTankTransformParent;
+        [Space(20)]
+        [SerializeField] private GameObject _sceneGameObjects;
+
+        private GridModel _gridModel;
+        private GridItemConfig _gridItemConfig;
+        private GridPlacer _gridPlacer;
+        private MainTankView _mainTank;
+        private CompositeDisposable _disposables = new();
+
+        private void OnDestroy()
+        {
+            RemoveListeners();
+        }
+
+        public void Initialize(GridModel gridModel, GridItemConfig gridItemConfig, GridPlacer gridPlacer)
+        {
+            _gridItemConfig = gridItemConfig;
+            _gridPlacer = gridPlacer;
+            _gridModel = gridModel;
+            AddListeners();
+            ChangeSetActiveObjects(gameObject, _sceneGameObjects, true);
+        }
+
+        private void AddListeners()
+        {
+            _createGridItemButton.onClick.AddListener(SpawnObjectInFirstAvailableCell);
+            _openUpgrade.onClick.AddListener(Close);
+
+            GridCellView.Message
+                .Receive<M_ItemMerged>()
+                .Subscribe(m => OnItemMerged(m.CurrentLevel, m.GridCellView))
+                .AddTo(_disposables);
+
+            UpgradeView.Message
+                .Receive<M_CloseUpgrade>()
+                .Subscribe(m => OnOpen())
+                .AddTo(_disposables);
+        }
+
+        private void RemoveListeners()
+        {
+            _createGridItemButton.onClick.RemoveListener(SpawnObjectInFirstAvailableCell);
+            _openUpgrade.onClick.RemoveListener(Close);
+            _disposables?.Dispose();
+        }
+
+        private void Close()
+        {
+            ChangeSetActiveObjects(gameObject, _sceneGameObjects, false);
+            Message.Publish(new M_CloseGrid());
+        }
+
+        private void OnOpen()
+        {
+            ChangeSetActiveObjects(gameObject, _sceneGameObjects, true);
+        }
+
+        private void OnItemMerged(int currentLevel, GridCellView gridCellView)
+        {
+            currentLevel++;
+            _gridModel.IncreaseMainTankLevel(currentLevel);
+            CreateGirdTank(gridCellView, currentLevel);
+            UpdateMainTank();
+        }
+
+        private void UpdateMainTankUI()
+        {
+            if (_levelMainTankImage.gameObject.activeSelf == false)
+                _levelMainTankImage.gameObject.SetActive(true);
+
+            if (_levelMainTankText.gameObject.activeSelf == false)
+                _levelMainTankText.gameObject.SetActive(true);
+
+            _levelMainTankText.text = _mainTank.Level.ToString();
+        }
+
+        private void UpdateMainTank()
+        {
+            if (_mainTank == null)
+            {
+                CreateMainTank();
+            }
+
+            if (_mainTank.Level < _gridModel.CurrentMainTankLevel)
+            {
+                Destroy(_mainTank.gameObject);
+                CreateMainTank();
+            }
+
+            UpdateMainTankUI();
+        }
+
+        private void SpawnObjectInFirstAvailableCell()
+        {
+            foreach (GridCellView cell in _gridPlacer.GridCellViews)
+            {
+                if (!cell.IsOccupied)
+                {
+                    CreateGirdTank(cell, _gridModel.CurrentGridTankLevel);
+                    UpdateMainTank();
+                    break;
+                }
+            }
+        }
+
+        private void CreateGirdTank(GridCellView gridCellView, int currentTankLevel)
+        {
+            GridItemData tankData = _gridItemConfig.GetGridTankDataByLevel(currentTankLevel);
+
+            GridTankView tank = Instantiate(tankData.TankView as GridTankView, new Vector3(
+                gridCellView.transform.position.x,
+                tankData.TankView.transform.position.y,
+                gridCellView.transform.position.z), Quaternion.identity);
+
+            tank.transform.eulerAngles = new Vector3(
+                _gridTankSpawnRotation.x,
+                _gridTankSpawnRotation.y,
+                _gridTankSpawnRotation.z);
+
+            tank.transform.SetParent(_gridTankTransformParent.transform, worldPositionStays: true);
+            tank.Construct(tankData.Level);
+            tank.ChangeOriginalCell(gridCellView);
+            gridCellView.SetOccupied(tank);
+        }
+
+        private void CreateMainTank()
+        {
+            TankData tankData = _gridItemConfig.GetMainTankDataByLevel(_gridModel.CurrentMainTankLevel);
+            TankState tankState = _gridModel.GetTankState(tankData);
+            _gridModel.ChangeEquippedTank(tankState);
+
+            _mainTank = Instantiate(tankData.MainTankView, new Vector3(
+                _mainTankSpawnPoint.position.x,
+                tankData.MainTankView.transform.position.y,
+                _mainTankSpawnPoint.position.z),
+                Quaternion.identity);
+
+            _mainTank.transform.eulerAngles = new Vector3(
+                _gridTankSpawnRotation.x,
+                _gridTankSpawnRotation.y,
+                _gridTankSpawnRotation.z);
+
+            _mainTank.transform.SetParent(_mainTankSpawnPoint.transform, worldPositionStays: true);
+            _mainTank.Construct(tankData.Level);
+        }
+    }
+}

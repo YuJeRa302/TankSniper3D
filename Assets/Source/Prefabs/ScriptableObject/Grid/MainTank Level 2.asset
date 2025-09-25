@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c86d34c0cbe2ca34e8bdf4699cedf390, type: 3}
+  m_Name: MainTank Level 2
+  m_EditorClassIdentifier: 
+  _id: 1
+  _level: 2
+  _itemView: {fileID: 8336017632338093549, guid: 31ceb73a235023d42ab06334978d8245, type: 3}
