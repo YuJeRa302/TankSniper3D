@@ -48,7 +48,7 @@ namespace Assets.Source.Scripts.Upgrades
         private List<TankCardView> _tankCardViews = new();
         private List<SelectionButtonView> _selectionButtonViews = new();
         private HeroView _currentHeroView;
-        private MainTankView _tankView;
+        private TankView _tankView;
         private int _currentCardIndex;
         private TypeCard _currentTypeCard;
         private UpgradeModel _upgradeModel;
@@ -94,7 +94,7 @@ namespace Assets.Source.Scripts.Upgrades
             ChangeSetActiveObjects(gameObject, _sceneGameObjects, true);
             CreateSelectionButtons();
             TankState tankState = _upgradeModel.GetTankStateByEquip();
-            CreateTank(tankState);
+            CreateTank(tankState, _typeHeroSpawn);
             CreateHero(tankState.HeroId, _typeHeroSpawn);
             CreateTankButtons();
         }
@@ -157,7 +157,7 @@ namespace Assets.Source.Scripts.Upgrades
             Message.Publish(new M_DeselectButtons(selectionButtonView));
         }
 
-        private void CreateTank(TankState tankState)
+        private void CreateTank(TankState tankState, TypeHeroSpawn typeHeroSpawn)
         {
             TankData tankData = _upgradeConfig.GetTankDataById(tankState.Id);
             _tankView = Instantiate(tankData.MainTankView, _tankSpawnPoint);
@@ -166,15 +166,15 @@ namespace Assets.Source.Scripts.Upgrades
                 tankData,
                 _upgradeConfig.GetDecalDataById(tankState.DecalId),
                 _upgradeConfig.GetPatternDataById(tankState.PatternId),
-                _upgradeConfig.GetHeroDataById(tankState.HeroId)
-                );
+                _upgradeConfig.GetHeroDataById(tankState.HeroId),
+                typeHeroSpawn);
         }
 
         private void CreateHero(int id, TypeHeroSpawn typeHeroSpawn)
         {
             HeroData heroData = _upgradeConfig.GetHeroDataById(id);
             _currentHeroView = Instantiate(heroData.HeroView, _heroSpawnPoint);
-            _currentHeroView.Initialize(typeHeroSpawn);
+            _currentHeroView.Initialize(heroData, typeHeroSpawn);
         }
 
         private void CreateDecarationButtons(List<DecorationData> decorationDatas)

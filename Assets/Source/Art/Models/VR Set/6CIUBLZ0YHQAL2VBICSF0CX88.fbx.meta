@@ -3,7 +3,12 @@ guid: 586fe2aed13932c4d8a45540984a37cf
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: mat_0-Handle1Tex.jpg
+    second: {fileID: 2100000, guid: 8178f17240869ed4e973145d0441f1fc, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

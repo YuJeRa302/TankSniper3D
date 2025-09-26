@@ -28,7 +28,7 @@ namespace Assets.Source.Scripts.Grid
         private GridModel _gridModel;
         private GridItemConfig _gridItemConfig;
         private GridPlacer _gridPlacer;
-        private MainTankView _mainTank;
+        private TankView _mainTank;
         private CompositeDisposable _disposables = new();
 
         private void OnDestroy()

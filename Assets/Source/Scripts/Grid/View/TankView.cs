@@ -1,19 +1,28 @@
+using Assets.Source.Game.Scripts.Enums;
 using Assets.Source.Scripts.Grid;
 using Assets.Source.Scripts.ScriptableObjects;
 using UnityEngine;
 
 namespace Assets.Source.Scripts.Upgrades
 {
-    public class MainTankView : ObjectView
+    public class TankView : ObjectView
     {
         [SerializeField] private MeshRenderer _decal;
         [SerializeField] private MeshRenderer _tankMaterial;
+        [SerializeField] private Transform _heroSpawnPoint;
 
-        public void Initialize(TankData tankData, DecorationData decal, DecorationData pattern, HeroData heroData)
+        public Transform HeroSpawnPoint => _heroSpawnPoint;
+
+        public void Initialize(
+            TankData tankData,
+            DecorationData decal,
+            DecorationData pattern,
+            HeroData heroData,
+            TypeHeroSpawn typeHeroSpawn)
         {
             UpdateDecal(decal);
             UpdatePattern(pattern);
-            CreateHero(heroData);
+            CreateHero(heroData, typeHeroSpawn);
         }
 
         private void UpdateDecal(DecorationData decorationData)
@@ -26,9 +35,10 @@ namespace Assets.Source.Scripts.Upgrades
             _tankMaterial.material.mainTexture = decorationData.Texture;
         }
 
-        private void CreateHero(HeroData heroData)
+        private void CreateHero(HeroData heroData, TypeHeroSpawn typeHeroSpawn)
         {
-
+            if (typeHeroSpawn == TypeHeroSpawn.Upgrade)
+                return;
         }
     }
 }
