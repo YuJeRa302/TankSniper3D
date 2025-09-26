@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: MainTank Level 2
   m_EditorClassIdentifier: 
   _id: 1
+  _typeCard: 3
   _level: 2
   _itemView: {fileID: 8336017632338093549, guid: 31ceb73a235023d42ab06334978d8245, type: 3}

@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Assets.Source.Scripts.ScriptableObjects
 {
+    [CreateAssetMenu(fileName = "New Hero", menuName = "Create Hero", order = 51)]
     public class HeroData : ObjectData
     {
         [SerializeField] private HeroView _heroView;

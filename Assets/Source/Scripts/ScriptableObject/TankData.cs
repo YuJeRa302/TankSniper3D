@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Assets.Source.Scripts.ScriptableObjects
 {
+    [CreateAssetMenu(fileName = "New Tank", menuName = "Create Tank", order = 51)]
     public class TankData : ObjectData
     {
         [SerializeField] private MainTankView _mainTankView;

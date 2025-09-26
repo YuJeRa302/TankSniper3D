@@ -16,5 +16,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 20d42ede348123c4d91b961203571890, type: 2}
   - {fileID: 11400000, guid: eca5db00798bb054f888c384bc5af103, type: 2}
   _mainTankDatas:
-  - {fileID: 11400000, guid: b0fdb6bab5a1af449963514324ec1c11, type: 2}
-  - {fileID: 11400000, guid: e8d882d852b543d4b852b7828a554712, type: 2}
+  - {fileID: 11400000, guid: ddea0ca45c265a04c9b530a4046c09c5, type: 2}
+  - {fileID: 11400000, guid: a7c217b7ea7b1604b89ffff7fd0483fe, type: 2}
