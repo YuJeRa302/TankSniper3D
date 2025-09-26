@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: GridTank Level 1
   m_EditorClassIdentifier: 
   _id: 0
+  _typeCard: 0
   _level: 1
-  _itemView: {fileID: 6824976125500125921, guid: ee60715253fa47247893d635fbf4feb9, type: 3}
+  _itemView: {fileID: 6046024679331592853, guid: 2a48daaff68db5c4c931284bbc662636, type: 3}

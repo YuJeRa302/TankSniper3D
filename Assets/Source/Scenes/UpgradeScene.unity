@@ -1235,9 +1235,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d1227030954ba04ba4ec55bf8bd5e20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _vrHeadSet: {fileID: 0}
-  _droneController: {fileID: 0}
-  _headGear: {fileID: 0}
+  _vrSetSpawnPoint: {fileID: 0}
+  _vrControllerSpawnPoint: {fileID: 0}
+  _headGears: []
   _animator: {fileID: 0}
 --- !u!95 &359226077
 Animator:
@@ -4733,7 +4733,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f53cb61c4afd144ebf0d900c67f605f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _decal: {fileID: 1206245856}
+  _decals: []
   _tankMaterial: {fileID: 1008899739}
   _heroSpawnPoint: {fileID: 0}
 --- !u!65 &1008899738
@@ -9505,9 +9505,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d1227030954ba04ba4ec55bf8bd5e20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _vrHeadSet: {fileID: 0}
-  _droneController: {fileID: 0}
-  _headGear: {fileID: 0}
+  _vrSetSpawnPoint: {fileID: 0}
+  _vrControllerSpawnPoint: {fileID: 0}
+  _headGears: []
   _animator: {fileID: 0}
 --- !u!4 &1754456270393084028
 Transform:
@@ -9809,6 +9809,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -55
       objectReference: {fileID: 0}
+    - target: {fileID: 1004735163387762661, guid: 926dd67528345a4449da5fddc70a49af, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 548e962d1af0a664eb04c843713c7155, type: 3}
     - target: {fileID: 2828528504037432180, guid: 926dd67528345a4449da5fddc70a49af, type: 3}
       propertyPath: m_Name
       value: Button
@@ -10335,7 +10339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f53cb61c4afd144ebf0d900c67f605f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _decal: {fileID: 2069303495729140789}
+  _decals: []
   _tankMaterial: {fileID: 1577658450012917045}
   _heroSpawnPoint: {fileID: 0}
 --- !u!65 &9002598086203009783

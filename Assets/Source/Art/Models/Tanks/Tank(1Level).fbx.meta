@@ -1,9 +1,24 @@
 fileFormatVersion: 2
-guid: abe897cef4eba9c488913bdc72e103b6
+guid: 5034386898695b141a64cada8368ac5d
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Additional_mat
+    second: {fileID: 2100000, guid: 9be8049bb36d181479636ffb1ed476fa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Main
+    second: {fileID: 2100000, guid: 06935dc419663ef468925490e623e12d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Tracks_mat
+    second: {fileID: 2100000, guid: 949d8f328df38b046870adfb06494e9b, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -24,7 +39,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -99,7 +114,7 @@ ModelImporter:
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 0
+  avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0

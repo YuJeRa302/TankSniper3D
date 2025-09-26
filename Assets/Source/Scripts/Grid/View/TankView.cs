@@ -1,13 +1,14 @@
 using Assets.Source.Game.Scripts.Enums;
 using Assets.Source.Scripts.Grid;
 using Assets.Source.Scripts.ScriptableObjects;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Source.Scripts.Upgrades
 {
     public class TankView : ObjectView
     {
-        [SerializeField] private MeshRenderer _decal;
+        [SerializeField] private List<MeshRenderer> _decals;
         [SerializeField] private MeshRenderer _tankMaterial;
         [SerializeField] private Transform _heroSpawnPoint;
 
@@ -27,7 +28,11 @@ namespace Assets.Source.Scripts.Upgrades
 
         private void UpdateDecal(DecorationData decorationData)
         {
-            _decal.material.mainTexture = decorationData.Texture;
+            if (_decals.Count > 0)
+            {
+                foreach (var decal in _decals)
+                    decal.material.mainTexture = decorationData.Texture;
+            }
         }
 
         private void UpdatePattern(DecorationData decorationData)

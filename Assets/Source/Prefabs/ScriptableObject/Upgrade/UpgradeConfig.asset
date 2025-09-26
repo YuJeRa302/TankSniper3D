@@ -14,7 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _patternDatas: []
   _decalDatas: []
-  _heroDatas: []
+  _heroDatas:
+  - {fileID: 11400000, guid: e50a6376b59ca034b9aefe3285bed630, type: 2}
+  - {fileID: 11400000, guid: a10abc61b954b3f41944341e4bab673a, type: 2}
+  - {fileID: 11400000, guid: 36ceff9f5504b034888bf9732d046885, type: 2}
+  - {fileID: 11400000, guid: 06d8171ac0c5e0d4fa21d916e57eeeba, type: 2}
+  - {fileID: 11400000, guid: b6a95c8641827184f917a162cdfa0fc4, type: 2}
+  - {fileID: 11400000, guid: de1141b4c58e1da4596d10f02252493a, type: 2}
+  - {fileID: 11400000, guid: e2b24fb3d6a14084f88c91038e70ccbc, type: 2}
+  - {fileID: 11400000, guid: 61af0df4dc59be04ca30a51ae6a2d1c8, type: 2}
+  - {fileID: 11400000, guid: 55f43f1b65dae6942814b0bdb48a8487, type: 2}
+  - {fileID: 11400000, guid: 8c5ad2d1de85cae4ab3bad880c775677, type: 2}
   _tankDatas: []
   _selectionButtonDatas:
   - {fileID: 11400000, guid: 6d86b33d32f581f4ead212b9cc43584e, type: 2}

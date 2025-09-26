@@ -1,9 +1,29 @@
 fileFormatVersion: 2
-guid: cf05d79bccbffb747b3e27e0bd60ca80
+guid: 76f12177644b54d4f83ef7959bb4e67d
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Additional_mat
+    second: {fileID: 2100000, guid: 9be8049bb36d181479636ffb1ed476fa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Additional_mat.002
+    second: {fileID: 2100000, guid: 9be8049bb36d181479636ffb1ed476fa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Main
+    second: {fileID: 2100000, guid: 06935dc419663ef468925490e623e12d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Tracks_mat
+    second: {fileID: 2100000, guid: 949d8f328df38b046870adfb06494e9b, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
