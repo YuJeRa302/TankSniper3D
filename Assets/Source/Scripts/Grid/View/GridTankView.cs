@@ -8,7 +8,7 @@ namespace Assets.Source.Scripts.Grid
     {
         private readonly float _timeToMove = 0.5f;
 
-        [SerializeField] private ItemLevelView _itemLevelView;
+        [SerializeField] private GridTankLevelView _itemLevelView;
 
         private float _elapsedTime = 0f;
         private bool _isHolding = false;

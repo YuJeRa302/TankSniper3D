@@ -1,6 +1,7 @@
 using Assets.Source.Game.Scripts.Enums;
 using Assets.Source.Scripts.Grid;
 using Assets.Source.Scripts.ScriptableObjects;
+using Assets.Source.Scripts.Views;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,8 @@ namespace Assets.Source.Scripts.Upgrades
         [SerializeField] private MeshRenderer _tankMaterial;
         [SerializeField] private Transform _heroSpawnPoint;
 
+        private HeroView _heroView;
+
         public Transform HeroSpawnPoint => _heroSpawnPoint;
 
         public void Initialize(
@@ -21,8 +24,8 @@ namespace Assets.Source.Scripts.Upgrades
             HeroData heroData,
             TypeHeroSpawn typeHeroSpawn)
         {
-            UpdateDecal(decal);
-            UpdatePattern(pattern);
+            //UpdateDecal(decal);
+            //UpdatePattern(pattern);
             CreateHero(heroData, typeHeroSpawn);
         }
 
@@ -44,6 +47,9 @@ namespace Assets.Source.Scripts.Upgrades
         {
             if (typeHeroSpawn == TypeHeroSpawn.Upgrade)
                 return;
+
+            _heroView = Instantiate(heroData.HeroView, _heroSpawnPoint);
+            _heroView.Initialize(heroData, typeHeroSpawn);
         }
     }
 }

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _id: 0
   _typeCard: 3
-  _mainTankView: {fileID: 3748136648721058959, guid: bdc06f322d3ec7e4889b8284f3afa3ad, type: 3}
-  _icon: {fileID: 21300000, guid: 548e962d1af0a664eb04c843713c7155, type: 3}
+  _mainTankView: {fileID: 6950403838444258230, guid: 3990a3dbb2d478a4a968d831b4f5bdee, type: 3}
+  _icon: {fileID: 21300000, guid: 1a0cea5e1920d634991a506fe426a00f, type: 3}
   _starCount: 5
   _level: 1

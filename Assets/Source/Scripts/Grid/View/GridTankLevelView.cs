@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Source.Scripts.Grid
 {
-    public class ItemLevelView : MonoBehaviour
+    public class GridTankLevelView : MonoBehaviour
     {
         [SerializeField] private TMP_Text _tmpText;
 
