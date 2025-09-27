@@ -20,6 +20,7 @@ namespace Assets.Source.Scripts.Upgrades
 
         [SerializeField] private TMP_Text _nameTankText;
         [SerializeField] private TMP_Text _levelTankText;
+        [SerializeField] private TMP_Text _nameButtonText;
         [Space(20)]
         [SerializeField] private Button _createTankCardButton;
         [SerializeField] private Button _createPatternCardButton;
@@ -133,28 +134,34 @@ namespace Assets.Source.Scripts.Upgrades
         {
             CreateDecarationButtons(_upgradeConfig.DecalDatas);
             _placePreviewView.SetDecalRotationView();
-            Message.Publish(new M_DeselectButtons(selectionButtonView));
+            SelectButton(selectionButtonView);
         }
 
         private void OnPatternButtonClicked(SelectionButtonView selectionButtonView)
         {
             CreateDecarationButtons(_upgradeConfig.PatternDatas);
             _placePreviewView.ResetRotation();
-            Message.Publish(new M_DeselectButtons(selectionButtonView));
+            SelectButton(selectionButtonView);
         }
 
         private void OnHeroButtonClicked(SelectionButtonView selectionButtonView)
         {
             CreateHeroButtons();
             _placePreviewView.SetHeroRotationView();
-            Message.Publish(new M_DeselectButtons(selectionButtonView));
+            SelectButton(selectionButtonView);
         }
 
         private void OnTankButtonClicked(SelectionButtonView selectionButtonView)
         {
             CreateTankButtons();
             _placePreviewView.ResetRotation();
+            SelectButton(selectionButtonView);
+        }
+
+        private void SelectButton(SelectionButtonView selectionButtonView) 
+        {
             Message.Publish(new M_DeselectButtons(selectionButtonView));
+            _nameButtonText.text = selectionButtonView.SelectionButtonData.Name;
         }
 
         private void CreateTank(TankState tankState, TypeHeroSpawn typeHeroSpawn)

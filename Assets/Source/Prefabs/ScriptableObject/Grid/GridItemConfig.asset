@@ -15,6 +15,18 @@ MonoBehaviour:
   _gridItemDatas:
   - {fileID: 11400000, guid: 20d42ede348123c4d91b961203571890, type: 2}
   - {fileID: 11400000, guid: eca5db00798bb054f888c384bc5af103, type: 2}
+  - {fileID: 11400000, guid: a7a715b0f8f0f40459a6f5335f166204, type: 2}
+  - {fileID: 11400000, guid: c1d7d25ec378b4947b599280ec1c3819, type: 2}
+  - {fileID: 11400000, guid: b165f0376757e0644af5ea0ea47164df, type: 2}
+  - {fileID: 11400000, guid: e1bdce30188e9b3439cd7cc39eb10c1b, type: 2}
+  - {fileID: 11400000, guid: 1b72a959b3e93424fb1c212107810b07, type: 2}
+  - {fileID: 11400000, guid: 0f9b3316d4da0af45b4196042abc3336, type: 2}
   _mainTankDatas:
   - {fileID: 11400000, guid: ddea0ca45c265a04c9b530a4046c09c5, type: 2}
   - {fileID: 11400000, guid: a7c217b7ea7b1604b89ffff7fd0483fe, type: 2}
+  - {fileID: 11400000, guid: 3d23768f9a6ff5d479b16325cc67715e, type: 2}
+  - {fileID: 11400000, guid: c087bb4284b5cca419136788e396aaa1, type: 2}
+  - {fileID: 11400000, guid: 2fc6f2138ec65ac41b15af9d9b9a6e12, type: 2}
+  - {fileID: 11400000, guid: 9f2c0336b83aada4296aa973d33fe3ac, type: 2}
+  - {fileID: 11400000, guid: d7baf42067b82784ea69222927ca6e97, type: 2}
+  - {fileID: 11400000, guid: 5c89c8bcd46002842a3368d627f4ea97, type: 2}

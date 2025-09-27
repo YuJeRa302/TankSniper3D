@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Assets.Source.Scripts.ScriptableObjects
 {
+    [CreateAssetMenu(fileName = "New Decoration(Decal/Pattern)", menuName = "Create Decoration", order = 51)]
     public class DecorationData : ObjectData
     {
         [SerializeField] private Sprite _sprite;

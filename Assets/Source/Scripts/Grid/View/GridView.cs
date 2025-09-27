@@ -136,11 +136,6 @@ namespace Assets.Source.Scripts.Grid
                 tankData.TankView.transform.position.y,
                 gridCellView.transform.position.z), Quaternion.identity);
 
-            tank.transform.eulerAngles = new Vector3(
-                _gridTankSpawnRotation.x,
-                _gridTankSpawnRotation.y,
-                _gridTankSpawnRotation.z);
-
             tank.transform.SetParent(_gridTankTransformParent.transform, worldPositionStays: true);
             tank.Construct(tankData.Level);
             tank.ChangeOriginalCell(gridCellView);

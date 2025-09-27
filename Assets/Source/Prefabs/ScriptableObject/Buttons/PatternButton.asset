@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8641c32cd8e2a5b41a94df74ba8ca34f, type: 3}
   m_Name: PatternButton
   m_EditorClassIdentifier: 
+  _name: "\u0422\u0435\u043A\u0441\u0442\u0443\u0440\u0430"
   _icon: {fileID: 21300000, guid: 332c52bb6ba5d644fb313ee8e07d551e, type: 3}
   _useButtonStrategy:
     rid: 5826229133976010756

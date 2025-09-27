@@ -12,8 +12,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42b583ecdb7262849b8bc18438f1853c, type: 3}
   m_Name: UpgradeConfig
   m_EditorClassIdentifier: 
-  _patternDatas: []
-  _decalDatas: []
+  _patternDatas:
+  - {fileID: 11400000, guid: 2290293e74eaa1343abf8fc125105604, type: 2}
+  - {fileID: 11400000, guid: 73cddd8b116546d43a9670f931027ad6, type: 2}
+  - {fileID: 11400000, guid: 8e4c1b54a9cdf61489b935c5fa601ffc, type: 2}
+  - {fileID: 11400000, guid: d6a7bf79cd310854997f2e5ebb32c75d, type: 2}
+  - {fileID: 11400000, guid: 24495de936876444baa6a21943faacbc, type: 2}
+  - {fileID: 11400000, guid: b4d3ae5b6d8b85e499d68502d6599d9e, type: 2}
+  - {fileID: 11400000, guid: 1b7c063b1855d40449f4bda0ff4ec08b, type: 2}
+  - {fileID: 11400000, guid: 23abf01cb39954f4c9caa4887586c90d, type: 2}
+  - {fileID: 11400000, guid: 90fe5675b80ee0846a368ed94861e381, type: 2}
+  - {fileID: 11400000, guid: 3de549146ae5b03429a565d221598670, type: 2}
+  - {fileID: 11400000, guid: 063f67f6cf0d6d74f9ebe9c461e48f58, type: 2}
+  - {fileID: 11400000, guid: 7b546ec6028db0b4bac48d3ef6c67dbf, type: 2}
+  - {fileID: 11400000, guid: 0132b253fbda8c947b53b151c3478744, type: 2}
+  - {fileID: 11400000, guid: 2eaae3a90e4ca1c4dbd8fff8de9103e5, type: 2}
+  - {fileID: 11400000, guid: ac01eea114ad6304081e7658b0334d9c, type: 2}
+  _decalDatas:
+  - {fileID: 11400000, guid: 722db86dc83603648a2aca025a2ff872, type: 2}
+  - {fileID: 11400000, guid: 5a952068182acd6409ddfc679e439b2e, type: 2}
+  - {fileID: 11400000, guid: 80a7543c5d588494b844a9022387934d, type: 2}
+  - {fileID: 11400000, guid: 2cac05befdc60c8418358626aacf117b, type: 2}
+  - {fileID: 11400000, guid: 4964bef2022a0c342a30e8b2dbb196ca, type: 2}
+  - {fileID: 11400000, guid: f00de2b32feba3840b9082ec57d0e21b, type: 2}
+  - {fileID: 11400000, guid: a8e7e2cea5e13614eb60e361b0a67ba6, type: 2}
+  - {fileID: 11400000, guid: f7cd1f20158fb0545be38748949cc259, type: 2}
+  - {fileID: 11400000, guid: 949e52a8f1030284992624760b54ea65, type: 2}
+  - {fileID: 11400000, guid: d03d69006c4961e49aedde17da3dc579, type: 2}
+  - {fileID: 11400000, guid: 6913e29c8425b4f48840f364869548c8, type: 2}
+  - {fileID: 11400000, guid: 9412bf59bbe35f245ba18e981fb91c42, type: 2}
+  - {fileID: 11400000, guid: 319b89cb57e9d594d92bb6e2117e3a99, type: 2}
+  - {fileID: 11400000, guid: 6301f6171ccc0544f9d13f39f2d4caa1, type: 2}
+  - {fileID: 11400000, guid: ba76502ceef2a9c438772dbcc02c1b92, type: 2}
   _heroDatas:
   - {fileID: 11400000, guid: e50a6376b59ca034b9aefe3285bed630, type: 2}
   - {fileID: 11400000, guid: a10abc61b954b3f41944341e4bab673a, type: 2}
@@ -25,7 +55,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 61af0df4dc59be04ca30a51ae6a2d1c8, type: 2}
   - {fileID: 11400000, guid: 55f43f1b65dae6942814b0bdb48a8487, type: 2}
   - {fileID: 11400000, guid: 8c5ad2d1de85cae4ab3bad880c775677, type: 2}
-  _tankDatas: []
+  _tankDatas:
+  - {fileID: 11400000, guid: ddea0ca45c265a04c9b530a4046c09c5, type: 2}
+  - {fileID: 11400000, guid: a7c217b7ea7b1604b89ffff7fd0483fe, type: 2}
+  - {fileID: 11400000, guid: 3d23768f9a6ff5d479b16325cc67715e, type: 2}
+  - {fileID: 11400000, guid: c087bb4284b5cca419136788e396aaa1, type: 2}
+  - {fileID: 11400000, guid: 2fc6f2138ec65ac41b15af9d9b9a6e12, type: 2}
+  - {fileID: 11400000, guid: 9f2c0336b83aada4296aa973d33fe3ac, type: 2}
+  - {fileID: 11400000, guid: d7baf42067b82784ea69222927ca6e97, type: 2}
+  - {fileID: 11400000, guid: 5c89c8bcd46002842a3368d627f4ea97, type: 2}
   _selectionButtonDatas:
   - {fileID: 11400000, guid: 6d86b33d32f581f4ead212b9cc43584e, type: 2}
   - {fileID: 11400000, guid: 681ab39b4363f3e4ab7cd8f7b536bd44, type: 2}

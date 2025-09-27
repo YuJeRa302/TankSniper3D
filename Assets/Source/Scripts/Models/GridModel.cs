@@ -1,6 +1,7 @@
 using Assets.Source.Game.Scripts.States;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
+using UnityEngine;
 
 namespace Assets.Source.Scripts.Models
 {
@@ -42,7 +43,10 @@ namespace Assets.Source.Scripts.Models
 
         private void IncreaseGridTankLevel(int currentLevel)
         {
-            if (currentLevel > CurrentGridTankLevel * _levelDifferenceMultiplier)
+            Debug.Log("currentLevel" + currentLevel);
+            Debug.Log("CurrentMainTankLevel" + CurrentMainTankLevel);
+
+            if (CurrentMainTankLevel > CurrentGridTankLevel * _levelDifferenceMultiplier)
                 CurrentGridTankLevel++;
         }
     }
