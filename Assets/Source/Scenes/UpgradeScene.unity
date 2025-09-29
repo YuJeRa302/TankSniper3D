@@ -6256,6 +6256,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a239785abe114e44da475888b2f8a5c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _previewHeroContainerRotation: {x: 0, y: 0.22069743, z: 0, w: 0.97534233}
+  _defaultHeroContainerRotation: {x: 0, y: 0, z: 0, w: 0}
   _defaultRotationValue: 0
   _rotationSpeed: 0.5
   _returnSpeed: 5

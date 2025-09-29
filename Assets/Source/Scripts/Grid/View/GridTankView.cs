@@ -1,3 +1,5 @@
+using Assets.Source.Game.Scripts.States;
+using Assets.Source.Scripts.ScriptableObjects;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -13,8 +15,12 @@ namespace Assets.Source.Scripts.Grid
         private float _elapsedTime = 0f;
         private bool _isHolding = false;
         private GridCellView _targetCell = null;
+        private GridTankState _gridTankState;
+        private GridItemData _gridItemData;
 
         public GridCellView OriginalCell { get; private set; }
+        public GridTankState GridTankState => _gridTankState;
+        public GridItemData GridItemData => _gridItemData;
 
         public override void Construct(int level)
         {
@@ -70,7 +76,7 @@ namespace Assets.Source.Scripts.Grid
             OriginalCell = originalCell;
         }
 
-        private void DeselectTargetCell() 
+        private void DeselectTargetCell()
         {
             if (_targetCell != null)
                 _targetCell.Deselect();

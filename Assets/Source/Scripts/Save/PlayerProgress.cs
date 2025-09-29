@@ -14,12 +14,14 @@ namespace Assets.Source.Scripts.Saves
         public DecorationService DecorationService;
         public HeroService HeroService;
         public TankService TankService;
+        public GridService GridService;
 
         public PlayerProgress()
         {
             DecorationService = new();
             HeroService = new();
             TankService = new();
+            GridService = new();
         }
     }
 }
