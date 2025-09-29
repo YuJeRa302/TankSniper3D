@@ -28,6 +28,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0132b253fbda8c947b53b151c3478744, type: 2}
   - {fileID: 11400000, guid: 2eaae3a90e4ca1c4dbd8fff8de9103e5, type: 2}
   - {fileID: 11400000, guid: ac01eea114ad6304081e7658b0334d9c, type: 2}
+  - {fileID: 11400000, guid: 21616f2f3e972a1459325a02ca8fbf68, type: 2}
   _decalDatas:
   - {fileID: 11400000, guid: 722db86dc83603648a2aca025a2ff872, type: 2}
   - {fileID: 11400000, guid: 5a952068182acd6409ddfc679e439b2e, type: 2}

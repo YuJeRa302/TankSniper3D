@@ -12,9 +12,9 @@ namespace Assets.Source.Scripts.Upgrades
     public class HeroCardView : MonoBehaviour
     {
         private readonly int _firstIndex = 0;
-        private readonly Color _lockedColor = new Color32(66, 72, 132, 255);
-        private readonly Color _defaultColor = new Color32(255, 255, 255, 255);
 
+        [SerializeField] private Color _lockedColor = new Color32(66, 72, 132, 255);
+        [SerializeField] private Color _defaultColor = new Color32(255, 255, 255, 255);
         [SerializeField] private Image _icon;
         [SerializeField] private Image _selectButtonImage;
         [SerializeField] private Image _lockStarImage;

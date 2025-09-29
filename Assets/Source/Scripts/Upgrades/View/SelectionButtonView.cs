@@ -54,7 +54,7 @@ namespace Assets.Source.Scripts.Upgrades
 
         private void ClickButton()
         {
-            _useButtonStrategy.ClickButton(this);
+            _useButtonStrategy.ClickButton(this, _selectionButtonData.TypeCard);
             Select();
         }
 

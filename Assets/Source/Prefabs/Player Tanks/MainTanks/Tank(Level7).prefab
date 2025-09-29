@@ -407,7 +407,9 @@ MonoBehaviour:
   _decals:
   - {fileID: 7032031239152541624}
   - {fileID: 8481185329469452662}
-  _tankMaterial: {fileID: 3376087726591481876}
+  _tankMaterials:
+  - {fileID: 3376087726591481876}
+  - {fileID: 6274778485421319827}
   _heroSpawnPoint: {fileID: 5780833565260329551}
 --- !u!1 &7584691875277051956
 GameObject:

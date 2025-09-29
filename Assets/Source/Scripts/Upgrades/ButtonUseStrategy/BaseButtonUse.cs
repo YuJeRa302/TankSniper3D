@@ -13,7 +13,7 @@ namespace Assets.Source.Scripts.Upgrades
         public event Action<SelectionButtonView> HeroButtonClicked;
         public event Action<SelectionButtonView> TankButtonClicked;
 
-        public virtual void ClickButton(SelectionButtonView selectionButtonView)
+        public virtual void ClickButton(SelectionButtonView selectionButtonView, TypeCard typeCard)
         {
         }
 

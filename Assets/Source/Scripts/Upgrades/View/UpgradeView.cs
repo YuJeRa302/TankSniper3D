@@ -29,7 +29,8 @@ namespace Assets.Source.Scripts.Upgrades
         [Space(20)]
         [SerializeField] private Button _backButton;
         [Space(20)]
-        [SerializeField] private DecorationCardView _decorationCardView;
+        [SerializeField] private DecorationCardView _patternCardView;
+        [SerializeField] private DecorationCardView _decalCardView;
         [SerializeField] private HeroCardView _heroCardView;
         [SerializeField] private TankCardView _tankCardView;
         [SerializeField] private SelectionButtonView _selectionButtonView;
@@ -41,7 +42,12 @@ namespace Assets.Source.Scripts.Upgrades
         [Space(20)]
         [SerializeField] private GameObject _sceneGameObjects;
         [Space(20)]
+        [SerializeField] private ScrollRect _scrollRectButtons;
+        [Space(20)]
         [SerializeField] private PlacePreviewView _placePreviewView;
+        [Space(20)]
+        [SerializeField] private Vector3 _tankSpawnRotation;
+        [SerializeField] private Vector3 _tankSpawnPosition;
 
         private CompositeDisposable _disposables = new();
         private List<DecorationCardView> _decorationCardViews = new();
@@ -87,6 +93,7 @@ namespace Assets.Source.Scripts.Upgrades
         private void Close()
         {
             ChangeSetActiveObjects(gameObject, _sceneGameObjects, false);
+            ClearSelectionButtons();
             Message.Publish(new M_CloseUpgrade());
         }
 
@@ -97,7 +104,7 @@ namespace Assets.Source.Scripts.Upgrades
             TankState tankState = _upgradeModel.GetTankStateByEquip();
             CreateTank(tankState, _typeHeroSpawn);
             CreateHero(tankState.HeroId, _typeHeroSpawn);
-            CreateTankButtons();
+            SelectTankButton();
         }
 
         private void OnRewardTaked() // возможно нужно будет убрать TypeCard
@@ -105,23 +112,24 @@ namespace Assets.Source.Scripts.Upgrades
             Message.Publish(new M_UpgradeUnlocked(_currentCardIndex, _currentTypeCard));
         }
 
-        private void OnDecorationSelected(DecorationCardView decorationCardView)
+        private void OnDecorationCardSelected(DecorationCardView decorationCardView)
         {
             Message.Publish(new M_DeselectCards(decorationCardView.DecorationData.Id));
             _upgradeModel.SelectDecoration(decorationCardView.DecorationState);
         }
 
-        private void OnHeroSelected(HeroCardView heroCardView)
+        private void OnHeroCardSelected(HeroCardView heroCardView)
         {
             Message.Publish(new M_DeselectCards(heroCardView.HeroData.Id));
             CreateHero(heroCardView.HeroState.Id, _typeHeroSpawn);
             _upgradeModel.SelectHero(heroCardView.HeroState);
         }
 
-        private void OnTankSelected(TankCardView tankCardView)
+        private void OnTankCardSelected(TankCardView tankCardView)
         {
             Message.Publish(new M_DeselectCards(tankCardView.TankData.Id));
             _upgradeModel.SelectTank(tankCardView.TankState);
+            CreateTank(tankCardView.TankState, _typeHeroSpawn);
         }
 
         private void OnBuyButtonClicked(int id, TypeCard typeCard)
@@ -132,14 +140,14 @@ namespace Assets.Source.Scripts.Upgrades
 
         private void OnDecalButtonClicked(SelectionButtonView selectionButtonView)
         {
-            CreateDecarationButtons(_upgradeConfig.DecalDatas);
+            CreateDecarationButtons(_upgradeConfig.DecalDatas, _decalCardView);
             _placePreviewView.SetDecalRotationView();
             SelectButton(selectionButtonView);
         }
 
         private void OnPatternButtonClicked(SelectionButtonView selectionButtonView)
         {
-            CreateDecarationButtons(_upgradeConfig.PatternDatas);
+            CreateDecarationButtons(_upgradeConfig.PatternDatas, _patternCardView);
             _placePreviewView.ResetRotation();
             SelectButton(selectionButtonView);
         }
@@ -158,16 +166,43 @@ namespace Assets.Source.Scripts.Upgrades
             SelectButton(selectionButtonView);
         }
 
-        private void SelectButton(SelectionButtonView selectionButtonView) 
+        private void SelectButton(SelectionButtonView selectionButtonView)
         {
+            _scrollRectButtons.horizontalNormalizedPosition = 0;
             Message.Publish(new M_DeselectButtons(selectionButtonView));
             _nameButtonText.text = selectionButtonView.SelectionButtonData.Name;
         }
 
+        private void SelectTankButton()
+        {
+            if (_selectionButtonViews.Count > 0)
+            {
+                foreach (var button in _selectionButtonViews)
+                {
+                    if (button.SelectionButtonData.TypeCard == TypeCard.Tank)
+                        OnTankButtonClicked(button);
+                }
+            }
+        }
+
         private void CreateTank(TankState tankState, TypeHeroSpawn typeHeroSpawn)
         {
+            ClearTankView();
             TankData tankData = _upgradeConfig.GetTankDataById(tankState.Id);
-            _tankView = Instantiate(tankData.MainTankView, _tankSpawnPoint);
+
+            _tankView = Instantiate(
+                tankData.MainTankView,
+                new Vector3(
+                    _tankSpawnPosition.x,
+                    _tankSpawnPosition.y,
+                    _tankSpawnPosition.z),
+                Quaternion.identity,
+                _tankSpawnPoint);
+
+            _tankView.transform.eulerAngles = new Vector3(
+                _tankSpawnRotation.x,
+                _tankSpawnRotation.y,
+                _tankSpawnRotation.z);
 
             _tankView.Initialize(
                 tankData,
@@ -179,22 +214,27 @@ namespace Assets.Source.Scripts.Upgrades
 
         private void CreateHero(int id, TypeHeroSpawn typeHeroSpawn)
         {
+            ClearHeroView();
             HeroData heroData = _upgradeConfig.GetHeroDataById(id);
+
+            if (heroData == null)
+                return;
+
             _currentHeroView = Instantiate(heroData.HeroView, _heroSpawnPoint);
             _currentHeroView.Initialize(heroData, typeHeroSpawn);
         }
 
-        private void CreateDecarationButtons(List<DecorationData> decorationDatas)
+        private void CreateDecarationButtons(List<DecorationData> decorationDatas, DecorationCardView decorationCardView)
         {
             ClearAllButtons();
 
             foreach (DecorationData decorationData in decorationDatas)
             {
-                DecorationCardView view = Instantiate(_decorationCardView, _cardsContainer);
+                DecorationCardView view = Instantiate(decorationCardView, _cardsContainer);
                 _decorationCardViews.Add(view);
                 DecorationState decorationState = _upgradeModel.GetDecorationState(decorationData);
                 view.Initialize(decorationData, decorationState);
-                view.DecorationSelected += OnDecorationSelected;
+                view.DecorationSelected += OnDecorationCardSelected;
                 view.BuyButtonClicked += OnBuyButtonClicked;
             }
         }
@@ -209,7 +249,7 @@ namespace Assets.Source.Scripts.Upgrades
                 _heroCardViews.Add(view);
                 HeroState heroState = _upgradeModel.GetHeroState(heroData);
                 view.Initialize(heroData, heroState);
-                view.Selected += OnHeroSelected;
+                view.Selected += OnHeroCardSelected;
                 view.BuyButtonClicked += OnBuyButtonClicked;
             }
         }
@@ -224,7 +264,7 @@ namespace Assets.Source.Scripts.Upgrades
                 _tankCardViews.Add(view);
                 TankState tankState = _upgradeModel.GetTankState(tankData);
                 view.Initialize(tankData, tankState);
-                view.Selected += OnTankSelected;
+                view.Selected += OnTankCardSelected;
             }
         }
 
@@ -242,6 +282,18 @@ namespace Assets.Source.Scripts.Upgrades
             }
         }
 
+        private void ClearTankView()
+        {
+            if (_tankView != null)
+                Destroy(_tankView.gameObject);
+        }
+
+        private void ClearHeroView()
+        {
+            if (_currentHeroView != null)
+                Destroy(_currentHeroView.gameObject);
+        }
+
         private void ClearDecarationButtons()
         {
             if (_decorationCardViews.Count == 0)
@@ -249,7 +301,7 @@ namespace Assets.Source.Scripts.Upgrades
 
             foreach (DecorationCardView view in _decorationCardViews)
             {
-                view.DecorationSelected -= OnDecorationSelected;
+                view.DecorationSelected -= OnDecorationCardSelected;
                 view.BuyButtonClicked -= OnBuyButtonClicked;
                 Destroy(view.gameObject);
             }
@@ -264,7 +316,7 @@ namespace Assets.Source.Scripts.Upgrades
 
             foreach (HeroCardView view in _heroCardViews)
             {
-                view.Selected -= OnHeroSelected;
+                view.Selected -= OnHeroCardSelected;
                 view.BuyButtonClicked -= OnBuyButtonClicked;
                 Destroy(view.gameObject);
             }
@@ -279,7 +331,7 @@ namespace Assets.Source.Scripts.Upgrades
 
             foreach (TankCardView view in _tankCardViews)
             {
-                view.Selected += OnTankSelected;
+                view.Selected += OnTankCardSelected;
                 Destroy(view.gameObject);
             }
 

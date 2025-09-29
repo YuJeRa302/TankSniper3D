@@ -6,9 +6,9 @@ namespace Assets.Source.Scripts.Upgrades
     {
         public override TypeCard TypeCard => TypeCard.Tank;
 
-        public override void ClickButton(SelectionButtonView selectionButtonView)
+        public override void ClickButton(SelectionButtonView selectionButtonView, TypeCard typeCard)
         {
-            if (TryGetAction(TypeCard))
+            if (TryGetAction(typeCard))
                 return;
 
             ClickTankButton(selectionButtonView);

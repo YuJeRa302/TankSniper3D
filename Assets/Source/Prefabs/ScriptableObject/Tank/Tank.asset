@@ -16,5 +16,5 @@ MonoBehaviour:
   _typeCard: 3
   _mainTankView: {fileID: 6950403838444258230, guid: 3990a3dbb2d478a4a968d831b4f5bdee, type: 3}
   _icon: {fileID: 21300000, guid: 1a0cea5e1920d634991a506fe426a00f, type: 3}
-  _starCount: 5
+  _starCount: 4
   _level: 1

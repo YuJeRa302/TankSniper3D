@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _id: 8
   _typeCard: 1
-  _sprite: {fileID: 21300000, guid: 5ef5f070f4724684eabe5703d409d693, type: 3}
-  _texture: {fileID: 2800000, guid: 5ef5f070f4724684eabe5703d409d693, type: 3}
+  _sprite: {fileID: 21300000, guid: 4cf48df88eec11d4498f51fb327a2405, type: 3}
+  _texture: {fileID: 2800000, guid: 4cf48df88eec11d4498f51fb327a2405, type: 3}

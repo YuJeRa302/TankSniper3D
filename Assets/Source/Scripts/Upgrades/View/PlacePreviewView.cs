@@ -61,6 +61,11 @@ namespace Assets.Source.Scripts.Upgrades
         public void ResetRotation()
         {
             _isCanRotation = true;
+
+            if (_rotationCoroutine != null)
+                StopCoroutine(_rotationCoroutine);
+
+            _rotationCoroutine = StartCoroutine(ReturnToDefaultRotation(_defaultRotationValue));
         }
 
         public void SetDecalRotationView()

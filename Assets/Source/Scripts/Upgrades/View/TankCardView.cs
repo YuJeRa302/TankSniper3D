@@ -10,12 +10,12 @@ namespace Assets.Source.Scripts.Upgrades
 {
     public class TankCardView : MonoBehaviour
     {
-        private readonly Color _lockedColor = new Color32(66, 72, 132, 255);
-        private readonly Color _defaultColor = new Color32(255, 255, 255, 255);
-
+        [SerializeField] private Color _lockedColor = new Color32(66, 72, 132, 255);
+        [SerializeField] private Color _defaultColor = new Color32(255, 255, 255, 255);
         [SerializeField] private Image _icon;
         [SerializeField] private Image _selectButtonImage;
         [SerializeField] private Image _lockStarImage;
+        [SerializeField] private Image _mainImage;
         [SerializeField] private GameObject _chooseMark;
         [SerializeField] private Button _selectButton;
         [Space(20)]
@@ -63,6 +63,7 @@ namespace Assets.Source.Scripts.Upgrades
         {
             _selectButton.interactable = false;
             _scrollStarView.gameObject.SetActive(false);
+            _mainImage.gameObject.SetActive(false);
             _selectButtonImage.color = _lockedColor;
             _lockStarImage.gameObject.SetActive(true);
         }
@@ -71,6 +72,7 @@ namespace Assets.Source.Scripts.Upgrades
         {
             _selectButton.interactable = true;
             _scrollStarView.gameObject.SetActive(true);
+            _mainImage.gameObject.SetActive(true);
             _selectButtonImage.color = _defaultColor;
             _lockStarImage.gameObject.SetActive(false);
         }

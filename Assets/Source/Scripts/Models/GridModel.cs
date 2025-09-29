@@ -39,13 +39,11 @@ namespace Assets.Source.Scripts.Models
             _currentTankState?.ChangeEquippedState(false);
             _currentTankState = tankState;
             _currentTankState.ChangeEquippedState(true);
+            _currentTankState.ChangeOpenState(true);
         }
 
         private void IncreaseGridTankLevel(int currentLevel)
         {
-            Debug.Log("currentLevel" + currentLevel);
-            Debug.Log("CurrentMainTankLevel" + CurrentMainTankLevel);
-
             if (CurrentMainTankLevel > CurrentGridTankLevel * _levelDifferenceMultiplier)
                 CurrentGridTankLevel++;
         }

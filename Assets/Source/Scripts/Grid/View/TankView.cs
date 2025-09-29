@@ -9,13 +9,13 @@ namespace Assets.Source.Scripts.Upgrades
 {
     public class TankView : ObjectView
     {
+        private readonly string _materialName = "Main";
+
         [SerializeField] private List<MeshRenderer> _decals;
-        [SerializeField] private MeshRenderer _tankMaterial;
+        [SerializeField] private List<MeshRenderer> _tankMaterials;
         [SerializeField] private Transform _heroSpawnPoint;
 
         private HeroView _heroView;
-
-        public Transform HeroSpawnPoint => _heroSpawnPoint;
 
         public void Initialize(
             TankData tankData,
@@ -24,8 +24,8 @@ namespace Assets.Source.Scripts.Upgrades
             HeroData heroData,
             TypeHeroSpawn typeHeroSpawn)
         {
-            //UpdateDecal(decal);
-            //UpdatePattern(pattern);
+            UpdateDecal(decal);
+            UpdatePattern(pattern);
             CreateHero(heroData, typeHeroSpawn);
         }
 
@@ -40,7 +40,17 @@ namespace Assets.Source.Scripts.Upgrades
 
         private void UpdatePattern(DecorationData decorationData)
         {
-            _tankMaterial.material.mainTexture = decorationData.Texture;
+            if (_tankMaterials.Count > 0)
+            {
+                foreach (var meshRenderer in _tankMaterials)
+                {
+                    foreach (var material in meshRenderer.materials)
+                    {
+                        if (material.name.Contains(_materialName))
+                            material.mainTexture = decorationData.Texture;
+                    }
+                }
+            }
         }
 
         private void CreateHero(HeroData heroData, TypeHeroSpawn typeHeroSpawn)
