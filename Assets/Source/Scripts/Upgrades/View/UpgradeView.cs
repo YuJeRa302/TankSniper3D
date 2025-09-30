@@ -102,6 +102,7 @@ namespace Assets.Source.Scripts.Upgrades
             ChangeSetActiveObjects(gameObject, _sceneGameObjects, true);
             CreateSelectionButtons();
             TankState tankState = _upgradeModel.GetTankStateByEquip();
+            _upgradeModel.SelectTank(tankState);
             CreateTank(tankState, _typeHeroSpawn);
             CreateHero(tankState.HeroId, _typeHeroSpawn);
             SelectTankButton();
@@ -233,7 +234,7 @@ namespace Assets.Source.Scripts.Upgrades
                 DecorationCardView view = Instantiate(decorationCardView, _cardsContainer);
                 _decorationCardViews.Add(view);
                 DecorationState decorationState = _upgradeModel.GetDecorationState(decorationData);
-                view.Initialize(decorationData, decorationState);
+                view.Initialize(decorationData, decorationState, _upgradeModel.TankState);
                 view.DecorationSelected += OnDecorationCardSelected;
                 view.BuyButtonClicked += OnBuyButtonClicked;
             }

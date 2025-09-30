@@ -14,9 +14,12 @@ namespace Assets.Source.Scripts.Services
 
         public List<GridTankState> GridTankState => _gridTankStates;
 
-        public void SetStates(List<GridTankState> gridTankStates)
+        public void SetStates(GridTankState[] gridTankStates)
         {
-            _gridTankStates = gridTankStates;
+            for (int index = 0; index < gridTankStates.Length; index++)
+            {
+                _gridTankStates.Add(gridTankStates[index]);
+            }
         }
 
         //public void SetOriginalCell(GridTankView gridTankView)

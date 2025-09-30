@@ -33,7 +33,7 @@ namespace Assets.Source.Scripts.Upgrades
             RemoveListeners();
         }
 
-        public void Initialize(DecorationData decorationData, DecorationState decorationState)
+        public void Initialize(DecorationData decorationData, DecorationState decorationState, TankState tankState) // переделать после создания State Save
         {
             _decorationData = decorationData;
             _decorationState = decorationState;
@@ -44,7 +44,7 @@ namespace Assets.Source.Scripts.Upgrades
             if (_decorationData.Id == _firstIndex)
                 Unlock();
 
-            UnlockByPlayerProgress();
+            UnlockByPlayerProgress(tankState);
         }
 
         private void SelectButtonClick()
@@ -103,22 +103,28 @@ namespace Assets.Source.Scripts.Upgrades
             _chooseMark.gameObject.SetActive(true);
         }
 
-        private void UnlockByPlayerProgress()
+        private void UnlockByPlayerProgress(TankState tankState)
         {
-            if (_decorationState.Id == _firstIndex)
-                return;
-
             if (_decorationState.IsBuyed == true)
             {
                 Unlock();
-                EquippByPlayerProgress();
+                EquippByPlayerProgress(tankState);
             }
         }
 
-        private void EquippByPlayerProgress()
+        private void EquippByPlayerProgress(TankState tankState)
         {
-            if (_decorationState.IsEquipped == true)
-                Select();
+            if (_decorationData.TypeCard == TypeCard.Pattern)
+            {
+                if (_decorationState.Id == tankState.PatternId)
+                    Select();
+            }
+
+            if (_decorationData.TypeCard == TypeCard.Decal)
+            {
+                if (_decorationState.Id == tankState.DecalId)
+                    Select();
+            }
         }
 
         private void OnUpgradeUnlocked(int id, TypeCard typeCard) // возможно нужно будет убрать if с TypeCard

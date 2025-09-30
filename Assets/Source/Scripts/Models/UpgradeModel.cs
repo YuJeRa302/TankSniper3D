@@ -1,6 +1,7 @@
 using Assets.Source.Game.Scripts.States;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
+using UnityEngine;
 
 namespace Assets.Source.Scripts.Models
 {
@@ -14,6 +15,8 @@ namespace Assets.Source.Scripts.Models
         {
             _persistentDataService = persistentDataService;
         }
+
+        public TankState TankState => _currentTankState;
 
         public TankState GetTankStateByEquip()
         {

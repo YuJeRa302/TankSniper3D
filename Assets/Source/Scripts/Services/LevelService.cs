@@ -7,15 +7,18 @@ using UnityEngine;
 namespace Assets.Source.Scripts.Services
 {
     [Serializable]
-    public class LevelService : MonoBehaviour
+    public class LevelService
     {
         [SerializeField] private List<LevelState> _levelStates = new();
 
         public List<LevelState> LevelStates => _levelStates;
 
-        public void SetStates(List<LevelState> levelStates)
+        public void SetStates(LevelState[] levelStates)
         {
-            _levelStates = levelStates;
+            for (int index = 0; index < levelStates.Length; index++)
+            {
+                _levelStates.Add(levelStates[index]);
+            }
         }
 
         public LevelState GetState(LevelData levelData, int biomId)

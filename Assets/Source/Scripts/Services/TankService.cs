@@ -13,9 +13,12 @@ namespace Assets.Source.Scripts.Services
 
         public List<TankState> TankStates => _tankStates;
 
-        public void SetStates(List<TankState> tankStates)
+        public void SetStates(TankState[] tankStates)
         {
-            _tankStates = tankStates;
+            for (int index = 0; index < tankStates.Length; index++)
+            {
+                _tankStates.Add(tankStates[index]);
+            }
         }
 
         public void SetStateByUnlock(TankState newTankState)
@@ -41,7 +44,7 @@ namespace Assets.Source.Scripts.Services
             }
         }
 
-        public TankState GetStateByEquip() 
+        public TankState GetStateByEquip()
         {
             if (_tankStates != null)
             {

@@ -8,8 +8,9 @@ namespace Assets.Source.Scripts.Models
     public class GridModel
     {
         private readonly PersistentDataService _persistentDataService;
-        private readonly int _levelDifferenceMultiplier = 2;
+        private readonly int _maxCountBuyTank = 8;
 
+        private int _currentCountBuyTank = 0;
         private TankState _currentTankState;
 
         public GridModel(PersistentDataService persistentDataService)
@@ -25,8 +26,27 @@ namespace Assets.Source.Scripts.Models
         {
             if (currentLevel > CurrentMainTankLevel)
                 CurrentMainTankLevel++;
+        }
 
-            IncreaseGridTankLevel(CurrentMainTankLevel);
+        public bool TryBuyGridTank(int coast)
+        {
+            if (_persistentDataService.TrySpendMoney(coast))
+            {
+                _currentCountBuyTank++;
+                UpdateGridTankLevel();
+                return true;
+            }
+
+            return false;
+        }
+
+        private void UpdateGridTankLevel()
+        {
+            if (_currentCountBuyTank == _maxCountBuyTank)
+            {
+                CurrentGridTankLevel++;
+                _currentCountBuyTank = 0;
+            }
         }
 
         public TankState GetTankState(TankData tankData)
@@ -45,12 +65,6 @@ namespace Assets.Source.Scripts.Models
             _currentTankState = tankState;
             _currentTankState.ChangeEquippedState(true);
             _currentTankState.ChangeOpenState(true);
-        }
-
-        private void IncreaseGridTankLevel(int currentLevel)
-        {
-            if (CurrentMainTankLevel > CurrentGridTankLevel * _levelDifferenceMultiplier)
-                CurrentGridTankLevel++;
         }
     }
 }

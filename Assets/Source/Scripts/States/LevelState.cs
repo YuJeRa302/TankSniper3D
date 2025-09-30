@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Assets.Source.Game.Scripts.States
 {
     [System.Serializable]
-    public class LevelState : MonoBehaviour
+    public class LevelState
     {
         [SerializeField] private int _id;
         [SerializeField] private int _biomId;
