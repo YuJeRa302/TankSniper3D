@@ -1,5 +1,6 @@
 using Assets.Source.Game.Scripts.States;
 using Assets.Source.Scripts.Grid;
+using Assets.Source.Scripts.ScriptableObjects;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,17 +19,27 @@ namespace Assets.Source.Scripts.Services
             _gridTankStates = gridTankStates;
         }
 
-        public void SetState(GridTankView gridTankView)
-        {
-            if (_gridTankStates != null)
-            {
-                GridTankState gridTankState = FindState(gridTankView.GridItemData.Id);
+        //public void SetOriginalCell(GridTankView gridTankView)
+        //{
+        //    if (_gridTankStates != null)
+        //    {
+        //        GridTankState gridTankState = FindState(gridTankView.GridItemData.Id);
 
-                if (gridTankState == null)
-                    gridTankState = InitState(gridTankView);
-                else
-                    gridTankState.ChangeOriginalCell(gridTankView.OriginalCell.transform.position);
-            }
+        //        if (gridTankState == null)
+        //            gridTankState = InitState(gridTankView.GridItemData);
+        //        else
+        //            gridTankState.ChangeOriginalCell(gridTankView.OriginalCell.transform.position);
+        //    }
+        //}
+
+        public GridTankState GetState(GridTankData gridTankData)
+        {
+            GridTankState gridTankState = FindState(gridTankData.Id);
+
+            if (gridTankState == null)
+                gridTankState = InitState(gridTankData);
+
+            return gridTankState;
         }
 
         private GridTankState FindState(int id)
@@ -45,9 +56,9 @@ namespace Assets.Source.Scripts.Services
             return null;
         }
 
-        private GridTankState InitState(GridTankView gridTankView)
+        private GridTankState InitState(GridTankData gridTankData)
         {
-            GridTankState gridTankState = new(gridTankView.GridItemData.Id, gridTankView.OriginalCell.transform.position);
+            GridTankState gridTankState = new(gridTankData.Id, Vector3.zero);
             _gridTankStates.Add(gridTankState);
             return gridTankState;
         }

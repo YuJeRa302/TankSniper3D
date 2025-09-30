@@ -1,3 +1,4 @@
+using Assets.Source.Game.Scripts.Enums;
 using Assets.Source.Game.Scripts.States;
 using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.ScriptableObjects;
@@ -13,6 +14,8 @@ namespace Assets.Source.Scripts.Grid
     {
         public static readonly IMessageBroker Message = new MessageBroker();
 
+        private readonly TypeHeroSpawn _typeHeroSpawn = TypeHeroSpawn.Tank;
+
         [SerializeField] private Image _levelMainTankImage;
         [SerializeField] private TMP_Text _levelMainTankText;
         [SerializeField] private Vector3 _gridTankSpawnRotation;
@@ -26,7 +29,8 @@ namespace Assets.Source.Scripts.Grid
         [SerializeField] private GameObject _sceneGameObjects;
 
         private GridModel _gridModel;
-        private GridItemConfig _gridItemConfig;
+        private GridConfig _gridConfig;
+        private UpgradeConfig _upgradeConfig;
         private GridPlacer _gridPlacer;
         private TankView _mainTank;
         private CompositeDisposable _disposables = new();
@@ -36,9 +40,10 @@ namespace Assets.Source.Scripts.Grid
             RemoveListeners();
         }
 
-        public void Initialize(GridModel gridModel, GridItemConfig gridItemConfig, GridPlacer gridPlacer)
+        public void Initialize(GridModel gridModel, GridConfig gridConfig, UpgradeConfig upgradeConfig, GridPlacer gridPlacer)
         {
-            _gridItemConfig = gridItemConfig;
+            _gridConfig = gridConfig;
+            _upgradeConfig = upgradeConfig;
             _gridPlacer = gridPlacer;
             _gridModel = gridModel;
             AddListeners();
@@ -129,22 +134,23 @@ namespace Assets.Source.Scripts.Grid
 
         private void CreateGirdTank(GridCellView gridCellView, int currentTankLevel)
         {
-            GridItemData tankData = _gridItemConfig.GetGridTankDataByLevel(currentTankLevel);
+            GridTankData gridTankData = _gridConfig.GetGridTankDataByLevel(currentTankLevel);
+            GridTankState gridTankState = _gridModel.GetGridTankState(gridTankData);
 
-            GridTankView tank = Instantiate(tankData.TankView as GridTankView, new Vector3(
+            GridTankView tank = Instantiate(gridTankData.TankView, new Vector3(
                 gridCellView.transform.position.x,
-                tankData.TankView.transform.position.y,
+                gridTankData.TankView.transform.position.y,
                 gridCellView.transform.position.z), Quaternion.identity);
 
             tank.transform.SetParent(_gridTankTransformParent.transform, worldPositionStays: true);
-            tank.Construct(tankData.Level);
+            tank.Initialize(gridTankData, gridTankState);
             tank.ChangeOriginalCell(gridCellView);
             gridCellView.SetOccupied(tank);
         }
 
         private void CreateMainTank()
         {
-            TankData tankData = _gridItemConfig.GetMainTankDataByLevel(_gridModel.CurrentMainTankLevel);
+            TankData tankData = _gridConfig.GetMainTankDataByLevel(_gridModel.CurrentMainTankLevel);
             TankState tankState = _gridModel.GetTankState(tankData);
             _gridModel.ChangeEquippedTank(tankState);
 
@@ -160,7 +166,13 @@ namespace Assets.Source.Scripts.Grid
                 _gridTankSpawnRotation.z);
 
             _mainTank.transform.SetParent(_mainTankSpawnPoint.transform, worldPositionStays: true);
-            _mainTank.Construct(tankData.Level);
+
+            _mainTank.Initialize(
+                tankData,
+                _upgradeConfig.GetDecalDataById(tankState.DecalId),
+                _upgradeConfig.GetPatternDataById(tankState.PatternId),
+                _upgradeConfig.GetHeroDataById(tankState.HeroId),
+                _typeHeroSpawn);
         }
     }
 }

@@ -34,6 +34,11 @@ namespace Assets.Source.Scripts.Models
             return _persistentDataService.PlayerProgress.TankService.GetState(tankData);
         }
 
+        public GridTankState GetGridTankState(GridTankData gridTankData)
+        {
+            return _persistentDataService.PlayerProgress.GridService.GetState(gridTankData);
+        }
+
         public void ChangeEquippedTank(TankState tankState)
         {
             _currentTankState?.ChangeEquippedState(false);

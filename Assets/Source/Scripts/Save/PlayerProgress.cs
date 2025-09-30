@@ -11,10 +11,14 @@ namespace Assets.Source.Scripts.Saves
         public bool IsMuted;
         public bool IsGamePause = false;
         public int CurrentPlayerTankId;
+        public int CurrentBiomId;
+        public int CurrentLevelId;
+        public int CurrentLevel;
         public DecorationService DecorationService;
         public HeroService HeroService;
         public TankService TankService;
         public GridService GridService;
+        public LevelService LevelService;
 
         public PlayerProgress()
         {
@@ -22,6 +26,7 @@ namespace Assets.Source.Scripts.Saves
             HeroService = new();
             TankService = new();
             GridService = new();
+            LevelService = new();
         }
     }
 }

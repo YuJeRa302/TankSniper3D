@@ -8,7 +8,7 @@ namespace Assets.Source.Scripts.Upgrades
 {
     public class UpgradeConstruct : MonoBehaviour
     {
-        [SerializeField] private GridItemConfig _gridItemConfig;
+        [SerializeField] private GridConfig _gridItemConfig;
         [SerializeField] private UpgradeConfig _upgradeConfig;
         [Space(20)]
         [SerializeField] private GridPlacer _gridPlacer;
@@ -30,7 +30,7 @@ namespace Assets.Source.Scripts.Upgrades
             _upgradeModel = new UpgradeModel(_persistentDataService);
             _gridModel = new GridModel(_persistentDataService);
 
-            _gridView.Initialize(_gridModel, _gridItemConfig, _gridPlacer);
+            _gridView.Initialize(_gridModel, _gridItemConfig, _upgradeConfig, _gridPlacer);
             _upgradeView.Initialize(_upgradeModel, _upgradeConfig);
         }
     }

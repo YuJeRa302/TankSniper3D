@@ -1,5 +1,4 @@
 using Assets.Source.Game.Scripts.Enums;
-using Assets.Source.Scripts.Grid;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Views;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.Source.Scripts.Upgrades
 {
-    public class TankView : ObjectView
+    public class TankView : MonoBehaviour
     {
         private readonly string _materialName = "Main";
 
@@ -17,6 +16,8 @@ namespace Assets.Source.Scripts.Upgrades
 
         private HeroView _heroView;
 
+        public int Level { get; private set; }
+
         public void Initialize(
             TankData tankData,
             DecorationData decal,
@@ -24,6 +25,7 @@ namespace Assets.Source.Scripts.Upgrades
             HeroData heroData,
             TypeHeroSpawn typeHeroSpawn)
         {
+            Level = tankData.Level;
             UpdateDecal(decal);
             UpdatePattern(pattern);
             CreateHero(heroData, typeHeroSpawn);
@@ -56,6 +58,9 @@ namespace Assets.Source.Scripts.Upgrades
         private void CreateHero(HeroData heroData, TypeHeroSpawn typeHeroSpawn)
         {
             if (typeHeroSpawn == TypeHeroSpawn.Upgrade)
+                return;
+
+            if (heroData == null)
                 return;
 
             _heroView = Instantiate(heroData.HeroView, _heroSpawnPoint);

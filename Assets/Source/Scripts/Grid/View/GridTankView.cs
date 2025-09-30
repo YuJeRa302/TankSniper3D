@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace Assets.Source.Scripts.Grid
 {
-    public class GridTankView : ObjectView, IPointerDownHandler, IPointerMoveHandler, IPointerUpHandler
+    public class GridTankView : MonoBehaviour, IPointerDownHandler, IPointerMoveHandler, IPointerUpHandler
     {
         private readonly float _timeToMove = 0.5f;
 
@@ -16,16 +16,19 @@ namespace Assets.Source.Scripts.Grid
         private bool _isHolding = false;
         private GridCellView _targetCell = null;
         private GridTankState _gridTankState;
-        private GridItemData _gridItemData;
+        private GridTankData _gridItemData;
 
+        public int Level { get; private set; }
         public GridCellView OriginalCell { get; private set; }
         public GridTankState GridTankState => _gridTankState;
-        public GridItemData GridItemData => _gridItemData;
+        public GridTankData GridItemData => _gridItemData;
 
-        public override void Construct(int level)
+        public void Initialize(GridTankData gridTankData, GridTankState gridTankState)
         {
-            base.Construct(level);
-            _itemLevelView.SetLevelValue(level);
+            _gridItemData = gridTankData;
+            _gridTankState = gridTankState;
+            Level = gridTankData.Level;
+            _itemLevelView.SetLevelValue(Level);
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -74,6 +77,7 @@ namespace Assets.Source.Scripts.Grid
         public void ChangeOriginalCell(GridCellView originalCell)
         {
             OriginalCell = originalCell;
+            _gridTankState.ChangeOriginalCell(OriginalCell.transform.position);
         }
 
         private void DeselectTargetCell()
