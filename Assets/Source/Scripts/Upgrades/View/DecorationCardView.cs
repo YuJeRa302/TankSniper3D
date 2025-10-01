@@ -33,7 +33,7 @@ namespace Assets.Source.Scripts.Upgrades
             RemoveListeners();
         }
 
-        public void Initialize(DecorationData decorationData, DecorationState decorationState, TankState tankState) // переделать после создания State Save
+        public void Initialize(DecorationData decorationData, DecorationState decorationState, TankState tankState)
         {
             _decorationData = decorationData;
             _decorationState = decorationState;
@@ -114,26 +114,14 @@ namespace Assets.Source.Scripts.Upgrades
 
         private void EquippByPlayerProgress(TankState tankState)
         {
-            if (_decorationData.TypeCard == TypeCard.Pattern)
-            {
-                if (_decorationState.Id == tankState.PatternId)
-                    Select();
-            }
-
-            if (_decorationData.TypeCard == TypeCard.Decal)
-            {
-                if (_decorationState.Id == tankState.DecalId)
-                    Select();
-            }
+            if (tankState.TryEquipDecoration(_decorationState))
+                Select();
         }
 
-        private void OnUpgradeUnlocked(int id, TypeCard typeCard) // возможно нужно будет убрать if с TypeCard
+        private void OnUpgradeUnlocked(int id, TypeCard typeCard)
         {
-            if (_decorationData.TypeCard == typeCard)
-            {
-                if (_decorationData.Id == id)
-                    Unlock();
-            }
+            if (_decorationData.Id == id)
+                Unlock();
         }
 
         private void OnDeselect(int id)
@@ -142,7 +130,6 @@ namespace Assets.Source.Scripts.Upgrades
                 return;
 
             _chooseMark.gameObject.SetActive(false);
-            _decorationState.ChangeEquippedState(false);
         }
     }
 }

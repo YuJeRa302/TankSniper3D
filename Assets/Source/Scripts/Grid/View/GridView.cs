@@ -82,6 +82,7 @@ namespace Assets.Source.Scripts.Grid
         private void OnOpen()
         {
             ChangeSetActiveObjects(gameObject, _sceneGameObjects, true);
+            UpdateTankEntities();
         }
 
         private void OnItemMerged(int currentLevel, GridCellView gridCellView)
@@ -117,6 +118,14 @@ namespace Assets.Source.Scripts.Grid
             }
 
             UpdateMainTankUI();
+        }
+
+        private void UpdateTankEntities()
+        {
+            _mainTank.UpdateTankEntities(
+                _upgradeConfig.GetDecalDataById(_mainTank.TankState.DecalId),
+                _upgradeConfig.GetPatternDataById(_mainTank.TankState.PatternId),
+                _upgradeConfig.GetHeroDataById(_mainTank.TankState.HeroId));
         }
 
         private void SpawnObjectInFirstAvailableCell()
@@ -168,7 +177,8 @@ namespace Assets.Source.Scripts.Grid
             _mainTank.transform.SetParent(_mainTankSpawnPoint.transform, worldPositionStays: true);
 
             _mainTank.Initialize(
-                tankData,
+                tankState,
+                tankData.Level,
                 _upgradeConfig.GetDecalDataById(tankState.DecalId),
                 _upgradeConfig.GetPatternDataById(tankState.PatternId),
                 _upgradeConfig.GetHeroDataById(tankState.HeroId),

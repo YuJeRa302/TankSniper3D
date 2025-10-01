@@ -4,6 +4,8 @@ using Assets.Source.Scripts.Grid;
 using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Views;
+using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UniRx;
@@ -17,6 +19,9 @@ namespace Assets.Source.Scripts.Upgrades
         public static readonly IMessageBroker Message = new MessageBroker();
 
         private readonly TypeHeroSpawn _typeHeroSpawn = TypeHeroSpawn.Upgrade;
+        private readonly float _tweenAnimationDuration = 1f;
+        private readonly float _tweenAnimationScaler = 1.2f;
+        private readonly float _delay = 0.25f;
 
         [SerializeField] private TMP_Text _nameTankText;
         [SerializeField] private TMP_Text _levelTankText;
@@ -49,6 +54,7 @@ namespace Assets.Source.Scripts.Upgrades
         [SerializeField] private Vector3 _tankSpawnRotation;
         [SerializeField] private Vector3 _tankSpawnPosition;
 
+        private Coroutine _coroutineTankAnimation;
         private CompositeDisposable _disposables = new();
         private List<DecorationCardView> _decorationCardViews = new();
         private List<HeroCardView> _heroCardViews = new();
@@ -117,6 +123,8 @@ namespace Assets.Source.Scripts.Upgrades
         {
             Message.Publish(new M_DeselectCards(decorationCardView.DecorationData.Id));
             _upgradeModel.SelectDecoration(decorationCardView.DecorationState);
+            UpdateTankEntities();
+            AnimateSelectionObject(_tankView.gameObject);
         }
 
         private void OnHeroCardSelected(HeroCardView heroCardView)
@@ -124,6 +132,7 @@ namespace Assets.Source.Scripts.Upgrades
             Message.Publish(new M_DeselectCards(heroCardView.HeroData.Id));
             CreateHero(heroCardView.HeroState.Id, _typeHeroSpawn);
             _upgradeModel.SelectHero(heroCardView.HeroState);
+            AnimateSelectionObject(_currentHeroView.gameObject);
         }
 
         private void OnTankCardSelected(TankCardView tankCardView)
@@ -131,6 +140,7 @@ namespace Assets.Source.Scripts.Upgrades
             Message.Publish(new M_DeselectCards(tankCardView.TankData.Id));
             _upgradeModel.SelectTank(tankCardView.TankState);
             CreateTank(tankCardView.TankState, _typeHeroSpawn);
+            AnimateSelectionObject(_tankView.gameObject);
         }
 
         private void OnBuyButtonClicked(int id, TypeCard typeCard)
@@ -165,6 +175,14 @@ namespace Assets.Source.Scripts.Upgrades
             CreateTankButtons();
             _placePreviewView.ResetRotation();
             SelectButton(selectionButtonView);
+        }
+
+        private void UpdateTankEntities()
+        {
+            _tankView.UpdateTankEntities(
+                _upgradeConfig.GetDecalDataById(_tankView.TankState.DecalId),
+                _upgradeConfig.GetPatternDataById(_tankView.TankState.PatternId),
+                _upgradeConfig.GetHeroDataById(_tankView.TankState.HeroId));
         }
 
         private void SelectButton(SelectionButtonView selectionButtonView)
@@ -206,7 +224,8 @@ namespace Assets.Source.Scripts.Upgrades
                 _tankSpawnRotation.z);
 
             _tankView.Initialize(
-                tankData,
+                tankState,
+                tankData.Level,
                 _upgradeConfig.GetDecalDataById(tankState.DecalId),
                 _upgradeConfig.GetPatternDataById(tankState.PatternId),
                 _upgradeConfig.GetHeroDataById(tankState.HeroId),
@@ -249,7 +268,7 @@ namespace Assets.Source.Scripts.Upgrades
                 HeroCardView view = Instantiate(_heroCardView, _cardsContainer);
                 _heroCardViews.Add(view);
                 HeroState heroState = _upgradeModel.GetHeroState(heroData);
-                view.Initialize(heroData, heroState);
+                view.Initialize(heroData, heroState, _upgradeModel.TankState);
                 view.Selected += OnHeroCardSelected;
                 view.BuyButtonClicked += OnBuyButtonClicked;
             }
@@ -361,6 +380,26 @@ namespace Assets.Source.Scripts.Upgrades
             ClearDecarationButtons();
             ClearHeroButtons();
             ClearTankButtons();
+        }
+
+        private void AnimateSelectionObject(GameObject gameObject)
+        {
+            if (_coroutineTankAnimation != null)
+                StopCoroutine(_coroutineTankAnimation);
+
+            _coroutineTankAnimation = StartCoroutine(SetAnimation(gameObject));
+        }
+
+        private IEnumerator SetAnimation(GameObject gameObject)
+        {
+            float endValue = gameObject.transform.localScale.x;
+            gameObject.transform.localScale *= _tweenAnimationScaler;
+
+            gameObject.transform.DOScale(endValue, _tweenAnimationDuration)
+                .SetEase(Ease.OutBounce)
+                .SetLink(gameObject.gameObject);
+
+            yield return new WaitForSeconds(_delay);
         }
     }
 }

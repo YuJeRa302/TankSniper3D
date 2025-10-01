@@ -50,7 +50,7 @@ namespace Assets.Source.Scripts.Services
 
         private LevelState InitState(LevelData levelData, int biomId)
         {
-            LevelState levelState = new(levelData.Id, biomId, false, false);
+            LevelState levelState = new(levelData.Id, biomId, false);
             _levelStates.Add(levelState);
             return levelState;
         }

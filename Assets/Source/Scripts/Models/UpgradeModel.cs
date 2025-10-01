@@ -40,15 +40,11 @@ namespace Assets.Source.Scripts.Models
 
         public void SelectHero(HeroState heroState)
         {
-            heroState.ChangeEquippedState(true);
-            _persistentDataService.PlayerProgress.HeroService.SetStateChangeEquipped(heroState);
             _currentTankState.ChangeHero(heroState.Id);
         }
 
         public void SelectDecoration(DecorationState decorationState)
         {
-            decorationState.ChangeEquippedState(true);
-            _persistentDataService.PlayerProgress.DecorationService.SetStateChangeEquipped(decorationState);
             _currentTankState.ChangeDecoration(decorationState);
         }
 

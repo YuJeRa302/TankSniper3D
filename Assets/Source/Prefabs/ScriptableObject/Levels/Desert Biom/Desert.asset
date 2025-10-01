@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cf2345421a609f449675269e7379c4d, type: 3}
-  m_Name: Level 3
+  m_Script: {fileID: 11500000, guid: 168815a6e18129a43ad450c7ee7bcec4, type: 3}
+  m_Name: Desert
   m_EditorClassIdentifier: 
-  _id: 0
-  _nameScene: 
-  _icon: {fileID: 0}
+  _id: 1
+  _levelDatas: []
+  _heroLevel: {fileID: 0}
+  _icon: {fileID: 21300000, guid: 0b2b2310b9a7ebd479a7954e76d8e0bd, type: 3}

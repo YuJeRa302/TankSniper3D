@@ -28,22 +28,9 @@ namespace Assets.Source.Scripts.Services
                 HeroState heroState = FindState(newHeroState.Id);
 
                 if (heroState == null)
-                    _heroStates.Add(new(newHeroState.Id, newHeroState.IsBuyed, newHeroState.IsEquipped));
+                    _heroStates.Add(new(newHeroState.Id, newHeroState.IsBuyed, newHeroState.IsOpened));
                 else
                     heroState.ChangeBuyState(newHeroState.IsBuyed);
-            }
-        }
-
-        public void SetStateChangeEquipped(HeroState newHeroState)
-        {
-            if (_heroStates != null)
-            {
-                HeroState heroState = FindState(newHeroState.Id);
-
-                if (heroState == null)
-                    _heroStates.Add(new(newHeroState.Id, newHeroState.IsBuyed, newHeroState.IsEquipped));
-                else
-                    heroState.ChangeEquippedState(newHeroState.IsEquipped);
             }
         }
 

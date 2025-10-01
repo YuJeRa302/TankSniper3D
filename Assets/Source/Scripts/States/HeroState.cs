@@ -7,27 +7,22 @@ namespace Assets.Source.Game.Scripts.States
     {
         [SerializeField] private int _id;
         [SerializeField] private bool _isBuyed;
-        [SerializeField] private bool _isEquipped;
+        [SerializeField] private bool _isOpened;
 
-        public HeroState(int id, bool isBuyed, bool isEquipped)
+        public HeroState(int id, bool isBuyed, bool isOpened)
         {
             _id = id;
             _isBuyed = isBuyed;
-            _isEquipped = isEquipped;
+            _isOpened = isOpened;
         }
 
         public int Id => _id;
         public bool IsBuyed => _isBuyed;
-        public bool IsEquipped => _isEquipped;
+        public bool IsOpened => _isOpened;
 
         public void ChangeBuyState(bool isBuyed)
         {
             _isBuyed = isBuyed;
-        }
-
-        public void ChangeEquippedState(bool isEquipped)
-        {
-            _isEquipped = isEquipped;
         }
     }
 }

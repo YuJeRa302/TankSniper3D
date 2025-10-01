@@ -7,26 +7,19 @@ namespace Assets.Source.Game.Scripts.States
     {
         [SerializeField] private int _id;
         [SerializeField] private int _biomId;
-        [SerializeField] private bool _isCurrent;
         [SerializeField] private bool _isComplete;
 
-        public LevelState(int id, int biomId, bool isCurrent, bool isComplete)
+        public LevelState(int id, int biomId, bool isComplete)
         {
             _id = id;
             _biomId = biomId;
-            _isCurrent = isCurrent;
             _isComplete = isComplete;
         }
 
         public int Id => _id;
-        public bool IsCurrent => _isCurrent;
         public bool IsComplete => _isComplete;
         public int BiomId => _biomId;
 
-        public void SetCurrent(bool isCurrent)
-        {
-            _isCurrent = isCurrent;
-        }
 
         public void SetComplete(bool isComplete)
         {

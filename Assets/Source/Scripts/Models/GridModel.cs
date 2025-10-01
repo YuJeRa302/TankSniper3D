@@ -1,7 +1,6 @@
 using Assets.Source.Game.Scripts.States;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
-using UnityEngine;
 
 namespace Assets.Source.Scripts.Models
 {
@@ -40,15 +39,6 @@ namespace Assets.Source.Scripts.Models
             return false;
         }
 
-        private void UpdateGridTankLevel()
-        {
-            if (_currentCountBuyTank == _maxCountBuyTank)
-            {
-                CurrentGridTankLevel++;
-                _currentCountBuyTank = 0;
-            }
-        }
-
         public TankState GetTankState(TankData tankData)
         {
             return _persistentDataService.PlayerProgress.TankService.GetState(tankData);
@@ -65,6 +55,15 @@ namespace Assets.Source.Scripts.Models
             _currentTankState = tankState;
             _currentTankState.ChangeEquippedState(true);
             _currentTankState.ChangeOpenState(true);
+        }
+
+        private void UpdateGridTankLevel()
+        {
+            if (_currentCountBuyTank == _maxCountBuyTank)
+            {
+                CurrentGridTankLevel++;
+                _currentCountBuyTank = 0;
+            }
         }
     }
 }

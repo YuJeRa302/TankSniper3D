@@ -1,3 +1,4 @@
+using Assets.Source.Game.Scripts.Enums;
 using UnityEngine;
 
 namespace Assets.Source.Game.Scripts.States
@@ -46,10 +47,26 @@ namespace Assets.Source.Game.Scripts.States
 
         public void ChangeDecoration(DecorationState decorationState)
         {
-            if (decorationState.TypeCard == Enums.TypeCard.Decal)
+            if (decorationState.TypeCard == TypeCard.Decal)
                 ChangeDecal(decorationState.Id);
             else
                 ChangePattern(decorationState.Id);
+        }
+
+        public bool TryEquipDecoration(DecorationState decorationState)
+        {
+            if (decorationState.TypeCard == TypeCard.Decal)
+            {
+                if (_decalId == decorationState.Id)
+                    return true;
+            }
+            else
+            {
+                if (_patternId == decorationState.Id)
+                    return true;
+            }
+
+            return false;
         }
 
         private void ChangeDecal(int decalId)

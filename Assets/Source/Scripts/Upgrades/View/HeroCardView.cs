@@ -11,8 +11,6 @@ namespace Assets.Source.Scripts.Upgrades
 {
     public class HeroCardView : MonoBehaviour
     {
-        private readonly int _firstIndex = 0;
-
         [SerializeField] private Color _lockedColor = new Color32(66, 72, 132, 255);
         [SerializeField] private Color _defaultColor = new Color32(255, 255, 255, 255);
         [SerializeField] private Image _icon;
@@ -44,18 +42,16 @@ namespace Assets.Source.Scripts.Upgrades
             RemoveListeners();
         }
 
-        public void Initialize(HeroData heroData, HeroState heroState)
+        public void Initialize(HeroData heroData, HeroState heroState, TankState tankState)
         {
             _heroData = heroData;
             _heroState = heroState;
             AddListeners();
             Fill();
             Lock();
-
-            if (_heroData.Id == _firstIndex)
-                Unlock();
-
-            UnlockByPlayerProgress();
+            Unlock();
+            Purchased();
+            EquippByPlayerProgress(tankState);
         }
 
         private void Fill()
@@ -76,9 +72,6 @@ namespace Assets.Source.Scripts.Upgrades
 
         private void Lock()
         {
-            if (_heroData.Id == _firstIndex)
-                return;
-
             _selectButton.interactable = false;
             _scrollStarView.gameObject.SetActive(false);
             _mainImage.gameObject.SetActive(false);
@@ -88,23 +81,25 @@ namespace Assets.Source.Scripts.Upgrades
 
         private void Unlock()
         {
+            if (_heroState.IsOpened != true)
+                return;
+
+            _selectButtonImage.color = _defaultColor;
+            _lockStarImage.gameObject.SetActive(false);
+            _mainImage.gameObject.SetActive(true);
+            _buyButton.gameObject.SetActive(true);
+        }
+
+        private void Purchased()
+        {
+            if (_heroState.IsBuyed != true)
+                return;
+
             _selectButton.interactable = true;
             _scrollStarView.gameObject.SetActive(true);
             _mainImage.gameObject.SetActive(true);
             _selectButtonImage.color = _defaultColor;
             _lockStarImage.gameObject.SetActive(false);
-        }
-
-        private void UnlockByPlayerProgress()
-        {
-            if (_heroData.Id == _firstIndex)
-                return;
-
-            if (_heroState.IsBuyed == true)
-            {
-                Unlock();
-                EquippByPlayerProgress();
-            }
         }
 
         private void AddListeners()
@@ -141,9 +136,9 @@ namespace Assets.Source.Scripts.Upgrades
             }
         }
 
-        private void EquippByPlayerProgress()
+        private void EquippByPlayerProgress(TankState state)
         {
-            if (_heroState.IsEquipped == true)
+            if (_heroState.Id == state.HeroId)
                 Select();
         }
 
@@ -155,11 +150,8 @@ namespace Assets.Source.Scripts.Upgrades
 
         private void OnUpgradeUnlocked(int id, TypeCard typeCard)
         {
-            if (_heroData.TypeCard == typeCard)
-            {
-                if (_heroData.Id == id)
-                    Unlock();
-            }
+            if (_heroData.Id == id)
+                Unlock();
         }
 
         private void OnDeselect(int id)
@@ -168,7 +160,6 @@ namespace Assets.Source.Scripts.Upgrades
                 return;
 
             _chooseMark.gameObject.SetActive(false);
-            _heroState.ChangeEquippedState(false);
         }
     }
 }

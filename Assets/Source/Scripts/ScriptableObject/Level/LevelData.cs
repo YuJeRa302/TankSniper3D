@@ -1,3 +1,4 @@
+using Assets.Source.Game.Scripts.Enums;
 using UnityEngine;
 
 namespace Assets.Source.Scripts.ScriptableObjects
@@ -7,10 +8,12 @@ namespace Assets.Source.Scripts.ScriptableObjects
     {
         [SerializeField] private int _id;
         [SerializeField] private string _nameScene;
-        [SerializeField] private Sprite _icon;
+        [SerializeField] private Sprite _specialSprite;
+        [SerializeField] private TypeLevel _typeLevel;
 
         public int Id => _id;
         public string NameScene => _nameScene;
-        public Sprite Icon => _icon;
+        public Sprite SpecialSprite => _specialSprite;
+        public TypeLevel TypeLevel => _typeLevel;
     }
 }
