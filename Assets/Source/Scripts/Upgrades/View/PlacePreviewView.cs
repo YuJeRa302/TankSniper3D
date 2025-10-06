@@ -24,10 +24,10 @@ namespace Assets.Source.Scripts.Upgrades
         private bool _isDragging = false;
         private bool _isCanRotation = true;
 
-        private void Start()
+        private void OnEnable()
         {
             _currentRotationY = _defaultRotationValue;
-            _rotationCoroutine = StartCoroutine(MovingToTargetRotation(_defaultRotationValue));
+            transform.rotation = Quaternion.Euler(0, _currentRotationY, 0);
         }
 
         private void LateUpdate()
