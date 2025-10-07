@@ -21,17 +21,15 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private Sprite _noneEnergySprite;
         [Space(20)]
         [SerializeField] private Image _superShotImage;
-        [Space(20)]
-        [SerializeField] private GameObject _scopeEntities;
 
         private bool _isAiming = false;
         private CompositeDisposable _disposables = new();
 
         private void Awake()
         {
-            AddListeners();
+            Initialize();
         }
-        
+
         private void OnDestroy()
         {
             RemoveListeners();
@@ -46,7 +44,6 @@ namespace Assets.Source.Scripts.Game
         public void OnPointerDown(PointerEventData eventData)
         {
             _isAiming = true;
-            Debug.Log("_isAiming" + _isAiming);
         }
 
         public void OnPointerUp(PointerEventData eventData)
@@ -54,8 +51,7 @@ namespace Assets.Source.Scripts.Game
             if (!_isAiming)
                 return;
 
-            //Message.Publish(new M_EndAiming());
-            _isAiming = false;
+            EndAiming();
         }
 
         private void AddListeners()
@@ -122,11 +118,19 @@ namespace Assets.Source.Scripts.Game
             return false;
         }
 
+        private void EndAiming()
+        {
+            _isAiming = false;
+            _sniperScopeButton.gameObject.SetActive(true);
+            gameObject.SetActive(false);
+            Message.Publish(new M_Aiming(false));
+        }
+
         private void OnSniperScopeButtonClicked()
         {
-            _isAiming = true;
             _sniperScopeButton.gameObject.SetActive(false);
-            _scopeEntities.SetActive(true);
+            gameObject.SetActive(true);
+            Message.Publish(new M_Aiming(true));
         }
 
         private void OnReloading()

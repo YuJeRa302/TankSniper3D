@@ -18,8 +18,8 @@ namespace Assets.Source.Scripts.Game
         private void Awake()
         {
             SniperScopeView.Message
-                .Receive<M_EndAiming>()
-                .Subscribe(m => OnShooting())
+                .Receive<M_Aiming>()
+                .Subscribe(m => OnShooting(m.IsAiming))
                 .AddTo(_disposables);
         }
 
@@ -28,8 +28,11 @@ namespace Assets.Source.Scripts.Game
             _disposables?.Dispose();
         }
 
-        private void OnShooting()
+        private void OnShooting(bool isAiming)
         {
+            if (isAiming)
+                return;
+
             if (_shotsCount == _shotsForSuper)
                 ShootWithEnergy();
             else
@@ -47,6 +50,7 @@ namespace Assets.Source.Scripts.Game
 
         private void ShootWithoutEnergy()
         {
+            Debug.Log("ShootWithoutEnergy");
             _shotsCount++;
             _currentBulletCount--;
             Reloading();
@@ -56,6 +60,7 @@ namespace Assets.Source.Scripts.Game
 
         private void ShootWithEnergy()
         {
+            Debug.Log("ShootWithEnergy");
             _shotsCount = 0;
             _currentBulletCount--;
             Reloading();

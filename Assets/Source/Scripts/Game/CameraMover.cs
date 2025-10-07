@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using UniRx;
 using UnityEngine;
 
@@ -7,77 +7,53 @@ namespace Assets.Source.Scripts.Game
     public class CameraMover : MonoBehaviour
     {
         [SerializeField] private Camera _mainCamera;
+        [Space(20)]
         [SerializeField] private float _normalFOV = 60f;
         [SerializeField] private float _sniperFOV = 20f;
-        [SerializeField] private float _zoomSpeed = 5f;
+        [SerializeField] private float _zoomSpeed = 8f;
         [SerializeField] private Vector3 _sniperPositionOffset = new(0, 0.5f, 0.5f);
+        [Space(20)]
+        [SerializeField] private float _normalSensitivity = 0.42f;
+        [SerializeField] private float _sniperSensitivity = 0.05f;
 
+        private Coroutine _zoomCoroutine;
         private CompositeDisposable _disposables = new();
         private bool _isSniperMode = false;
         private Vector3 _normalPosition;
-        private float _targetFOV;
-        private Vector3 _targetPosition;
         private float _rotationX = 0f;
         private float _rotationY = 0f;
 
-        public float normalSensitivity = 0.1f;
-        public float sniperSensitivity = 0.05f;
-
-        public Transform cameraPivot;
-
         private void Awake()
         {
-            SniperScopeView.Message
-                .Receive<M_EndAiming>()
-                .Subscribe(m => SetNormalMod())
-                .AddTo(_disposables);
+            SetCameraParameters();
 
             SniperScopeView.Message
                 .Receive<M_Aiming>()
-                .Subscribe(m => SetSniperMode())
+                .Subscribe(m => SetCameraZoom(m.IsAiming))
                 .AddTo(_disposables);
         }
 
-        private void Start()
+        private void OnDestroy()
         {
-            _normalPosition = _mainCamera.transform.localPosition;
-            _mainCamera.fieldOfView = _normalFOV;
-
-            _targetFOV = _normalFOV;
-            _targetPosition = _normalPosition;
-
-            _mainCamera.fieldOfView = _normalFOV;
-
-            Vector3 angles = cameraPivot.localEulerAngles;
-            _rotationY = angles.y;
-            _rotationX = angles.x;
+            _disposables.Dispose();
         }
 
         private void Update()
         {
-            HandleTouchRotation();
-
-            //if (Input.GetKeyDown(KeyCode.Tab)) // Переключение между режимами (на мобильных можно заменить на кнопку)
-            //{
-            //    isSniperMode = !isSniperMode;
-            //    _sniperScopeView.gameObject.SetActive(isSniperMode);
-            //}
-
-            if (_isSniperMode)
-            {
-                _mainCamera.fieldOfView = Mathf.Lerp(_mainCamera.fieldOfView, _sniperFOV, Time.deltaTime * _zoomSpeed);
-                _mainCamera.transform.localPosition = Vector3.Lerp(_mainCamera.transform.localPosition, _normalPosition + _sniperPositionOffset, Time.deltaTime * _zoomSpeed);
-            }
-            else
-            {
-                _mainCamera.fieldOfView = Mathf.Lerp(_mainCamera.fieldOfView, _normalFOV, Time.deltaTime * _zoomSpeed);
-                _mainCamera.transform.localPosition = Vector3.Lerp(_mainCamera.transform.localPosition, _normalPosition, Time.deltaTime * _zoomSpeed);
-            }
-
-            // Добавьте сюда управление поворотом камеры, если нужно
+            RotationCamera();
         }
 
-        private void HandleTouchRotation()
+        private void SetCameraParameters()
+        {
+            _normalPosition = _mainCamera.transform.localPosition;
+            _mainCamera.fieldOfView = _normalFOV;
+
+            Vector3 angles = _mainCamera.transform.localEulerAngles;
+            _rotationY = angles.y;
+            _rotationX = angles.x;
+        }
+
+        private void RotationCamera()
         {
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP_8_1
             if (Input.touchCount == 1)
@@ -95,34 +71,48 @@ namespace Assets.Source.Scripts.Game
                 }
             }
 #endif
-
             if (Input.GetMouseButton(0))
             {
-                float sensitivity = _isSniperMode ? sniperSensitivity : normalSensitivity;
-                _rotationY += Input.mousePosition.normalized.x * sensitivity;
-                _rotationX -= Input.mousePosition.normalized.y * sensitivity;
+                float sensitivity = _isSniperMode ? _sniperSensitivity : _normalSensitivity;
+                _rotationY += Input.GetAxis("Mouse X") * sensitivity;
+                _rotationX -= Input.GetAxis("Mouse Y") * sensitivity;
+
+                // Ограничиваем угол по X (наклон вверх/вниз)
                 _rotationX = Mathf.Clamp(_rotationX, -45f, 45f);
 
-                cameraPivot.localRotation = Quaternion.Euler(_rotationX, _rotationY, 0);
+                // Ограничиваем угол по Y (вращение влево/вправо), например, от -60 до 60 градусов
+                _rotationY = Mathf.Clamp(_rotationY, -60f, 60f);
+                _mainCamera.transform.localRotation = Quaternion.Euler(_rotationX, _rotationY, 0);
             }
-            else 
+        }
+
+        private void SetCameraZoom(bool isSniper)
+        {
+            float targetFOV = isSniper ? _sniperFOV : _normalFOV;
+            Vector3 targetPosition = isSniper ? _normalPosition + _sniperPositionOffset : _normalPosition;
+
+            if (_zoomCoroutine != null)
+                StopCoroutine(_zoomCoroutine);
+
+            _zoomCoroutine = StartCoroutine(ChangeCameraZoom(targetFOV, targetPosition));
+        }
+
+        private IEnumerator ChangeCameraZoom(float targetFOV, Vector3 targetPosition)
+        {
+            while (_mainCamera.fieldOfView != targetFOV)
             {
-                SetNormalMod();
+                _mainCamera.fieldOfView = Mathf.Lerp(_mainCamera.fieldOfView, targetFOV, Time.deltaTime * _zoomSpeed);
+
+                _mainCamera.transform.localPosition = Vector3.Lerp(
+                    _mainCamera.transform.localPosition,
+                    targetPosition,
+                    Time.deltaTime * _zoomSpeed);
+
+                yield return null;
             }
-        }
 
-        private void SetSniperMode()
-        {
-            _isSniperMode = true;
-            _mainCamera.fieldOfView = Mathf.Lerp(_mainCamera.fieldOfView, _sniperFOV, Time.deltaTime * _zoomSpeed);
-            _mainCamera.transform.localPosition = Vector3.Lerp(_mainCamera.transform.localPosition, _normalPosition + _sniperPositionOffset, Time.deltaTime * _zoomSpeed);
-        }
-
-        private void SetNormalMod()
-        {
-            _isSniperMode = false;
-            _mainCamera.fieldOfView = Mathf.Lerp(_mainCamera.fieldOfView, _normalFOV, Time.deltaTime * _zoomSpeed);
-            _mainCamera.transform.localPosition = Vector3.Lerp(_mainCamera.transform.localPosition, _normalPosition, Time.deltaTime * _zoomSpeed);
+            _mainCamera.fieldOfView = targetFOV;
+            _mainCamera.transform.localPosition = targetPosition;
         }
     }
 }
