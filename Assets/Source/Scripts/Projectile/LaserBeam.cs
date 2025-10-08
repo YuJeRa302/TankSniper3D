@@ -1,3 +1,4 @@
+using Assets.Source.Scripts.ScriptableObjects;
 using UnityEngine;
 
 namespace Assets.Source.Scripts.Projectile
@@ -12,8 +13,9 @@ namespace Assets.Source.Scripts.Projectile
 
         private float laserTimer = 0f;
 
-        public override void Initialize()
+        public override void Initialize(ProjectileData projectileData)
         {
+            base.Initialize(projectileData);
         }
 
         void Update() // заменить на корутину

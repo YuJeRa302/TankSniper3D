@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using Assets.Source.Scripts.Game;
+using Assets.Source.Scripts.ScriptableObjects;
 using UnityEngine;
 
 namespace Assets.Source.Scripts.Projectile
@@ -8,19 +8,18 @@ namespace Assets.Source.Scripts.Projectile
     {
         private int _damage;
 
-        public override void Initialize()
+        public override void Initialize(ProjectileData projectileData)
         {
-
+            base.Initialize(projectileData);
         }
 
         protected override void Hit(Collision collision)
         {
-            //var destructible = collision.collider.GetComponentInParent<BuildingDestructible>();
-            //if (destructible != null)
-            //{
-            //    Vector3 hitPoint = collision.contacts[0].point;
-            //    destructible.ApplyDamage(_damage, hitPoint);
-            //}
+            if (collision.collider.TryGetComponent(out DestructibleObjectView destructibleObjectView))
+            {
+                Vector3 hitPoint = collision.contacts[0].point;
+                destructibleObjectView.ApplyDamage(hitPoint);
+            }
 
             Destroy(gameObject);
         }

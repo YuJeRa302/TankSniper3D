@@ -25,6 +25,7 @@ namespace Assets.Source.Scripts.Game
         private bool _isAiming = false;
         private CompositeDisposable _disposables = new();
 
+
         private void Awake()
         {
             Initialize();
@@ -61,6 +62,11 @@ namespace Assets.Source.Scripts.Game
             Shooting.Message
                 .Receive<M_Reloading>()
                 .Subscribe(m => OnReloading())
+                .AddTo(_disposables);
+
+            GamePanelView.Message
+                .Receive<M_EndReloading>()
+                .Subscribe(m => OnReloaded())
                 .AddTo(_disposables);
 
             Shooting.Message
@@ -133,8 +139,15 @@ namespace Assets.Source.Scripts.Game
             Message.Publish(new M_Aiming(true));
         }
 
-        private void OnReloading()
+        private void OnReloading() 
         {
+            _sniperScopeButton.gameObject.SetActive(false);
+            _isAiming = false;
+        }
+
+        private void OnReloaded()
+        {
+            _sniperScopeButton.gameObject.SetActive(true);
             RefillImages(_bulletImages, _ammoSprite, _noneAmmoSprite);
         }
 

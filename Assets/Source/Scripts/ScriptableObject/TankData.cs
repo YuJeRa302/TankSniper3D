@@ -10,10 +10,12 @@ namespace Assets.Source.Scripts.ScriptableObjects
         [SerializeField] private Sprite _icon;
         [SerializeField] private int _starCount;
         [SerializeField] private int _level;
+        [SerializeField] private ProjectileData _projectileData;
 
         public int StarCount => _starCount;
         public int Level => _level;
         public TankView MainTankView => _mainTankView;
         public Sprite Icon => _icon;
+        public ProjectileData ProjectileData => _projectileData;
     }
 }

@@ -1,3 +1,4 @@
+using Assets.Source.Scripts.ScriptableObjects;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,9 +7,9 @@ namespace Assets.Source.Scripts.Projectile
 {
     public class SmallProjectile : BaseProjectile
     {
-        public override void Initialize()
+        public override void Initialize(ProjectileData projectileData)
         {
-
+            base.Initialize(projectileData);
         }
 
         protected override void Hit(Collision collision)
