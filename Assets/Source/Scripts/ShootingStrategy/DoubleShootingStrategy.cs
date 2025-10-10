@@ -1,11 +1,14 @@
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
+using System.Collections;
 using UnityEngine;
 
 namespace Assets.Source.Scripts.ShootingStrategy
 {
-    public class SimpleShootingStrategy : IShootingStrategy
+    public class DoubleShootingStrategy : IShootingStrategy
     {
+        private float _delayBetweenShots = 0.5f;
+        private int _shotCount = 2;
         private ProjectileData _projectileData;
         private Transform _shotPoint;
 
@@ -17,14 +20,23 @@ namespace Assets.Source.Scripts.ShootingStrategy
 
         public void ShootWithEnergy()
         {
-            var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, _shotPoint.position, _shotPoint.rotation);
-            projectile.Initialize(_projectileData);
+            //StartCoroutine(ShootSequentially());
         }
 
         public void ShootWithoutEnergy()
         {
             var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, _shotPoint.position, _shotPoint.rotation);
             projectile.Initialize(_projectileData);
+        }
+
+        private IEnumerator ShootSequentially()
+        {
+            for (int i = 0; i < _shotCount; i++)
+            {
+                var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, _shotPoint.position, _shotPoint.rotation);
+                projectile.Initialize(_projectileData);
+                yield return new WaitForSeconds(_delayBetweenShots);
+            }
         }
     }
 }
