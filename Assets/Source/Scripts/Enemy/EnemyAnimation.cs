@@ -11,10 +11,10 @@ namespace Assets.Source.Game.Scripts.Enemy
             _animator = animator;
         }
 
-        public void SetIdleAnimation() => _animator.SetTrigger(EnemyAnimationName.IdleAnimation);
-        public void SetMoveAnimation() => _animator.SetTrigger(EnemyAnimationName.MoveAnimation);
-        public void SetAttackAnimation() => _animator.SetTrigger(EnemyAnimationName.AttackAnimation);
-        public void SetReloadAnimation() => _animator.SetTrigger(EnemyAnimationName.ReloadAnimation);
-        public void SetDeathAnimation() => _animator.SetTrigger(EnemyAnimationName.DeathAnimation);
+        public void SetIdleAnimation() => _animator.Play(EnemyAnimationName.IdleAnimation);
+        public void SetMoveAnimation() => _animator.Play(EnemyAnimationName.MoveAnimation);
+        public void SetAttackAnimation() => _animator.Play(EnemyAnimationName.AttackAnimation);
+        public void SetReloadAnimation() => _animator.Play(EnemyAnimationName.ReloadAnimation);
+        public void SetDeathAnimation() => _animator.Play(EnemyAnimationName.DeathAnimation);
     }
 }

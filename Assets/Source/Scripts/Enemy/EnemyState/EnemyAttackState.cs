@@ -1,9 +1,10 @@
 using Assets.Source.Game.Scripts.Enums;
+using Assets.Source.Scripts.Services;
 using UnityEngine;
 
 namespace Assets.Source.Game.Scripts.Enemy
 {
-    public class EnemyAttackState : BaseEnemyState
+    public class EnemyAttackState : IEnemyState
     {
         private Enemy _enemy;
         private float _fireCooldown = 1f;
@@ -11,29 +12,25 @@ namespace Assets.Source.Game.Scripts.Enemy
         private int _shotsBeforeReload;
         private int _shotCount = 0;
 
-        public override TypeEnemyState TypeEnemyState => TypeEnemyState.Attack;
+        public TypeEnemyState TypeEnemyState => TypeEnemyState.Attack;
 
-        public override void Construct(Enemy enemy)
+        public void Construct(Enemy enemy)
         {
-            base.Construct(enemy);
             _enemy = enemy;
             _shotsBeforeReload = enemy.ShotsBeforeReload;
         }
 
-        public override void Enter()
+        public void Enter()
         {
             _fireTimer = 0f;
             _shotCount = 0;
             _enemy.EnemyAnimation.SetAttackAnimation();
         }
 
-        public override void Execute()
+        public void Execute()
         {
-            if (_enemy.player == null)
-            {
-                _enemy.UseEnemyStateStrategy.SetNextState(TypeEnemyState.Idle);
-                return;
-            }
+            if (_enemy.IsDead)
+                _enemy.UseEnemyStateStrategy.SetNextState(TypeEnemyState.Death);
 
             Vector3 dirToPlayer = (_enemy.player.position - _enemy.transform.position);
             float distance = dirToPlayer.magnitude;

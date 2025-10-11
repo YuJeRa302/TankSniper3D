@@ -4,29 +4,32 @@ using UnityEngine;
 
 namespace Assets.Source.Scripts.Services
 {
-    public class EnemyReloadState : BaseEnemyState
+    public class EnemyReloadState : IEnemyState
     {
         private Enemy _enemy;
-        private float _reloadTime = 2f;
+        private float _reloadTime;
         private float _timer = 0f;
 
         public int ReloadNumberForSpecialState { get; private set; } = 0;
-        public override TypeEnemyState TypeEnemyState => TypeEnemyState.Reload;
+        public TypeEnemyState TypeEnemyState => TypeEnemyState.Reload;
 
-        public override void Construct(Enemy enemy)
+        public void Construct(Enemy enemy)
         {
-            base.Construct(enemy);
             _enemy = enemy;
+            _reloadTime = enemy.ReloadTime;
         }
 
-        public override void Enter()
+        public void Enter()
         {
             _timer = _reloadTime;
             _enemy.EnemyAnimation.SetReloadAnimation();
         }
 
-        public override void Execute()
+        public void Execute()
         {
+            if (_enemy.IsDead)
+                _enemy.UseEnemyStateStrategy.SetNextState(TypeEnemyState.Death);
+
             _timer -= Time.deltaTime;
             SetReloadState();
         }

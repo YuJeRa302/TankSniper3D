@@ -1,28 +1,28 @@
 using Assets.Source.Game.Scripts.Enums;
+using Assets.Source.Scripts.Services;
 using UnityEngine;
 
 namespace Assets.Source.Game.Scripts.Enemy
 {
-    public class EnemyIdleState : BaseEnemyState
+    public class EnemyIdleState : IEnemyState
     {
         private Enemy _enemy;
-        private int _currentWaypointIndex = 0;
+        private int _currentWaypointIndex;
 
-        public override TypeEnemyState TypeEnemyState => TypeEnemyState.Idle;
+        public TypeEnemyState TypeEnemyState => TypeEnemyState.Idle;
 
-        public override void Construct(Enemy enemy)
+        public void Construct(Enemy enemy)
         {
-            base.Construct(enemy);
             _enemy = enemy;
         }
 
-        public override void Enter()
+        public void Enter()
         {
             _currentWaypointIndex = 0;
             _enemy.EnemyAnimation.SetIdleAnimation();
         }
 
-        public override void Execute()
+        public void Execute()
         {
             if (_enemy.IsPlayerShot)
                 _enemy.UseEnemyStateStrategy.SetNextState(TypeEnemyState.Attack);

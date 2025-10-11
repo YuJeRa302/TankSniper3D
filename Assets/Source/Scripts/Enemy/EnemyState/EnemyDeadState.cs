@@ -4,23 +4,25 @@ using UnityEngine;
 
 namespace Assets.Source.Scripts.Services
 {
-    public class EnemyDeadState : BaseEnemyState
+    public class EnemyDeadState : IEnemyState
     {
         private Enemy _enemy;
 
-        public override TypeEnemyState TypeEnemyState => TypeEnemyState.Death;
+        public TypeEnemyState TypeEnemyState => TypeEnemyState.Death;
 
-        public override void Construct(Enemy enemy)
+        public void Construct(Enemy enemy)
         {
-            base.Construct(enemy);
             _enemy = enemy;
         }
 
-        public override void Enter()
+        public void Enter()
         {
-            Debug.Log("Enemy dead");
             _enemy.EnemyAnimation.SetDeathAnimation();
             GameObject.Destroy(_enemy.gameObject, 2f);
+        }
+
+        public void Execute()
+        {
         }
     }
 }

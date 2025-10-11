@@ -12,12 +12,14 @@ namespace Assets.Source.Game.Scripts.Enemy
         [SerializeField] private int _health;
         [SerializeField] private float _moveSpeed = 3f;
         [SerializeField] private float _rotateSpeed = 5f;
-        [SerializeField] private float _attackRange = 15f;
         [SerializeField] private int _shotsBeforeReload = 3;
+        [SerializeField] private float _reloadTime = 3;
+        [SerializeField] private bool _isPlayerShot;
+        [SerializeField] private bool _isDead;
         [Space(20)]
         [SerializeReference] private List<DamageableArea> _damageableAreas;
         [Space(20)]
-        [SerializeReference] private List<BaseEnemyState> _enemyStates;
+        [SerializeReference] private List<IEnemyState> _enemyStates;
         [Space(20)]
         [SerializeReference] private IUseEnemyStateStrategy _useEnemyStateStrategy;
         [Space(20)]
@@ -25,19 +27,19 @@ namespace Assets.Source.Game.Scripts.Enemy
 
         private EnemyHealth _enemyHealth;
         private EnemyAnimation _enemyAnimation;
-        private bool _isPlayerShot = false;
 
         public IUseEnemyStateStrategy UseEnemyStateStrategy => _useEnemyStateStrategy;
-        public List<BaseEnemyState> EnemyStates => _enemyStates;
+        public List<IEnemyState> EnemyStates => _enemyStates;
         public List<Transform> Waypoints => _waypoints;
         public EnemyAnimation EnemyAnimation => _enemyAnimation;
         public int ShotsBeforeReload => _shotsBeforeReload;
         public bool IsPlayerShot => _isPlayerShot;
-        public bool IsDead => _enemyHealth.IsDead;
+        public float ReloadTime => _reloadTime;
+        public bool IsDead => _isDead;
+        //public bool IsDead => _enemyHealth.IsDead;
         public float MoveSpeed => _moveSpeed;
         public int MaxHealth => _health;
         public float RotateSpeed => _rotateSpeed;
-        public float AttackRange => _attackRange;
 
         private void Awake()
         {

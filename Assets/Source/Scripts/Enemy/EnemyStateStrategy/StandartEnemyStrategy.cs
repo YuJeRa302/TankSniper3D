@@ -1,29 +1,24 @@
 using Assets.Source.Game.Scripts.Enums;
 using Assets.Source.Scripts.Services;
-using System;
 using System.Collections.Generic;
 
 namespace Assets.Source.Game.Scripts.Enemy
 {
-    public abstract class StandartEnemyStrategy : IUseEnemyStateStrategy, IDisposable
+    public abstract class StandartEnemyStrategy : IUseEnemyStateStrategy
     {
         private Enemy _enemy;
-        private BaseEnemyState _currentState;
-        private List<BaseEnemyState> _enemyState;
+        private IEnemyState _currentState;
+        private List<IEnemyState> _enemyState = new();
 
         public abstract int ReloadNumberForSpecialState { get; }
-
-        public void Dispose()
-        {
-            _enemyState.ForEach(s => s.Dispose());
-        }
 
         public void Construct(Enemy enemy)
         {
             _enemy = enemy;
-            _enemyState = enemy.EnemyStates;
+            _enemyState = _enemy.EnemyStates;
             _enemyState.ForEach(s => s.Construct(_enemy));
             _currentState = GetStateByType(TypeEnemyState.Idle);
+            _currentState.Enter();
         }
 
         public void CurrentStateExecute()
@@ -31,31 +26,37 @@ namespace Assets.Source.Game.Scripts.Enemy
             _currentState?.Execute();
         }
 
+        private void LoadEnemyStates()
+        {
+            foreach (var enemy in _enemy.EnemyStates)
+            {
+                _enemyState.Add(enemy as BaseEnemyState);
+            }
+        }
+
         public void SetNextState(TypeEnemyState typeEnemyState)
         {
-            if (TrySetDeathState(typeEnemyState))
-            {
-                ChangeCurrentState(GetStateByType(typeEnemyState));
-                return;
-            }
+            IEnemyState nextState = null;
 
-            BaseEnemyState nextState;
-            int reloadNumber = GetReloadNumber(TypeEnemyState.Reload);
+            //if (_enemy.IsDead)
+            //{
+            //    nextState = GetStateByType(TypeEnemyState.Death);
+            //    ChangeCurrentState(nextState);
+            //    return;
+            //}
 
-            if (TrySetSpecialState(reloadNumber))
-                nextState = GetStateByType(TypeEnemyState.Idle);
-            else
+            //BaseEnemyState nextState;
+            //int reloadNumber = GetReloadNumber(TypeEnemyState.Reload);
+
+            //if (TrySetSpecialState(reloadNumber))
+            //    nextState = GetStateByType(TypeEnemyState.Idle);
+            //else
+            //    nextState = GetStateByType(typeEnemyState);
+
+            if (nextState == null)
                 nextState = GetStateByType(typeEnemyState);
 
             ChangeCurrentState(nextState);
-        }
-
-        private bool TrySetDeathState(TypeEnemyState typeEnemyState)
-        {
-            if (TypeEnemyState.Death == typeEnemyState)
-                return true;
-
-            return false;
         }
 
         private int GetReloadNumber(TypeEnemyState typeEnemyState)
@@ -77,7 +78,7 @@ namespace Assets.Source.Game.Scripts.Enemy
             return false;
         }
 
-        private BaseEnemyState GetStateByType(TypeEnemyState typeEnemyState)
+        private IEnemyState GetStateByType(TypeEnemyState typeEnemyState)
         {
             foreach (var enemyState in _enemyState)
             {
@@ -88,12 +89,11 @@ namespace Assets.Source.Game.Scripts.Enemy
             return null;
         }
 
-        private void ChangeCurrentState(BaseEnemyState newState)
+        private void ChangeCurrentState(IEnemyState newState)
         {
             if (newState == null)
                 return;
 
-            _currentState?.Exit();
             _currentState = newState;
             _currentState?.Enter();
         }
