@@ -8,5 +8,8 @@ namespace Assets.Source.Scripts.Services
         public void Construct(Enemy enemy);
         public void CurrentStateExecute();
         public void SetNextState(TypeEnemyState typeEnemyState);
+        public bool TryChangePosition(int reloadCount);
+        public bool TryChangeIdleState(int countPositionChange);
+        public bool GetPositionChangedStatus();
     }
 }

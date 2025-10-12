@@ -7,8 +7,13 @@ namespace Assets.Source.Game.Scripts.Enemy
     {
         public abstract TypeEnemyState TypeEnemyState { get; }
 
-        public virtual void Construct(Enemy enemy)
+        public virtual void Construct(Enemy enemy, IUseEnemyStateStrategy useEnemyStateStrategy)
         {
+        }
+
+        public bool TryGetEnemyStateByType(TypeEnemyState typeEnemyState)
+        {
+            return TypeEnemyState == typeEnemyState;
         }
 
         public virtual void Enter()
@@ -19,8 +24,16 @@ namespace Assets.Source.Game.Scripts.Enemy
         {
         }
 
-        public virtual void Exit()
+        public void SetStateDeath(Enemy enemy) 
         {
+            if (enemy.IsDead)
+                enemy.UseEnemyStateStrategy.SetNextState(TypeEnemyState.Death);
+        }
+
+        public void SetStateAttack(Enemy enemy)
+        {
+            if (enemy.IsPlayerShot)
+                enemy.UseEnemyStateStrategy.SetNextState(TypeEnemyState.Attack);
         }
     }
 }

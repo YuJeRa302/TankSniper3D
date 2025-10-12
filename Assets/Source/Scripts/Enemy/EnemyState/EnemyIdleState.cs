@@ -4,28 +4,32 @@ using UnityEngine;
 
 namespace Assets.Source.Game.Scripts.Enemy
 {
-    public class EnemyIdleState : IEnemyState
+    public class EnemyIdleState : BaseEnemyState
     {
         private Enemy _enemy;
+        private IUseEnemyStateStrategy _useEnemyStateStrategy;
         private int _currentWaypointIndex;
 
-        public TypeEnemyState TypeEnemyState => TypeEnemyState.Idle;
+        public override TypeEnemyState TypeEnemyState => TypeEnemyState.Idle;
 
-        public void Construct(Enemy enemy)
+        public override void Construct(Enemy enemy, IUseEnemyStateStrategy useEnemyStateStrategy)
         {
             _enemy = enemy;
+            _useEnemyStateStrategy = useEnemyStateStrategy;
         }
 
-        public void Enter()
+        public override void Enter()
         {
             _currentWaypointIndex = 0;
             _enemy.EnemyAnimation.SetIdleAnimation();
         }
 
-        public void Execute()
+        public override void Execute()
         {
-            if (_enemy.IsPlayerShot)
-                _enemy.UseEnemyStateStrategy.SetNextState(TypeEnemyState.Attack);
+            SetStateDeath(_enemy);
+
+            if (_useEnemyStateStrategy.GetPositionChangedStatus() == true)
+                SetStateAttack(_enemy);
 
             if (_enemy.Waypoints.Count == 0)
                 return;
@@ -41,6 +45,8 @@ namespace Assets.Source.Game.Scripts.Enemy
 
             if (Vector3.Distance(_enemy.transform.position, target.position) < 0.5f)
                 _currentWaypointIndex = (_currentWaypointIndex + 1) % _enemy.Waypoints.Count;
+
+            _useEnemyStateStrategy.TryChangeIdleState(_currentWaypointIndex);
         }
     }
 }

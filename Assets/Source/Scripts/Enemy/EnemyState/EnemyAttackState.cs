@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Source.Game.Scripts.Enemy
 {
-    public class EnemyAttackState : IEnemyState
+    public class EnemyAttackState : BaseEnemyState
     {
         private Enemy _enemy;
         private float _fireCooldown = 1f;
@@ -12,25 +12,24 @@ namespace Assets.Source.Game.Scripts.Enemy
         private int _shotsBeforeReload;
         private int _shotCount = 0;
 
-        public TypeEnemyState TypeEnemyState => TypeEnemyState.Attack;
+        public override TypeEnemyState TypeEnemyState => TypeEnemyState.Attack;
 
-        public void Construct(Enemy enemy)
+        public override void Construct(Enemy enemy, IUseEnemyStateStrategy useEnemyStateStrategy)
         {
             _enemy = enemy;
             _shotsBeforeReload = enemy.ShotsBeforeReload;
         }
 
-        public void Enter()
+        public override void Enter()
         {
             _fireTimer = 0f;
             _shotCount = 0;
             _enemy.EnemyAnimation.SetAttackAnimation();
         }
 
-        public void Execute()
+        public override void Execute()
         {
-            if (_enemy.IsDead)
-                _enemy.UseEnemyStateStrategy.SetNextState(TypeEnemyState.Death);
+            SetStateDeath(_enemy);
 
             Vector3 dirToPlayer = (_enemy.player.position - _enemy.transform.position);
             float distance = dirToPlayer.magnitude;

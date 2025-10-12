@@ -4,43 +4,53 @@ using UnityEngine;
 
 namespace Assets.Source.Scripts.Services
 {
-    public class EnemyReloadState : IEnemyState
+    public class EnemyReloadState : BaseEnemyState
     {
         private Enemy _enemy;
+        private IUseEnemyStateStrategy _useEnemyStateStrategy;
         private float _reloadTime;
         private float _timer = 0f;
+        private int _reloadCountForChangePosition;
 
-        public int ReloadNumberForSpecialState { get; private set; } = 0;
-        public TypeEnemyState TypeEnemyState => TypeEnemyState.Reload;
+        public override TypeEnemyState TypeEnemyState => TypeEnemyState.Reload;
 
-        public void Construct(Enemy enemy)
+        public override void Construct(Enemy enemy, IUseEnemyStateStrategy useEnemyStateStrategy)
         {
             _enemy = enemy;
+            _useEnemyStateStrategy = useEnemyStateStrategy;
             _reloadTime = enemy.ReloadTime;
         }
 
-        public void Enter()
+        public override void Enter()
         {
             _timer = _reloadTime;
             _enemy.EnemyAnimation.SetReloadAnimation();
         }
 
-        public void Execute()
+        public override void Execute()
         {
-            if (_enemy.IsDead)
-                _enemy.UseEnemyStateStrategy.SetNextState(TypeEnemyState.Death);
-
+            SetStateDeath(_enemy);
             _timer -= Time.deltaTime;
-            SetReloadState();
+            ChangeState();
         }
 
-        private void SetReloadState()
+        private void ChangeState()
         {
             if (_timer <= 0f)
             {
-                ReloadNumberForSpecialState++;
-                _enemy.UseEnemyStateStrategy.SetNextState(TypeEnemyState.Attack);
+                _reloadCountForChangePosition++;
+
+                if (_useEnemyStateStrategy.TryChangePosition(_reloadCountForChangePosition))
+                    SetIdleState();
+                else
+                    SetStateAttack(_enemy);
             }
+        }
+
+        private void SetIdleState()
+        {
+            _reloadCountForChangePosition = 0;
+            _enemy.UseEnemyStateStrategy.SetNextState(TypeEnemyState.Idle);
         }
     }
 }

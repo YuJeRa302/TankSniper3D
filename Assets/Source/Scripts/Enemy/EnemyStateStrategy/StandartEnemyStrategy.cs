@@ -9,15 +9,17 @@ namespace Assets.Source.Game.Scripts.Enemy
         private Enemy _enemy;
         private IEnemyState _currentState;
         private List<IEnemyState> _enemyState = new();
+        private bool _isPositionChanged = true;
 
-        public abstract int ReloadNumberForSpecialState { get; }
+        public abstract int ReloadCountForPositionChanged { get; }
+        public abstract int CountPositionChange { get; }
 
         public void Construct(Enemy enemy)
         {
             _enemy = enemy;
             _enemyState = _enemy.EnemyStates;
-            _enemyState.ForEach(s => s.Construct(_enemy));
-            _currentState = GetStateByType(TypeEnemyState.Idle);
+            _enemyState.ForEach(s => s.Construct(_enemy, this));
+            _currentState = GetEnemyStateByType(TypeEnemyState.Idle);
             _currentState.Enter();
         }
 
@@ -26,64 +28,48 @@ namespace Assets.Source.Game.Scripts.Enemy
             _currentState?.Execute();
         }
 
-        private void LoadEnemyStates()
+        public bool GetPositionChangedStatus()
         {
-            foreach (var enemy in _enemy.EnemyStates)
-            {
-                _enemyState.Add(enemy as BaseEnemyState);
-            }
+            return _isPositionChanged;
         }
 
         public void SetNextState(TypeEnemyState typeEnemyState)
         {
-            IEnemyState nextState = null;
-
-            //if (_enemy.IsDead)
-            //{
-            //    nextState = GetStateByType(TypeEnemyState.Death);
-            //    ChangeCurrentState(nextState);
-            //    return;
-            //}
-
-            //BaseEnemyState nextState;
-            //int reloadNumber = GetReloadNumber(TypeEnemyState.Reload);
-
-            //if (TrySetSpecialState(reloadNumber))
-            //    nextState = GetStateByType(TypeEnemyState.Idle);
-            //else
-            //    nextState = GetStateByType(typeEnemyState);
-
-            if (nextState == null)
-                nextState = GetStateByType(typeEnemyState);
-
+            IEnemyState nextState = GetEnemyStateByType(typeEnemyState);
             ChangeCurrentState(nextState);
         }
 
-        private int GetReloadNumber(TypeEnemyState typeEnemyState)
+        public bool TryChangePosition(int reloadCount)
         {
-            foreach (var enemyState in _enemyState)
+            if (reloadCount > 0)
             {
-                if (enemyState.TypeEnemyState == typeEnemyState)
-                    return (enemyState as EnemyReloadState).ReloadNumberForSpecialState;
+                if (ReloadCountForPositionChanged == reloadCount)
+                {
+                    _isPositionChanged = false;
+                    return true;
+                }
             }
-
-            return 0;
-        }
-
-        private bool TrySetSpecialState(int reloadNumber)
-        {
-            if (ReloadNumberForSpecialState == reloadNumber)
-                return true;
 
             return false;
         }
 
-        private IEnemyState GetStateByType(TypeEnemyState typeEnemyState)
+        public bool TryChangeIdleState(int countPositionChange)
         {
-            foreach (var enemyState in _enemyState)
+            if (CountPositionChange == countPositionChange)
             {
-                if (enemyState.TypeEnemyState == typeEnemyState)
-                    return enemyState;
+                _isPositionChanged = true;
+                return true;
+            }
+
+            return false;
+        }
+
+        private IEnemyState GetEnemyStateByType(TypeEnemyState typeEnemyState)
+        {
+            foreach (var state in _enemyState)
+            {
+                if (state.TryGetEnemyStateByType(typeEnemyState))
+                    return state;
             }
 
             return null;
