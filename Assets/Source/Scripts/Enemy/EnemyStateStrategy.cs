@@ -1,31 +1,35 @@
 using Assets.Source.Game.Scripts.Enums;
 using Assets.Source.Scripts.Services;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Source.Game.Scripts.Enemy
 {
-    public abstract class StandartEnemyStrategy : IUseEnemyStateStrategy
+    public class EnemyStateStrategy : MonoBehaviour
     {
+        [SerializeReference] private List<IEnemyState> _enemyStates;
+        [Space(20)]
+        [SerializeField] private bool _isPositionChanged = true;
+        [SerializeField] private int _reloadCountForPositionChanged;
+        [SerializeField] private int _positionNumber;
+
         private Enemy _enemy;
         private IEnemyState _currentState;
-        private List<IEnemyState> _enemyState = new();
-        private bool _isPositionChanged = true;
 
-        public abstract int ReloadCountForPositionChanged { get; }
-        public abstract int CountPositionChange { get; }
+        public int ReloadCountForPositionChanged => _reloadCountForPositionChanged;
+        public int PositionNumber => _positionNumber;
 
-        public void Construct(Enemy enemy)
-        {
-            _enemy = enemy;
-            _enemyState = _enemy.EnemyStates;
-            _enemyState.ForEach(s => s.Construct(_enemy, this));
-            _currentState = GetEnemyStateByType(TypeEnemyState.Idle);
-            _currentState.Enter();
-        }
-
-        public void CurrentStateExecute()
+        private void Update()
         {
             _currentState?.Execute();
+        }
+
+        public void Initialize(Enemy enemy)
+        {
+            _enemy = enemy;
+            _enemyStates.ForEach(s => s.Construct(_enemy, this));
+            _currentState = GetEnemyStateByType(TypeEnemyState.Idle);
+            _currentState.Enter();
         }
 
         public bool GetPositionChangedStatus()
@@ -55,7 +59,7 @@ namespace Assets.Source.Game.Scripts.Enemy
 
         public bool TryChangeIdleState(int countPositionChange)
         {
-            if (CountPositionChange == countPositionChange)
+            if (_positionNumber == countPositionChange)
             {
                 _isPositionChanged = true;
                 return true;
@@ -66,7 +70,7 @@ namespace Assets.Source.Game.Scripts.Enemy
 
         private IEnemyState GetEnemyStateByType(TypeEnemyState typeEnemyState)
         {
-            foreach (var state in _enemyState)
+            foreach (var state in _enemyStates)
             {
                 if (state.TryGetEnemyStateByType(typeEnemyState))
                     return state;

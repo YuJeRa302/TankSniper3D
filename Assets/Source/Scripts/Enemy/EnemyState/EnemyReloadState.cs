@@ -7,17 +7,17 @@ namespace Assets.Source.Scripts.Services
     public class EnemyReloadState : BaseEnemyState
     {
         private Enemy _enemy;
-        private IUseEnemyStateStrategy _useEnemyStateStrategy;
+        private EnemyStateStrategy _enemyStateStrategy;
         private float _reloadTime;
         private float _timer = 0f;
         private int _reloadCountForChangePosition;
 
         public override TypeEnemyState TypeEnemyState => TypeEnemyState.Reload;
 
-        public override void Construct(Enemy enemy, IUseEnemyStateStrategy useEnemyStateStrategy)
+        public override void Construct(Enemy enemy, EnemyStateStrategy enemyStateStrategy)
         {
             _enemy = enemy;
-            _useEnemyStateStrategy = useEnemyStateStrategy;
+            _enemyStateStrategy = enemyStateStrategy;
             _reloadTime = enemy.ReloadTime;
         }
 
@@ -29,7 +29,7 @@ namespace Assets.Source.Scripts.Services
 
         public override void Execute()
         {
-            SetStateDeath(_enemy);
+            SetStateDeath(_enemy, _enemyStateStrategy);
             _timer -= Time.deltaTime;
             ChangeState();
         }
@@ -40,17 +40,17 @@ namespace Assets.Source.Scripts.Services
             {
                 _reloadCountForChangePosition++;
 
-                if (_useEnemyStateStrategy.TryChangePosition(_reloadCountForChangePosition))
+                if (_enemyStateStrategy.TryChangePosition(_reloadCountForChangePosition))
                     SetIdleState();
                 else
-                    SetStateAttack(_enemy);
+                    SetStateAttack(_enemy, _enemyStateStrategy);
             }
         }
 
         private void SetIdleState()
         {
             _reloadCountForChangePosition = 0;
-            _enemy.UseEnemyStateStrategy.SetNextState(TypeEnemyState.Idle);
+            _enemyStateStrategy.SetNextState(TypeEnemyState.Idle);
         }
     }
 }

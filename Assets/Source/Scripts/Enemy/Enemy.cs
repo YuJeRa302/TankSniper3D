@@ -1,9 +1,10 @@
-using Assets.Source.Scripts.Services;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Source.Game.Scripts.Enemy
 {
+    [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(EnemyStateStrategy))]
     public class Enemy : MonoBehaviour
     {
         [SerializeField] public Transform player; // поменять при загрузке передавать его трансформ танка
@@ -19,17 +20,13 @@ namespace Assets.Source.Game.Scripts.Enemy
         [Space(20)]
         [SerializeReference] private List<DamageableArea> _damageableAreas;
         [Space(20)]
-        [SerializeReference] private List<IEnemyState> _enemyStates;
-        [Space(20)]
-        [SerializeReference] private IUseEnemyStateStrategy _useEnemyStateStrategy;
-        [Space(20)]
         [SerializeField] private Animator _animator;
+        [Space(20)]
+        [SerializeField] private EnemyStateStrategy _enemyStateStrategy;
 
         private EnemyHealth _enemyHealth;
         private EnemyAnimation _enemyAnimation;
 
-        public IUseEnemyStateStrategy UseEnemyStateStrategy => _useEnemyStateStrategy;
-        public List<IEnemyState> EnemyStates => _enemyStates;
         public List<Transform> Waypoints => _waypoints;
         public EnemyAnimation EnemyAnimation => _enemyAnimation;
         public int ShotsBeforeReload => _shotsBeforeReload;
@@ -46,14 +43,8 @@ namespace Assets.Source.Game.Scripts.Enemy
             _enemyAnimation = new EnemyAnimation(_animator);
             _enemyHealth = new EnemyHealth(this);
             _damageableAreas.ForEach(s => s.Initialize(_enemyHealth));
-            _useEnemyStateStrategy.Construct(this);
-
+            _enemyStateStrategy.Initialize(this);
             //PlayerShooting.OnPlayerShot += OnPlayerFirstShot;
-        }
-
-        private void Update()
-        {
-            _useEnemyStateStrategy.CurrentStateExecute();
         }
 
         private void OnDestroy()

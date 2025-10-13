@@ -10,7 +10,7 @@ namespace Assets.Source.Scripts.Services
 
         public override TypeEnemyState TypeEnemyState => TypeEnemyState.Death;
 
-        public override void Construct(Enemy enemy, IUseEnemyStateStrategy useEnemyStateStrategy)
+        public override void Construct(Enemy enemy, EnemyStateStrategy enemyStateStrategy)
         {
             _enemy = enemy;
         }

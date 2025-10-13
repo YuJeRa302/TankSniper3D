@@ -7,7 +7,7 @@ namespace Assets.Source.Game.Scripts.Enemy
     {
         public abstract TypeEnemyState TypeEnemyState { get; }
 
-        public virtual void Construct(Enemy enemy, IUseEnemyStateStrategy useEnemyStateStrategy)
+        public virtual void Construct(Enemy enemy, EnemyStateStrategy enemyStateStrategy)
         {
         }
 
@@ -24,16 +24,16 @@ namespace Assets.Source.Game.Scripts.Enemy
         {
         }
 
-        public void SetStateDeath(Enemy enemy) 
+        public void SetStateDeath(Enemy enemy, EnemyStateStrategy enemyStateStrategy)
         {
             if (enemy.IsDead)
-                enemy.UseEnemyStateStrategy.SetNextState(TypeEnemyState.Death);
+                enemyStateStrategy.SetNextState(TypeEnemyState.Death);
         }
 
-        public void SetStateAttack(Enemy enemy)
+        public void SetStateAttack(Enemy enemy, EnemyStateStrategy enemyStateStrategy)
         {
             if (enemy.IsPlayerShot)
-                enemy.UseEnemyStateStrategy.SetNextState(TypeEnemyState.Attack);
+                enemyStateStrategy.SetNextState(TypeEnemyState.Attack);
         }
     }
 }

@@ -1,11 +1,11 @@
 using Assets.Source.Game.Scripts.Enums;
-using Assets.Source.Scripts.Services;
 using UnityEngine;
 
 namespace Assets.Source.Game.Scripts.Enemy
 {
     public class EnemyAttackState : BaseEnemyState
     {
+        private EnemyStateStrategy _enemyStateStrategy;
         private Enemy _enemy;
         private float _fireCooldown = 1f;
         private float _fireTimer = 0f;
@@ -14,9 +14,10 @@ namespace Assets.Source.Game.Scripts.Enemy
 
         public override TypeEnemyState TypeEnemyState => TypeEnemyState.Attack;
 
-        public override void Construct(Enemy enemy, IUseEnemyStateStrategy useEnemyStateStrategy)
+        public override void Construct(Enemy enemy, EnemyStateStrategy enemyStateStrategy)
         {
             _enemy = enemy;
+            _enemyStateStrategy = enemyStateStrategy;
             _shotsBeforeReload = enemy.ShotsBeforeReload;
         }
 
@@ -29,7 +30,7 @@ namespace Assets.Source.Game.Scripts.Enemy
 
         public override void Execute()
         {
-            SetStateDeath(_enemy);
+            SetStateDeath(_enemy, _enemyStateStrategy);
 
             Vector3 dirToPlayer = (_enemy.player.position - _enemy.transform.position);
             float distance = dirToPlayer.magnitude;
@@ -55,7 +56,7 @@ namespace Assets.Source.Game.Scripts.Enemy
         private void SetReloadState()
         {
             if (_shotCount >= _shotsBeforeReload)
-                _enemy.UseEnemyStateStrategy.SetNextState(TypeEnemyState.Reload);
+                _enemyStateStrategy.SetNextState(TypeEnemyState.Reload);
         }
     }
 }

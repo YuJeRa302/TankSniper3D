@@ -5,7 +5,7 @@ namespace Assets.Source.Scripts.Services
 {
     public interface IEnemyState
     {
-        public void Construct(Enemy enemy, IUseEnemyStateStrategy useEnemyStateStrategy);
+        public void Construct(Enemy enemy, EnemyStateStrategy enemyStateStrategy);
         public bool TryGetEnemyStateByType(TypeEnemyState typeEnemyState);
         public void Enter();
         public void Execute();

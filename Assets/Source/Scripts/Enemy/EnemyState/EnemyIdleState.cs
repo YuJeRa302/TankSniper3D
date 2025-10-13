@@ -1,5 +1,4 @@
 using Assets.Source.Game.Scripts.Enums;
-using Assets.Source.Scripts.Services;
 using UnityEngine;
 
 namespace Assets.Source.Game.Scripts.Enemy
@@ -7,29 +6,30 @@ namespace Assets.Source.Game.Scripts.Enemy
     public class EnemyIdleState : BaseEnemyState
     {
         private Enemy _enemy;
-        private IUseEnemyStateStrategy _useEnemyStateStrategy;
-        private int _currentWaypointIndex;
+        private EnemyStateStrategy _enemyStateStrategy;
+        private int _currentWaypointIndex = 0;
+        private int _lastReachedWaypointIndex = 0;
 
         public override TypeEnemyState TypeEnemyState => TypeEnemyState.Idle;
 
-        public override void Construct(Enemy enemy, IUseEnemyStateStrategy useEnemyStateStrategy)
+        public override void Construct(Enemy enemy, EnemyStateStrategy enemyStateStrategy)
         {
             _enemy = enemy;
-            _useEnemyStateStrategy = useEnemyStateStrategy;
+            _enemyStateStrategy = enemyStateStrategy;
         }
 
         public override void Enter()
         {
-            _currentWaypointIndex = 0;
+            ChangeReachedWaypoint();
             _enemy.EnemyAnimation.SetIdleAnimation();
         }
 
         public override void Execute()
         {
-            SetStateDeath(_enemy);
+            SetStateDeath(_enemy, _enemyStateStrategy);
 
-            if (_useEnemyStateStrategy.GetPositionChangedStatus() == true)
-                SetStateAttack(_enemy);
+            if (_enemyStateStrategy.GetPositionChangedStatus() == true)
+                SetStateAttack(_enemy, _enemyStateStrategy);
 
             if (_enemy.Waypoints.Count == 0)
                 return;
@@ -43,10 +43,24 @@ namespace Assets.Source.Game.Scripts.Enemy
             Quaternion lookRotation = Quaternion.LookRotation(direction);
             _enemy.transform.rotation = Quaternion.Slerp(_enemy.transform.rotation, lookRotation, _enemy.RotateSpeed * Time.deltaTime);
 
-            if (Vector3.Distance(_enemy.transform.position, target.position) < 0.5f)
-                _currentWaypointIndex = (_currentWaypointIndex + 1) % _enemy.Waypoints.Count;
+            if (Vector3.Distance(_enemy.transform.position, target.position) < 0.1f)
+                SetNextWayPoint();
 
-            _useEnemyStateStrategy.TryChangeIdleState(_currentWaypointIndex);
+            _enemyStateStrategy.TryChangeIdleState(_lastReachedWaypointIndex);
+        }
+
+        private void ChangeReachedWaypoint()
+        {
+            if (_lastReachedWaypointIndex != _enemyStateStrategy.PositionNumber)
+                return;
+
+            _lastReachedWaypointIndex = _currentWaypointIndex;
+        }
+
+        private void SetNextWayPoint()
+        {
+            _lastReachedWaypointIndex = _currentWaypointIndex;
+            _currentWaypointIndex = (_currentWaypointIndex + 1) % _enemy.Waypoints.Count;
         }
     }
 }
