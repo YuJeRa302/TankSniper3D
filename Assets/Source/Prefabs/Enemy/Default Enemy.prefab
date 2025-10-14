@@ -1349,8 +1349,9 @@ GameObject:
   - component: {fileID: 8291775944266721755}
   - component: {fileID: 2398051063700344123}
   - component: {fileID: 5519766952035169781}
+  - component: {fileID: 5806170108948891930}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Default Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1397,32 +1398,8 @@ MonoBehaviour:
   _damageableAreas:
   - {fileID: 848007105018756134}
   - {fileID: 212202705931148296}
-  _enemyStates:
-  - rid: 2278159766600024065
-  - rid: 2278159766600024066
-  - rid: 2278159766600024067
-  - rid: 2278159766600024068
-  _useEnemyStateStrategy:
-    rid: 2278159744493682690
   _animator: {fileID: 5519766952035169781}
-  references:
-    version: 2
-    RefIds:
-    - rid: 2278159744493682690
-      type: {class: StandingSoldierStrategy, ns: Assets.Source.Game.Scripts.Enemy, asm: Assembly-CSharp}
-      data: 
-    - rid: 2278159766600024065
-      type: {class: EnemyAttackState, ns: Assets.Source.Game.Scripts.Enemy, asm: Assembly-CSharp}
-      data: 
-    - rid: 2278159766600024066
-      type: {class: EnemyDeadState, ns: Assets.Source.Scripts.Services, asm: Assembly-CSharp}
-      data: 
-    - rid: 2278159766600024067
-      type: {class: EnemyIdleState, ns: Assets.Source.Game.Scripts.Enemy, asm: Assembly-CSharp}
-      data: 
-    - rid: 2278159766600024068
-      type: {class: EnemyReloadState, ns: Assets.Source.Scripts.Services, asm: Assembly-CSharp}
-      data: 
+  _enemyStateStrategy: {fileID: 5806170108948891930}
 --- !u!95 &5519766952035169781
 Animator:
   serializedVersion: 5
@@ -1444,6 +1421,41 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5806170108948891930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8232047784558665520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4eae3c046abb1443b3d5ff7c428f9e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyStates:
+  - rid: 2278159832159617024
+  - rid: 2278159832159617025
+  - rid: 2278159832159617026
+  - rid: 2278159832159617027
+  _isPositionChanged: 1
+  _reloadCountForPositionChanged: 0
+  _positionNumber: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 2278159832159617024
+      type: {class: EnemyAttackState, ns: Assets.Source.Game.Scripts.Enemy, asm: Assembly-CSharp}
+      data: 
+    - rid: 2278159832159617025
+      type: {class: EnemyDeadState, ns: Assets.Source.Scripts.Services, asm: Assembly-CSharp}
+      data: 
+    - rid: 2278159832159617026
+      type: {class: EnemyIdleState, ns: Assets.Source.Game.Scripts.Enemy, asm: Assembly-CSharp}
+      data: 
+    - rid: 2278159832159617027
+      type: {class: EnemyReloadState, ns: Assets.Source.Scripts.Services, asm: Assembly-CSharp}
+      data: 
 --- !u!1 &8576064623548385500
 GameObject:
   m_ObjectHideFlags: 0

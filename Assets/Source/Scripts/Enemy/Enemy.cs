@@ -1,3 +1,5 @@
+using Assets.Source.Scripts.ScriptableObjects;
+using Assets.Source.Scripts.Services;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +10,7 @@ namespace Assets.Source.Game.Scripts.Enemy
     public class Enemy : MonoBehaviour
     {
         [SerializeField] public Transform player; // поменять при загрузке передавать его трансформ танка
+        [SerializeField] private Transform _firePoint;
         [SerializeField] private List<Transform> _waypoints;
         [Space(20)]
         [SerializeField] private int _health;
@@ -18,6 +21,10 @@ namespace Assets.Source.Game.Scripts.Enemy
         [SerializeField] private bool _isPlayerShot;
         [SerializeField] private bool _isDead;
         [Space(20)]
+        [SerializeField] private ProjectileData _projectileData;
+        [Space(20)]
+        [SerializeReference] private IEnemyShootingStrategy _enemyShootingStrategy;
+        [Space(20)]
         [SerializeReference] private List<DamageableArea> _damageableAreas;
         [Space(20)]
         [SerializeField] private Animator _animator;
@@ -27,6 +34,9 @@ namespace Assets.Source.Game.Scripts.Enemy
         private EnemyHealth _enemyHealth;
         private EnemyAnimation _enemyAnimation;
 
+        public ProjectileData ProjectileData => _projectileData;
+        public Transform FirePoint => _firePoint;
+        public IEnemyShootingStrategy EnemyShootingStrategy => _enemyShootingStrategy;
         public List<Transform> Waypoints => _waypoints;
         public EnemyAnimation EnemyAnimation => _enemyAnimation;
         public int ShotsBeforeReload => _shotsBeforeReload;
@@ -40,11 +50,17 @@ namespace Assets.Source.Game.Scripts.Enemy
 
         private void Awake()
         {
+            _enemyShootingStrategy.Construct(this);
             _enemyAnimation = new EnemyAnimation(_animator);
             _enemyHealth = new EnemyHealth(this);
             _damageableAreas.ForEach(s => s.Initialize(_enemyHealth));
             _enemyStateStrategy.Initialize(this);
             //PlayerShooting.OnPlayerShot += OnPlayerFirstShot;
+        }
+
+        public void Initialize(Transform tankTransform)
+        {
+            player = tankTransform;
         }
 
         private void OnDestroy()

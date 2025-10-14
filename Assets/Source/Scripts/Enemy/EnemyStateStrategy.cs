@@ -45,6 +45,9 @@ namespace Assets.Source.Game.Scripts.Enemy
 
         public bool TryChangePosition(int reloadCount)
         {
+            if (_enemy.Waypoints.Count == 0)
+                return false;
+
             if (reloadCount > 0)
             {
                 if (ReloadCountForPositionChanged == reloadCount)
