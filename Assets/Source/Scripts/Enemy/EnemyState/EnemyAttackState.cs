@@ -20,9 +20,8 @@ namespace Assets.Source.Game.Scripts.Enemy
         {
             _enemy = enemy;
             _enemyStateStrategy = enemyStateStrategy;
-            _shotsBeforeReload = enemy.ShotsBeforeReload;
-            _shootingStrategy = enemy.EnemyShootingStrategy;
-            _fireCooldown = enemy.ProjectileData.ReloadTime;
+            _shootingStrategy = enemyStateStrategy.EnemyShootingStrategy;
+            Fill();
         }
 
         public override void Enter()
@@ -36,13 +35,25 @@ namespace Assets.Source.Game.Scripts.Enemy
         {
             SetStateDeath(_enemy, _enemyStateStrategy);
 
-            Vector3 dirToPlayer = (_enemy.player.position - _enemy.transform.position);
+            Vector3 dirToPlayer = (_enemy.Player.position - _enemy.transform.position);
             float distance = dirToPlayer.magnitude;
-
             Quaternion lookRotation = Quaternion.LookRotation(dirToPlayer.normalized);
-            _enemy.transform.rotation = Quaternion.Slerp(_enemy.transform.rotation, lookRotation, _enemy.RotateSpeed * Time.deltaTime);
+
+            _enemy.RotationPartToPlayer.transform.rotation = Quaternion.Slerp(
+                _enemy.RotationPartToPlayer.transform.rotation,
+                lookRotation,
+                _enemy.RotateSpeed * Time.deltaTime);
 
             ApplyDelayBeforeShooting();
+        }
+
+        private void Fill()
+        {
+            if (_shootingStrategy == null)
+                return;
+
+            _shotsBeforeReload = _shootingStrategy.GetProjectileData().ProjectileCount;
+            _fireCooldown = _shootingStrategy.GetProjectileData().ReloadTime;
         }
 
         private void ApplyDelayBeforeShooting()

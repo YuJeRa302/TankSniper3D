@@ -25,7 +25,6 @@ namespace Assets.Source.Scripts.Game
         private bool _isAiming = false;
         private CompositeDisposable _disposables = new();
 
-
         private void Awake()
         {
             Initialize();

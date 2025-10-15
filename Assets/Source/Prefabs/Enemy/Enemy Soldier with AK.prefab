@@ -169,9 +169,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8235846984131896937}
-  - component: {fileID: 2937271988857566218}
   - component: {fileID: 7940960096723751587}
   - component: {fileID: 4503312951287670692}
+  - component: {fileID: 1896180865450632608}
+  - component: {fileID: 7842216039062882833}
+  - component: {fileID: 3682526628212138354}
   m_Layer: 0
   m_Name: Enemy Soldier with AK
   m_TagString: Untagged
@@ -196,42 +198,6 @@ Transform:
   - {fileID: 1589599196972422300}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2937271988857566218
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1178862436992849089}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0f41e4444b407f4e9f5a44aeefe36c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  _firePoint: {fileID: 3920443471747090438}
-  _waypoints: []
-  _health: 0
-  _moveSpeed: 3
-  _rotateSpeed: 5
-  _shotsBeforeReload: 3
-  _reloadTime: 3
-  _isPlayerShot: 0
-  _isDead: 0
-  _projectileData: {fileID: 11400000, guid: 4526063beb5a6594b9f2555b13d17647, type: 2}
-  _enemyShootingStrategy:
-    rid: 2278159832159617028
-  _damageableAreas:
-  - {fileID: 4030556644418647471}
-  - {fileID: 8300472040874050172}
-  _animator: {fileID: 7940960096723751587}
-  _enemyStateStrategy: {fileID: 4503312951287670692}
-  references:
-    version: 2
-    RefIds:
-    - rid: 2278159832159617028
-      type: {class: BulletEnemyShootingStrategy, ns: Assets.Source.Game.Scripts.Enemy, asm: Assembly-CSharp}
-      data: 
 --- !u!95 &7940960096723751587
 Animator:
   serializedVersion: 5
@@ -288,6 +254,95 @@ MonoBehaviour:
     - rid: 2278159818043424771
       type: {class: EnemyReloadState, ns: Assets.Source.Scripts.Services, asm: Assembly-CSharp}
       data: 
+--- !u!114 &1896180865450632608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1178862436992849089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efa7c8f0ed9423e4dae188d1c836b179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pieceForce: 0
+  _pieceUpwards: 0
+  _pieceTorque: 0
+  _destroyPieces: []
+  _waypoints: []
+  _rotationPartToPlayer: {fileID: 8235846984131896937}
+  _enemyData: {fileID: 0}
+  _health: 100
+  _moveSpeed: 3
+  _rotateSpeed: 5
+  _isPlayerShot: 0
+  _isDead: 0
+  _damageableAreas:
+  - {fileID: 8300472040874050172}
+  - {fileID: 4030556644418647471}
+  _animator: {fileID: 7940960096723751587}
+  _audioSource: {fileID: 0}
+  _enemyStateStrategy: {fileID: 4503312951287670692}
+  _firePoints:
+  - {fileID: 3920443471747090438}
+  _projectileData: {fileID: 11400000, guid: 4526063beb5a6594b9f2555b13d17647, type: 2}
+  _enemyShootingStrategy:
+    rid: 2278159854689058820
+  references:
+    version: 2
+    RefIds:
+    - rid: 2278159854689058820
+      type: {class: BulletEnemyShootingStrategy, ns: Assets.Source.Game.Scripts.Enemy, asm: Assembly-CSharp}
+      data: 
+--- !u!65 &7842216039062882833
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1178862436992849089}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &3682526628212138354
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1178862436992849089}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1210176649145650705
 GameObject:
   m_ObjectHideFlags: 0

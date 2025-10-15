@@ -13,8 +13,8 @@ namespace Assets.Source.Game.Scripts.Enemy
 
         public EnemyHealth(Enemy enemy)
         {
-            _maxHealth = enemy.MaxHealth;
-            _currentHealth = enemy.MaxHealth;
+            _maxHealth = enemy.Health;
+            _currentHealth = _maxHealth;
         }
 
         public bool IsDead => _isDead;

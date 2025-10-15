@@ -5,6 +5,8 @@ namespace Assets.Source.Game.Scripts.Enemy
 {
     public class EnemyIdleState : BaseEnemyState
     {
+        private readonly float _controlDistanceValue = 0.1f;
+
         private Enemy _enemy;
         private EnemyStateStrategy _enemyStateStrategy;
         private int _currentWaypointIndex = 0;
@@ -22,6 +24,7 @@ namespace Assets.Source.Game.Scripts.Enemy
         {
             ChangeReachedWaypoint();
             _enemy.EnemyAnimation.SetIdleAnimation();
+            _enemy.EnemySoundPlayer.PlayMovingSound();
         }
 
         public override void Execute()
@@ -39,11 +42,19 @@ namespace Assets.Source.Game.Scripts.Enemy
             Transform target = _enemy.Waypoints[_currentWaypointIndex];
             Vector3 direction = (target.position - _enemy.transform.position).normalized;
             _enemy.transform.position += direction * _enemy.MoveSpeed * Time.deltaTime;
-
             Quaternion lookRotation = Quaternion.LookRotation(direction);
-            _enemy.transform.rotation = Quaternion.Slerp(_enemy.transform.rotation, lookRotation, _enemy.RotateSpeed * Time.deltaTime);
 
-            if (Vector3.Distance(_enemy.transform.position, target.position) < 0.1f)
+            _enemy.transform.rotation = Quaternion.Slerp(
+                _enemy.transform.rotation,
+                lookRotation,
+                _enemy.RotateSpeed * Time.deltaTime);
+
+            _enemy.RotationPartToPlayer.transform.rotation = Quaternion.Slerp(
+                _enemy.RotationPartToPlayer.transform.rotation,
+                lookRotation,
+                _enemy.RotateSpeed * Time.deltaTime);
+
+            if (Vector3.Distance(_enemy.transform.position, target.position) < _controlDistanceValue)
                 SetNextWayPoint();
 
             _enemyStateStrategy.TryChangeIdleState(_lastReachedWaypointIndex);

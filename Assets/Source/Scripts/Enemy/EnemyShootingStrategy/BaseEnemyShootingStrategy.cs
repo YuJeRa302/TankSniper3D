@@ -1,29 +1,47 @@
+using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Source.Game.Scripts.Enemy
 {
-    public class BaseEnemyShootingStrategy : IEnemyShootingStrategy
+    public abstract class BaseEnemyShootingStrategy : IEnemyShootingStrategy
     {
-        public virtual void Construct(Enemy enemy)
+        public abstract ProjectileData ProjectileData { get; }
+
+        public virtual void Construct(Enemy enemy, ProjectileData projectileData, List<Transform> firePoints)
         {
         }
+
         public virtual void Shoot()
         {
         }
 
-        public void CreateFireSound(Enemy enemy)
+        public ProjectileData GetProjectileData()
         {
-            if (enemy.ProjectileData.FireSound != null)
-                AudioSource.PlayClipAtPoint(enemy.ProjectileData.FireSound, enemy.FirePoint.position);
+            return ProjectileData;
         }
 
-        public void CreateMuzzleFlash(Enemy enemy)
+        public void CreateFireSound(ProjectileData projectileData, List<Transform> firePoints)
         {
-            if (enemy.ProjectileData.MuzzleFlash == null)
+            if (projectileData.FireSound == null)
                 return;
 
-            GameObject.Instantiate(enemy.ProjectileData.MuzzleFlash, enemy.FirePoint.position, enemy.FirePoint.rotation);
+            foreach (Transform firePoint in firePoints)
+            {
+                AudioSource.PlayClipAtPoint(projectileData.FireSound, firePoint.position);
+            }
+        }
+
+        public void CreateMuzzleFlash(ProjectileData projectileData, List<Transform> firePoints)
+        {
+            if (projectileData.MuzzleFlash == null)
+                return;
+
+            foreach (Transform firePoint in firePoints)
+            {
+                GameObject.Instantiate(projectileData.MuzzleFlash, firePoint.position, firePoint.rotation);
+            }
         }
     }
 }

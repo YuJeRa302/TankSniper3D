@@ -1906,9 +1906,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4756999607180063811}
-  - component: {fileID: 1688969466941145124}
   - component: {fileID: 8784773708923349943}
   - component: {fileID: 1446518878830698695}
+  - component: {fileID: 1808141873116087877}
   m_Layer: 0
   m_Name: Enemy Soldier with Bazuka
   m_TagString: Untagged
@@ -1933,42 +1933,6 @@ Transform:
   - {fileID: 7556724095569362778}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1688969466941145124
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8813964936492880528}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0f41e4444b407f4e9f5a44aeefe36c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  _firePoint: {fileID: 7823684361529699732}
-  _waypoints: []
-  _health: 0
-  _moveSpeed: 3
-  _rotateSpeed: 5
-  _shotsBeforeReload: 3
-  _reloadTime: 3
-  _isPlayerShot: 0
-  _isDead: 0
-  _projectileData: {fileID: 11400000, guid: 2a907e36becd3a141b65156a903cfcf2, type: 2}
-  _enemyShootingStrategy:
-    rid: 2278159832159617029
-  _damageableAreas:
-  - {fileID: 7993528748926761212}
-  - {fileID: 8661379881265330249}
-  _animator: {fileID: 8784773708923349943}
-  _enemyStateStrategy: {fileID: 1446518878830698695}
-  references:
-    version: 2
-    RefIds:
-    - rid: 2278159832159617029
-      type: {class: RocketEnemyShootingStrategy, ns: Assets.Source.Game.Scripts.Enemy, asm: Assembly-CSharp}
-      data: 
 --- !u!95 &8784773708923349943
 Animator:
   serializedVersion: 5
@@ -2024,6 +1988,43 @@ MonoBehaviour:
       data: 
     - rid: 2278159818043424771
       type: {class: EnemyReloadState, ns: Assets.Source.Scripts.Services, asm: Assembly-CSharp}
+      data: 
+--- !u!114 &1808141873116087877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8813964936492880528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efa7c8f0ed9423e4dae188d1c836b179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _waypoints: []
+  _rotationPartToPlayer: {fileID: 4756999607180063811}
+  _health: 0
+  _moveSpeed: 3
+  _rotateSpeed: 5
+  _isPlayerShot: 0
+  _isDead: 0
+  _damageableAreas:
+  - {fileID: 8661379881265330249}
+  - {fileID: 7993528748926761212}
+  _animator: {fileID: 8784773708923349943}
+  _enemyStateStrategy: {fileID: 1446518878830698695}
+  _firePoints:
+  - {fileID: 7823684361529699732}
+  _reloadTime: 3
+  _shotsBeforeReload: 3
+  _projectileData: {fileID: 11400000, guid: 2a907e36becd3a141b65156a903cfcf2, type: 2}
+  _enemyShootingStrategy:
+    rid: 2278159854689058817
+  references:
+    version: 2
+    RefIds:
+    - rid: 2278159854689058817
+      type: {class: RocketEnemyShootingStrategy, ns: Assets.Source.Game.Scripts.Enemy, asm: Assembly-CSharp}
       data: 
 --- !u!1 &8927717846586564611
 GameObject:

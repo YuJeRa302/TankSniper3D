@@ -1,4 +1,5 @@
 using Assets.Source.Scripts.ScriptableObjects;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Source.Game.Scripts.Enemy
@@ -7,11 +8,15 @@ namespace Assets.Source.Game.Scripts.Enemy
     {
         private Enemy _enemy;
         private ProjectileData _projectileData;
+        private List<Transform> _firePoints = new();
 
-        public override void Construct(Enemy enemy)
+        public override ProjectileData ProjectileData => _projectileData;
+
+        public override void Construct(Enemy enemy, ProjectileData projectileData, List<Transform> firePoints)
         {
             _enemy = enemy;
-            _projectileData = _enemy.ProjectileData;
+            _projectileData = projectileData;
+            _firePoints = firePoints;
         }
 
         public override void Shoot()
@@ -19,11 +24,24 @@ namespace Assets.Source.Game.Scripts.Enemy
             if (_projectileData.BaseProjectile == null)
                 return;
 
-            Vector3 direction = (_enemy.player.position - _enemy.FirePoint.position).normalized;
-            var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, _enemy.FirePoint.position, Quaternion.LookRotation(direction));
-            projectile.Initialize(_projectileData);
-            CreateFireSound(_enemy);
-            CreateMuzzleFlash(_enemy);
+            CreateRocket(_firePoints);
+            CreateFireSound(_projectileData, _firePoints);
+            CreateMuzzleFlash(_projectileData, _firePoints);
+        }
+
+        private void CreateRocket(List<Transform> firePoints)
+        {
+            foreach (Transform firePoint in firePoints)
+            {
+                Vector3 direction = (_enemy.Player.position - firePoint.position).normalized;
+
+                var projectile = GameObject.Instantiate(
+                    _projectileData.BaseProjectile,
+                    firePoint.position,
+                    Quaternion.LookRotation(direction));
+
+                projectile.Initialize(_projectileData);
+            }
         }
     }
 }

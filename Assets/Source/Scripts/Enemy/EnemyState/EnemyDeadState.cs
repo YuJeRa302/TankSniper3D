@@ -17,8 +17,12 @@ namespace Assets.Source.Scripts.Services
 
         public override void Enter()
         {
+            _enemy.EnemySoundPlayer.StopMovingSound();
+            _enemy.EnemySoundPlayer.PlayExplosionSound();
             _enemy.EnemyAnimation.SetDeathAnimation();
-            GameObject.Destroy(_enemy.gameObject, 2f);
+            _enemy.CreateExplosionEffect();
+            _enemy.DestroyParts();
+            GameObject.Destroy(_enemy.gameObject, 3f);
         }
     }
 }

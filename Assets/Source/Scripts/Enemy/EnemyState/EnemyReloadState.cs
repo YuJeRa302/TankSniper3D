@@ -18,7 +18,7 @@ namespace Assets.Source.Scripts.Services
         {
             _enemy = enemy;
             _enemyStateStrategy = enemyStateStrategy;
-            _reloadTime = enemy.ReloadTime;
+            _reloadTime = enemyStateStrategy.EnemyShootingStrategy.GetProjectileData().ReloadTime;
         }
 
         public override void Enter()

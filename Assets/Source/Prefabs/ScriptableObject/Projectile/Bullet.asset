@@ -20,8 +20,8 @@ MonoBehaviour:
   _spread: 5
   _muzzleFlash: {fileID: 5281253730612765263, guid: 69742cb9a5f55c443bf25751427ad6f2, type: 3}
   _hitEffect: {fileID: 5621337006859321494, guid: 9ae135c629f45d74e923e28f5703cba4, type: 3}
-  _fireSound: {fileID: 0}
-  _hitSound: {fileID: 0}
+  _fireSound: {fileID: 8300000, guid: 2dcd5da12751d034bb710af85ad18450, type: 3}
+  _hitSound: {fileID: 8300000, guid: 11390b4b43824e54e9eaada95422a366, type: 3}
   _baseProjectile: {fileID: 8935895550186741627, guid: e8eb4ee10284bd24b8473f38c5f7e25b, type: 3}
   _shootingStrategy:
     rid: 2278159699402031104

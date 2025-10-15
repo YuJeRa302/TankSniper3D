@@ -1,4 +1,5 @@
 using Assets.Source.Scripts.ScriptableObjects;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Source.Game.Scripts.Enemy
@@ -7,12 +8,15 @@ namespace Assets.Source.Game.Scripts.Enemy
     {
         private Enemy _enemy;
         private ProjectileData _projectileData;
-        private Vector3 _spreadDirection;
+        private List<Transform> _firePoints = new();
 
-        public override void Construct(Enemy enemy)
+        public override ProjectileData ProjectileData => _projectileData;
+
+        public override void Construct(Enemy enemy, ProjectileData projectileData, List<Transform> firePoints)
         {
             _enemy = enemy;
-            _projectileData = _enemy.ProjectileData;
+            _projectileData = projectileData;
+            _firePoints = firePoints;
         }
 
         public override void Shoot()
@@ -20,23 +24,34 @@ namespace Assets.Source.Game.Scripts.Enemy
             if (_projectileData.BaseProjectile == null)
                 return;
 
-            CreateSpread();
-            var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, _enemy.FirePoint.position, Quaternion.LookRotation(_spreadDirection));
-            projectile.Initialize(_projectileData);
-            CreateFireSound(_enemy);
-            CreateMuzzleFlash(_enemy);
+            CreateBullet(_firePoints);
+            CreateFireSound(_projectileData, _firePoints);
+            CreateMuzzleFlash(_projectileData, _firePoints);
         }
 
-        private void CreateSpread()
+        private Vector3 GetSpreadDirection(Transform firePoint)
         {
-            Vector3 direction = (_enemy.player.position - _enemy.FirePoint.position).normalized;
+            Vector3 direction = (_enemy.Player.position - firePoint.position).normalized;
 
             float spreadAngle = _projectileData.Spread;
             float randomYaw = Random.Range(-spreadAngle, spreadAngle);
             float randomPitch = Random.Range(-spreadAngle, spreadAngle);
 
             Quaternion spreadRotation = Quaternion.Euler(randomPitch, randomYaw, 0);
-            _spreadDirection = spreadRotation * direction;
+            return spreadRotation * direction;
+        }
+
+        private void CreateBullet(List<Transform> firePoints)
+        {
+            foreach (Transform firePoint in firePoints)
+            {
+                var projectile = GameObject.Instantiate(
+                    _projectileData.BaseProjectile,
+                    firePoint.position,
+                    Quaternion.LookRotation(GetSpreadDirection(firePoint)));
+
+                projectile.Initialize(_projectileData);
+            }
         }
     }
 }

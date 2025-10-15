@@ -13,20 +13,23 @@ namespace Assets.Source.Game.Scripts.Enemy
         [SerializeField] private int _reloadCountForPositionChanged;
         [SerializeField] private int _positionNumber;
 
+        private IEnemyShootingStrategy _enemyShootingStrategy;
         private Enemy _enemy;
         private IEnemyState _currentState;
 
         public int ReloadCountForPositionChanged => _reloadCountForPositionChanged;
         public int PositionNumber => _positionNumber;
+        public IEnemyShootingStrategy EnemyShootingStrategy => _enemyShootingStrategy;
 
         private void Update()
         {
             _currentState?.Execute();
         }
 
-        public void Initialize(Enemy enemy)
+        public void Initialize(Enemy enemy, IEnemyShootingStrategy enemyShootingStrategy)
         {
             _enemy = enemy;
+            _enemyShootingStrategy = enemyShootingStrategy;
             _enemyStates.ForEach(s => s.Construct(_enemy, this));
             _currentState = GetEnemyStateByType(TypeEnemyState.Idle);
             _currentState.Enter();
