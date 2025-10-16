@@ -9,9 +9,9 @@ namespace Assets.Source.Game.Scripts.Enemy
     [RequireComponent(typeof(EnemyStateStrategy))]
     public abstract class Enemy : MonoBehaviour
     {
-        [SerializeField] private float _pieceForce;
-        [SerializeField] private float _pieceUpwards;
-        [SerializeField] private float _pieceTorque;
+        [SerializeField] private float _pieceForce = 15f;
+        [SerializeField] private float _pieceUpwards = 0.1f;
+        [SerializeField] private float _pieceTorque = 2f;
         [SerializeField] private List<GameObject> _destroyPieces;
         [Space(20)]
         [SerializeField] private List<Transform> _waypoints;
@@ -19,9 +19,6 @@ namespace Assets.Source.Game.Scripts.Enemy
         [SerializeField] private Transform _rotationPartToPlayer;
         [Space(20)]
         [SerializeField] private EnemyData _enemyData;
-        [SerializeField] private int _health;
-        [SerializeField] private float _moveSpeed = 3f;
-        [SerializeField] private float _rotateSpeed = 5f;
         [SerializeField] private bool _isPlayerShot;
         [SerializeField] private bool _isDead;
         [Space(20)]

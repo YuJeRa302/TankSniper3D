@@ -29,6 +29,7 @@ namespace Assets.Source.Game.Scripts.Enemy
             _fireTimer = _fireCooldown;
             _shotCount = 0;
             _enemy.EnemyAnimation.SetAttackAnimation();
+            _enemy.EnemySoundPlayer.StopMovingSound();
         }
 
         public override void Execute()

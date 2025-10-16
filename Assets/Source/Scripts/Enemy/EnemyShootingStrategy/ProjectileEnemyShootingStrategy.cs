@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Source.Game.Scripts.Enemy
 {
-    public class BulletEnemyShootingStrategy : BaseEnemyShootingStrategy
+    public class ProjectileEnemyShootingStrategy : BaseEnemyShootingStrategy
     {
         private Enemy _enemy;
         private ProjectileData _projectileData;

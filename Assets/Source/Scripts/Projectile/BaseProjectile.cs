@@ -12,7 +12,9 @@ namespace Assets.Source.Scripts.Projectile
 
         private void Start()
         {
-            _rigidbody.velocity = transform.forward * _speed;
+            if (_rigidbody != null)
+                _rigidbody.velocity = transform.forward * _speed;
+
             Destroy(gameObject, _lifeTime);
         }
 

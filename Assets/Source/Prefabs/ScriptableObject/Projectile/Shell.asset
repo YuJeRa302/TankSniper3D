@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8437857bac9a6845bcdf22d2077950f, type: 3}
+  m_Name: Shell
+  m_EditorClassIdentifier: 
+  _speed: 100
+  _damage: 0
+  _projectileCount: 3
+  _reloadTime: 4
+  _lifeTime: 5
+  _spread: 5
+  _muzzleFlash: {fileID: 6974459100858477288, guid: 7ba5c56478141274c8ecf4296d2da977, type: 3}
+  _hitEffect: {fileID: 30685999186260522, guid: f0138d95b6d4af24391983891e108c9c, type: 3}
+  _fireSound: {fileID: 8300000, guid: e4a2a98ee03890d40a06b28d95d492a0, type: 3}
+  _hitSound: {fileID: 8300000, guid: 79c3cb7a26813d146b07c293b0324039, type: 3}
+  _baseProjectile: {fileID: 6836442744894961241, guid: 4a00386636441814b8b922fcaabc13fd, type: 3}
+  _shootingStrategy:
+    rid: 2278159699402031104
+  references:
+    version: 2
+    RefIds:
+    - rid: 2278159699402031104
+      type: {class: SimpleShootingStrategy, ns: Assets.Source.Scripts.ShootingStrategy, asm: Assembly-CSharp}
+      data: 

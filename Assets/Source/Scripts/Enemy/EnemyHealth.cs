@@ -25,6 +25,7 @@ namespace Assets.Source.Game.Scripts.Enemy
                 return;
 
             _currentHealth -= damage;
+            Message.Publish(new M_EnemyHealthChanged(_currentHealth));
 
             if (_currentHealth <= 0)
             {
