@@ -5,6 +5,7 @@ namespace Assets.Source.Game.Scripts.Enemy
     public class DamageableArea : MonoBehaviour
     {
         [SerializeField] private int _damageMultiplier;
+        [SerializeField] private DetachablePart _detachablePart;
 
         private EnemyHealth _enemyHealth;
 
@@ -13,13 +14,16 @@ namespace Assets.Source.Game.Scripts.Enemy
             _enemyHealth = enemyHealth;
         }
 
-        public void ApplyDamage(int baseDamage)
+        public void ApplyDamage(int baseDamage, Vector3 hitPoint)
         {
             if (_enemyHealth != null)
             {
                 int totalDamage = baseDamage * _damageMultiplier;
                 _enemyHealth.TakeDamage(totalDamage);
             }
+
+            if (_detachablePart != null)
+                _detachablePart.Detach(hitPoint);
         }
     }
 }

@@ -1,30 +1,38 @@
 using Assets.Source.Scripts.ScriptableObjects;
-using Assets.Source.Scripts.Services;
 using UnityEngine;
 
 namespace Assets.Source.Scripts.ShootingStrategy
 {
-    public class SimpleShootingStrategy : IShootingStrategy
+    public class SimpleShootingStrategy : BaseShootingStrategy
     {
         private ProjectileData _projectileData;
-        private Transform _shotPoint;
+        private Transform _firePoint;
 
-        public void Construct(ProjectileData projectileData, Transform shotPoint)
+        public override void Construct(ProjectileData projectileData, Transform firePoint)
         {
             _projectileData = projectileData;
-            _shotPoint = shotPoint;
+            _firePoint = firePoint;
         }
 
-        public void ShootWithEnergy()
+        public override void ShootWithEnergy()
         {
-            var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, _shotPoint.position, _shotPoint.rotation);
+            Transform target = FindTargetInCrosshair(FindTargetradius);
+            var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, _firePoint.position, _firePoint.rotation);
             projectile.Initialize(_projectileData);
+
+            if (target != null)
+                projectile.SetToTarget(target);
+
+            CreateFireSound(_projectileData, _firePoint);
+            CreateMuzzleFlash(_projectileData, _firePoint);
         }
 
-        public void ShootWithoutEnergy()
+        public override void ShootWithoutEnergy()
         {
-            var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, _shotPoint.position, _shotPoint.rotation);
+            var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, _firePoint.position, _firePoint.rotation);
             projectile.Initialize(_projectileData);
+            CreateFireSound(_projectileData, _firePoint);
+            CreateMuzzleFlash(_projectileData, _firePoint);
         }
     }
 }

@@ -180,6 +180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _damageMultiplier: 1
+  _detachablePart: {fileID: 0}
 --- !u!1 &666691196893730631
 GameObject:
   m_ObjectHideFlags: 0
@@ -1066,6 +1067,7 @@ GameObject:
   - component: {fileID: 2436972363755210031}
   - component: {fileID: 145505437818296764}
   - component: {fileID: 1232096735672786373}
+  - component: {fileID: 146747649605562313}
   - component: {fileID: 2815816774305248968}
   - component: {fileID: 2451456231128624132}
   m_Layer: 0
@@ -1140,6 +1142,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &146747649605562313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4573137988696552909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc8450e6bfef0704f9417c7b1a694294, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _velocityMultiplier: 5
+  _rigidbody: {fileID: 0}
+  _lifeTime: 5
 --- !u!65 &2815816774305248968
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1412,6 +1429,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _damageMultiplier: 1
+  _detachablePart: {fileID: 0}
 --- !u!1 &6079540534519894380
 GameObject:
   m_ObjectHideFlags: 0
@@ -1688,6 +1706,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _damageMultiplier: 1
+  _detachablePart: {fileID: 0}
 --- !u!1 &6560266511776302165
 GameObject:
   m_ObjectHideFlags: 0
@@ -2017,6 +2036,7 @@ GameObject:
   - component: {fileID: 4314885563588294347}
   - component: {fileID: 6605674272270173639}
   - component: {fileID: 2568088824936683519}
+  - component: {fileID: 770281533504614672}
   - component: {fileID: 2961510854550628727}
   - component: {fileID: 5552976790667868938}
   m_Layer: 0
@@ -2091,6 +2111,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &770281533504614672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7977193156989984087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc8450e6bfef0704f9417c7b1a694294, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _velocityMultiplier: 5
+  _rigidbody: {fileID: 0}
+  _lifeTime: 5
 --- !u!65 &2961510854550628727
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2206,3 +2241,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _damageMultiplier: 2
+  _detachablePart: {fileID: 0}

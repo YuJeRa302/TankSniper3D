@@ -13,10 +13,15 @@ MonoBehaviour:
   m_Name: SimpleProjectile
   m_EditorClassIdentifier: 
   _speed: 85
-  _damage: 0
+  _damage: 50
   _projectileCount: 3
   _reloadTime: 3
   _lifeTime: 5
+  _spread: 0
+  _muzzleFlash: {fileID: 0}
+  _hitEffect: {fileID: 0}
+  _fireSound: {fileID: 0}
+  _hitSound: {fileID: 0}
   _baseProjectile: {fileID: 6836442744894961241, guid: 4a00386636441814b8b922fcaabc13fd, type: 3}
   _shootingStrategy:
     rid: 2278159699402031104

@@ -14,6 +14,22 @@ namespace Assets.Source.Game.Scripts.Enemy
             _enemyData = enemyData;
         }
 
+        public void PlayerSoundReloading()
+        {
+            if (_enemyData.ReloadingAudioClip == null)
+                return;
+
+            _audioSource.PlayOneShot(_enemyData.ReloadingAudioClip);
+        }
+
+        public void PlayerSoundStanding()
+        {
+            if (_enemyData.StandingAudioClip == null)
+                return;
+
+            _audioSource.PlayOneShot(_enemyData.StandingAudioClip);
+        }
+
         public void PlayExplosionSound()
         {
             if (_enemyData.ExplosionSound == null)

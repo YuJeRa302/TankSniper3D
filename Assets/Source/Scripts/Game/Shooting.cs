@@ -9,6 +9,8 @@ namespace Assets.Source.Scripts.Game
     {
         public static readonly IMessageBroker Message = new MessageBroker();
 
+        private readonly int _maxProjectileCount = 4;
+
         [SerializeField] private Transform _shotPoint;
 
         private IShootingStrategy _shootingStrategy;
@@ -17,7 +19,6 @@ namespace Assets.Source.Scripts.Game
         private int _shotsCount = 0;
         private int _shotsForSuper = 3;
         private int _currentProjectileCount;
-        private int _maxProjectileCount;
 
         private void Awake()
         {
@@ -35,7 +36,6 @@ namespace Assets.Source.Scripts.Game
         public void Initialize(TankData tankData)
         {
             _tankData = tankData;
-            _maxProjectileCount = _tankData.ProjectileData.ProjectileCount;
             _currentProjectileCount = _maxProjectileCount;
             _shootingStrategy = _tankData.ProjectileData.ShootingStrategy;
             _shootingStrategy.Construct(_tankData.ProjectileData, _shotPoint);

@@ -20,7 +20,6 @@ namespace Assets.Source.Game.Scripts.Enemy
         [Space(20)]
         [SerializeField] private EnemyData _enemyData;
         [SerializeField] private bool _isPlayerShot;
-        [SerializeField] private bool _isDead;
         [Space(20)]
         [SerializeField] private List<DamageableArea> _damageableAreas;
         [Space(20)]
@@ -43,8 +42,7 @@ namespace Assets.Source.Game.Scripts.Enemy
         public List<Transform> Waypoints => _waypoints;
         public EnemyAnimation EnemyAnimation => _enemyAnimation;
         public bool IsPlayerShot => _isPlayerShot;
-        public bool IsDead => _isDead;
-        //public bool IsDead => _enemyHealth.IsDead;
+        public bool IsDead => _enemyHealth.IsDead;
         public float MoveSpeed => _enemyData.MoveSpeed;
         public int Health => _enemyData.Health;
         public float RotateSpeed => _enemyData.RotationSpeed;

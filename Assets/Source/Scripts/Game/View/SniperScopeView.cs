@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -39,6 +40,7 @@ namespace Assets.Source.Scripts.Game
         {
             gameObject.SetActive(false);
             AddListeners();
+            Fill();
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -63,7 +65,7 @@ namespace Assets.Source.Scripts.Game
                 .Subscribe(m => OnReloading())
                 .AddTo(_disposables);
 
-            GamePanelView.Message
+            ReloadingView.Message
                 .Receive<M_EndReloading>()
                 .Subscribe(m => OnReloaded())
                 .AddTo(_disposables);
@@ -77,6 +79,12 @@ namespace Assets.Source.Scripts.Game
                 .Receive<M_SuperShoot>()
                 .Subscribe(m => OnSuperShooting())
                 .AddTo(_disposables);
+        }
+
+        private void Fill()
+        {
+            RefillImages(_bulletImages, _ammoSprite, _noneAmmoSprite);
+            RefillImages(_energyImages, _noneEnergySprite, _energySprite);
         }
 
         private void RemoveListeners()
@@ -96,31 +104,34 @@ namespace Assets.Source.Scripts.Game
 
         private void IncreaseEnergyCount()
         {
-            foreach (var image in _energyImages)
+            for (int index = 0; index < _energyImages.Count; index++)
             {
-                if (image.sprite == _noneEnergySprite)
-                    image.sprite = _energySprite;
+                if (_energyImages[index].sprite == _noneEnergySprite)
+                {
+                    _energyImages[index].sprite = _energySprite;
+                    break;
+                }
             }
         }
 
         private void DecreaseAmmoCount()
         {
-            for (int index = _bulletImages.Count - 1; index > 0; index--)
+            for (int index = _bulletImages.Count - 1; index >= 0; index--)
             {
                 if (_bulletImages[index].sprite == _ammoSprite)
+                {
                     _bulletImages[index].sprite = _noneAmmoSprite;
+                    break;
+                }
             }
         }
 
-        private bool TrySetSuperShotImage()
+        private void SetSuperShotImage()
         {
-            foreach (var image in _energyImages)
-            {
-                if (image.sprite != _noneEnergySprite)
-                    return true;
-            }
+            var energyImage = _energyImages.LastOrDefault();
 
-            return false;
+            if (energyImage.sprite != _noneEnergySprite)
+                _superShotImage.gameObject.SetActive(true);
         }
 
         private void EndAiming()
@@ -136,9 +147,10 @@ namespace Assets.Source.Scripts.Game
             _sniperScopeButton.gameObject.SetActive(false);
             gameObject.SetActive(true);
             Message.Publish(new M_Aiming(true));
+            SetSuperShotImage();
         }
 
-        private void OnReloading() 
+        private void OnReloading()
         {
             _sniperScopeButton.gameObject.SetActive(false);
             _isAiming = false;
@@ -161,9 +173,6 @@ namespace Assets.Source.Scripts.Game
         {
             DecreaseAmmoCount();
             IncreaseEnergyCount();
-
-            if (TrySetSuperShotImage())
-                _superShotImage.gameObject.SetActive(true);
         }
     }
 }

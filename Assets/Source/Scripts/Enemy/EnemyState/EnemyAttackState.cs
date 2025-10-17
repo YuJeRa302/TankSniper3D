@@ -30,6 +30,7 @@ namespace Assets.Source.Game.Scripts.Enemy
             _shotCount = 0;
             _enemy.EnemyAnimation.SetAttackAnimation();
             _enemy.EnemySoundPlayer.StopMovingSound();
+            _enemy.EnemySoundPlayer.PlayerSoundStanding();
         }
 
         public override void Execute()

@@ -10,6 +10,8 @@ namespace Assets.Source.Scripts.ScriptableObjects
         [SerializeField] private float _rotateSpeed = 5f;
         [SerializeField] private ParticleSystem _explosionEffect;
         [SerializeField] private AudioClip _movingAudioClip;
+        [SerializeField] private AudioClip _standingAudioClip;
+        [SerializeField] private AudioClip _reloadingAudioClip;
         [SerializeField] private AudioClip _explosionSound;
 
         public int Health => _health;
@@ -18,5 +20,7 @@ namespace Assets.Source.Scripts.ScriptableObjects
         public ParticleSystem ExplosionEffect => _explosionEffect;
         public AudioClip MovingAudioClip => _movingAudioClip;
         public AudioClip ExplosionSound => _explosionSound;
+        public AudioClip StandingAudioClip => _standingAudioClip;
+        public AudioClip ReloadingAudioClip => _reloadingAudioClip;
     }
 }

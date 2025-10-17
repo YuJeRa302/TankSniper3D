@@ -26,6 +26,7 @@ namespace Assets.Source.Scripts.Services
             _timer = _reloadTime;
             _enemy.EnemyAnimation.SetReloadAnimation();
             _enemy.EnemySoundPlayer.StopMovingSound();
+            _enemy.EnemySoundPlayer.PlayerSoundReloading();
         }
 
         public override void Execute()

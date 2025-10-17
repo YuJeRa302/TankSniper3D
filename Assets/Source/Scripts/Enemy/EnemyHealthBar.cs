@@ -31,12 +31,22 @@ namespace Assets.Source.Game.Scripts.Enemy
                 .Receive<M_EnemyHealthChanged>()
                 .Subscribe(m => OnChangeHealth(m.CurrentHealth))
                 .AddTo(_disposables);
+
+            EnemyHealth.Message
+                .Receive<M_DeathEnemy>()
+                .Subscribe(m => OnEnemyDeath())
+                .AddTo(_disposables);
         }
 
         private void SetSliderValue(int value)
         {
             _sliderHP.maxValue = value;
             _sliderHP.value = _sliderHP.maxValue;
+        }
+
+        private void OnEnemyDeath()
+        {
+            Destroy(gameObject);
         }
 
         private void OnChangeHealth(int currentHealth)

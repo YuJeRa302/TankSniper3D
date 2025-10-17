@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f758367595aec4a4b86258f78bcfc9d2, type: 3}
-  m_Name: BossChopper
+  m_Name: BossSubmarine
   m_EditorClassIdentifier: 
-  _health: 250
-  _moveSpeed: 2
-  _rotateSpeed: 4
+  _health: 450
+  _moveSpeed: 1
+  _rotateSpeed: 1
   _explosionEffect: {fileID: 1816117870564257024, guid: 947567ca49a53624a90c40f27c9f29c0, type: 3}
-  _movingAudioClip: {fileID: 8300000, guid: 7eb61fa9aeed949488e9e2c06faec4ca, type: 3}
-  _standingAudioClip: {fileID: 8300000, guid: 7eb61fa9aeed949488e9e2c06faec4ca, type: 3}
-  _reloadingAudioClip: {fileID: 8300000, guid: 7eb61fa9aeed949488e9e2c06faec4ca, type: 3}
+  _movingAudioClip: {fileID: 8300000, guid: bb4547b12a2dc5544bc90a0d6cfed265, type: 3}
+  _standingAudioClip: {fileID: 8300000, guid: bb4547b12a2dc5544bc90a0d6cfed265, type: 3}
+  _reloadingAudioClip: {fileID: 8300000, guid: bb4547b12a2dc5544bc90a0d6cfed265, type: 3}
   _explosionSound: {fileID: 8300000, guid: 8dfcae34791b3a447b81d6653208f596, type: 3}

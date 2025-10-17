@@ -7,6 +7,7 @@ namespace Assets.Source.Scripts.Projectile
     {
         [SerializeField] private Rigidbody _rigidbody;
 
+        private Transform _target;
         private int _speed;
         private float _lifeTime;
 
@@ -18,10 +19,22 @@ namespace Assets.Source.Scripts.Projectile
             Destroy(gameObject, _lifeTime);
         }
 
-        private void OnCollisionEnter(Collision collision)
+        private void OnTriggerEnter(Collider collider)
         {
-            Hit(collision);
+            Hit2(collider);
         }
+
+        public void SetToTarget(Transform target)
+        {
+            _target = target;
+            Vector3 direction = (_target.position - transform.position).normalized;
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            transform.LookAt(target.position);
+            transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, _speed * Time.deltaTime);
+            transform.position += transform.forward * _speed * Time.deltaTime;
+        }
+
+        public virtual void Hit2(Collider collider) { }
 
         public virtual void Initialize(ProjectileData projectileData)
         {
