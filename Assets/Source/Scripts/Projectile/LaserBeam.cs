@@ -4,8 +4,13 @@ namespace Assets.Source.Scripts.Projectile
 {
     public class LaserBeam : BaseProjectile
     {
-        protected override void Hit(Collision collision)
+        [SerializeField] private Material _laserMaterial;
+
+        public Material Material => _laserMaterial;
+
+        protected override void Hit(Collider collider)
         {
+            throw new System.NotImplementedException();
         }
     }
 }

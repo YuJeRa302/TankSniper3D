@@ -40,12 +40,7 @@ namespace Assets.Source.Game.Scripts.Enemy
             Vector3 dirToPlayer = (_enemy.Player.position - _enemy.transform.position);
             float distance = dirToPlayer.magnitude;
             Quaternion lookRotation = Quaternion.LookRotation(dirToPlayer.normalized);
-
-            _enemy.RotationPartToPlayer.transform.rotation = Quaternion.Slerp(
-                _enemy.RotationPartToPlayer.transform.rotation,
-                lookRotation,
-                _enemy.RotateSpeed * Time.deltaTime);
-
+            RotatePartToPlayer(dirToPlayer);
             ApplyDelayBeforeShooting();
         }
 
@@ -80,6 +75,17 @@ namespace Assets.Source.Game.Scripts.Enemy
         {
             if (_shotCount >= _shotsBeforeReload)
                 _enemyStateStrategy.SetNextState(TypeEnemyState.Reload);
+        }
+
+        private void RotatePartToPlayer(Vector3 direction)
+        {
+            Vector3 directionOnPlane = new Vector3(direction.x, 0, direction.z).normalized;
+            Quaternion lookRotation = Quaternion.LookRotation(directionOnPlane);
+
+            _enemy.RotationPartToPlayer.rotation = Quaternion.Slerp(
+                _enemy.RotationPartToPlayer.rotation,
+                lookRotation,
+                _enemy.RotateSpeed * Time.deltaTime);
         }
     }
 }

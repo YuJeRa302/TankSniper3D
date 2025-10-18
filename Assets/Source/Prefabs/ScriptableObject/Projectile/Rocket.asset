@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Rocket
   m_EditorClassIdentifier: 
   _speed: 70
-  _damage: 0
+  _damage: 70
   _projectileCount: 3
   _reloadTime: 3
   _lifeTime: 5

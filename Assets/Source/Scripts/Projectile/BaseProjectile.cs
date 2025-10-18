@@ -5,6 +5,8 @@ namespace Assets.Source.Scripts.Projectile
 {
     public abstract class BaseProjectile : MonoBehaviour
     {
+        private readonly float _lifeTimeHitEffect = 1f;
+
         [SerializeField] private Rigidbody _rigidbody;
 
         private Transform _target;
@@ -21,7 +23,13 @@ namespace Assets.Source.Scripts.Projectile
 
         private void OnTriggerEnter(Collider collider)
         {
-            Hit2(collider);
+            Hit(collider);
+        }
+
+        public virtual void Initialize(ProjectileData projectileData)
+        {
+            _speed = projectileData.Speed;
+            _lifeTime = projectileData.LifeTime;
         }
 
         public void SetToTarget(Transform target)
@@ -34,14 +42,15 @@ namespace Assets.Source.Scripts.Projectile
             transform.position += transform.forward * _speed * Time.deltaTime;
         }
 
-        public virtual void Hit2(Collider collider) { }
+        protected abstract void Hit(Collider collider);
 
-        public virtual void Initialize(ProjectileData projectileData)
+        protected void CreateHitEffect(ProjectileData projectileData, Vector3 hitPoint)
         {
-            _speed = projectileData.Speed;
-            _lifeTime = projectileData.LifeTime;
-        }
+            if (projectileData.HitEffect == null)
+                return;
 
-        protected abstract void Hit(Collision collision);
+            var effect = Instantiate(projectileData.HitEffect, hitPoint, Quaternion.identity);
+            Destroy(effect, _lifeTimeHitEffect);
+        }
     }
 }

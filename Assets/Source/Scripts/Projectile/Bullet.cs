@@ -11,7 +11,7 @@ namespace Assets.Source.Scripts.Projectile
             base.Initialize(projectileData);
         }
 
-        protected override void Hit(Collision collision)
+        protected override void Hit(Collider collider)
         {
             //if (collision.collider.TryGetComponent(out DestructibleObjectView destructibleObjectView))
             //{

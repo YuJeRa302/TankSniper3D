@@ -7,47 +7,33 @@ namespace Assets.Source.Scripts.Projectile
 {
     public class SimpleProjectile : BaseProjectile
     {
+        private ProjectileData _projectileData;
         private int _damage;
 
         public override void Initialize(ProjectileData projectileData)
         {
             base.Initialize(projectileData);
+            _projectileData = projectileData;
             _damage = projectileData.Damage;
         }
 
-        public override void Hit2(Collider collider)
+        protected override void Hit(Collider collider)
         {
+            Vector3 hitPoint = transform.position;
+
             if (collider.TryGetComponent(out DestructibleObjectView destructibleObjectView))
             {
-                Vector3 hitPoint = collider.ClosestPoint(transform.position);
+                hitPoint = collider.ClosestPoint(transform.position);
                 destructibleObjectView.ApplyDamage(hitPoint);
             }
 
             if (collider.TryGetComponent(out DamageableArea damageableArea))
             {
-                Vector3 hitPoint = collider.ClosestPoint(transform.position);
+                hitPoint = collider.ClosestPoint(transform.position);
                 damageableArea.ApplyDamage(_damage, hitPoint);
             }
 
-            Destroy(gameObject);
-        }
-
-        protected override void Hit(Collision collision)
-        {
-            Debug.Log("ApplyDamage");
-
-            if (collision.collider.TryGetComponent(out DestructibleObjectView destructibleObjectView))
-            {
-                Vector3 hitPoint = collision.contacts[0].point;
-                destructibleObjectView.ApplyDamage(hitPoint);
-            }
-
-            if (collision.collider.TryGetComponent(out DamageableArea damageableArea))
-            {
-                Vector3 hitPoint = collision.contacts[0].point;
-                damageableArea.ApplyDamage(_damage, hitPoint);
-            }
-
+            CreateHitEffect(_projectileData, hitPoint);
             Destroy(gameObject);
         }
     }

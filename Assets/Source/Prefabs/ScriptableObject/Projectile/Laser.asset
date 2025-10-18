@@ -24,10 +24,10 @@ MonoBehaviour:
   _hitSound: {fileID: 8300000, guid: 235db7e7f6d982140a4a5ac56629e519, type: 3}
   _baseProjectile: {fileID: 1987559397670400515, guid: 4c0945f13bd4b9146b79a599ea5506ac, type: 3}
   _shootingStrategy:
-    rid: 2278159699402031104
+    rid: 2278159931352285184
   references:
     version: 2
     RefIds:
-    - rid: 2278159699402031104
-      type: {class: SimpleShootingStrategy, ns: Assets.Source.Scripts.ShootingStrategy, asm: Assembly-CSharp}
+    - rid: 2278159931352285184
+      type: {class: LaserShootingStrategy, ns: Assets.Source.Scripts.ShootingStrategy, asm: Assembly-CSharp}
       data: 

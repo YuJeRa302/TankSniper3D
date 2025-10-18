@@ -24,10 +24,10 @@ MonoBehaviour:
   _hitSound: {fileID: 0}
   _baseProjectile: {fileID: 6836442744894961241, guid: 4a00386636441814b8b922fcaabc13fd, type: 3}
   _shootingStrategy:
-    rid: 2278159699402031104
+    rid: 2278159931352285189
   references:
     version: 2
     RefIds:
-    - rid: 2278159699402031104
+    - rid: 2278159931352285189
       type: {class: SimpleShootingStrategy, ns: Assets.Source.Scripts.ShootingStrategy, asm: Assembly-CSharp}
       data: 

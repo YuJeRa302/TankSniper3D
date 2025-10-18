@@ -1,41 +1,61 @@
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
+using Reflex.Extensions;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Source.Scripts.ShootingStrategy
 {
-    public class DoubleShootingStrategy : IShootingStrategy
+    public class DoubleShootingStrategy : BaseShootingStrategy
     {
         private float _delayBetweenShots = 0.5f;
         private int _shotCount = 2;
         private ProjectileData _projectileData;
-        private Transform _shotPoint;
+        private Transform _firePoint;
+        private ICoroutineRunner _coroutineRunner;
 
-        public void Construct(ProjectileData projectileData, Transform shotPoint)
+        public override void Construct(ProjectileData projectileData, Transform shotPoint)
         {
             _projectileData = projectileData;
-            _shotPoint = shotPoint;
+            _firePoint = shotPoint;
+            var container = SceneManager.GetActiveScene().GetSceneContainer();
+            _coroutineRunner = container.Resolve<ICoroutineRunner>();
         }
 
-        public void ShootWithEnergy()
+        public override void ShootWithEnergy()
         {
-            //StartCoroutine(ShootSequentially());
+            _coroutineRunner.StartCoroutine(DelayedDoubleShot());
         }
 
-        public void ShootWithoutEnergy()
+        public override void ShootWithoutEnergy()
         {
-            var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, _shotPoint.position, _shotPoint.rotation);
+            var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, _firePoint.position, _firePoint.rotation);
             projectile.Initialize(_projectileData);
+            CreateFireSound(_projectileData, _firePoint);
+            CreateMuzzleFlash(_projectileData, _firePoint);
         }
 
-        private IEnumerator ShootSequentially()
+        private IEnumerator DelayedDoubleShot()
         {
-            for (int i = 0; i < _shotCount; i++)
+            int shotsFired = 0;
+
+            while (shotsFired < _shotCount)
             {
-                var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, _shotPoint.position, _shotPoint.rotation);
+                Transform target = FindTargetInCrosshair(FindTargetradius);
+                var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, _firePoint.position, _firePoint.rotation);
                 projectile.Initialize(_projectileData);
-                yield return new WaitForSeconds(_delayBetweenShots);
+
+                if (target != null)
+                    projectile.SetToTarget(target);
+
+                CreateFireSound(_projectileData, _firePoint);
+                CreateMuzzleFlash(_projectileData, _firePoint);
+
+                shotsFired++;
+
+                if (shotsFired < _shotCount)
+                    yield return new WaitForSeconds(_delayBetweenShots);
             }
         }
     }

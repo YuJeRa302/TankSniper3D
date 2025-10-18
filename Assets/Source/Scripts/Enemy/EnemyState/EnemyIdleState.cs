@@ -49,8 +49,8 @@ namespace Assets.Source.Game.Scripts.Enemy
                 lookRotation,
                 _enemy.RotateSpeed * Time.deltaTime);
 
-            _enemy.RotationPartToPlayer.transform.rotation = Quaternion.Slerp(
-                _enemy.RotationPartToPlayer.transform.rotation,
+            _enemy.RotationPartToPlayer.rotation = Quaternion.Slerp(
+                _enemy.RotationPartToPlayer.rotation,
                 lookRotation,
                 _enemy.RotateSpeed * Time.deltaTime);
 

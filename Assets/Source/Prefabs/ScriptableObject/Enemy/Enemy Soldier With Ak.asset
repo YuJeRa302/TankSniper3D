@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: Enemy Soldier With Ak
   m_EditorClassIdentifier: 
   _health: 100
-  _moveSpeed: 3
+  _moveSpeed: 2
   _rotateSpeed: 5
   _explosionEffect: {fileID: 0}
   _movingAudioClip: {fileID: 0}
+  _standingAudioClip: {fileID: 0}
+  _reloadingAudioClip: {fileID: 0}
   _explosionSound: {fileID: 0}

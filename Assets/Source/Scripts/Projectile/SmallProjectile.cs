@@ -12,7 +12,7 @@ namespace Assets.Source.Scripts.Projectile
             base.Initialize(projectileData);
         }
 
-        protected override void Hit(Collision collision)
+        protected override void Hit(Collider collider)
         {
             //Vector3 hitPoint = collision.contacts[0].point;
 
