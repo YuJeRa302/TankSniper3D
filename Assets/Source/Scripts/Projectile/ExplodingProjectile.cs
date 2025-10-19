@@ -1,3 +1,5 @@
+using Assets.Source.Game.Scripts.Enemy;
+using Assets.Source.Scripts.Game;
 using Assets.Source.Scripts.ScriptableObjects;
 using UnityEngine;
 
@@ -5,63 +7,53 @@ namespace Assets.Source.Scripts.Projectile
 {
     public class ExplodingProjectile : BaseProjectile
     {
+        private readonly float _degrees = 360f;
+
+        [SerializeField] private ProjectileData _smallProjectileData;
+
+        private ProjectileData _projectileData;
+        private int _damage;
+
         public override void Initialize(ProjectileData projectileData)
         {
             base.Initialize(projectileData);
+            _projectileData = projectileData;
+            _damage = projectileData.Damage;
         }
 
         protected override void Hit(Collider collider)
         {
-            Vector3 hitPoint = collider.ClosestPoint(transform.position);
+            Vector3 hitPoint = transform.position;
 
-            Explode(hitPoint);
+            if (collider.TryGetComponent(out DestructibleObjectView destructibleObjectView))
+            {
+                hitPoint = collider.ClosestPoint(transform.position);
+                destructibleObjectView.ApplyDamage(hitPoint);
+            }
 
+            if (collider.TryGetComponent(out DamageableArea damageableArea))
+            {
+                hitPoint = collider.ClosestPoint(transform.position);
+                damageableArea.ApplyDamage(_damage, hitPoint);
+            }
+
+            CreateHitEffect(_projectileData, hitPoint);
+            CreateSoundEffect(_projectileData, hitPoint);
             SpawnSmallProjectiles(hitPoint);
-
             Destroy(gameObject);
-        }
-
-        private void Explode(Vector3 center)
-        {
-            //// Взрыв наносит урон всем в радиусе
-            //Collider[] hits = Physics.OverlapSphere(center, explosionRadius);
-            //foreach (var hit in hits)
-            //{
-            //    var destructible = hit.GetComponentInParent<BuildingDestructible>();
-            //    if (destructible != null)
-            //    {
-            //        destructible.ApplyDamage(damage, center);
-            //    }
-
-            //    var enemy = hit.GetComponentInParent<EnemyHealth>();
-            //    if (enemy != null)
-            //    {
-            //        enemy.ApplyDamage(damage);
-            //    }
-            //}
-
-            //// Тут можно добавить эффект взрыва, звук и т.д.
         }
 
         private void SpawnSmallProjectiles(Vector3 spawnPoint)
         {
-            //for (int i = 0; i < smallProjectileCount; i++)
-            //{
-            //    float angle = i * 360f / smallProjectileCount;
-            //    Vector3 dir = Quaternion.Euler(0, angle, 0) * Vector3.forward;
+            for (int i = 0; i < _smallProjectileData.ProjectileCount; i++)
+            {
+                float angle = i * _degrees / _smallProjectileData.ProjectileCount;
+                Vector3 dir = Quaternion.Euler(0, angle, 0) * Vector3.forward;
 
-            //    GameObject proj = Instantiate(smallProjectilePrefab, spawnPoint, Quaternion.LookRotation(dir));
-            //    var projRb = proj.GetComponent<Rigidbody>();
-            //    if (projRb != null)
-            //        projRb.velocity = dir * smallProjectileSpeed;
-
-            //    // Передаем урон маленьким снарядам, если у них есть скрипт с логикой урона
-            //    var smallProjScript = proj.GetComponent<SmallProjectile>();
-            //    if (smallProjScript != null)
-            //    {
-            //        smallProjScript.damage = smallProjectileDamage;
-            //    }
-            //}
+                var projectile = Instantiate(_smallProjectileData.BaseProjectile, spawnPoint, Quaternion.LookRotation(dir));
+                projectile.Initialize(_smallProjectileData);
+                Destroy(projectile, _smallProjectileData.LifeTime);
+            }
         }
     }
 }

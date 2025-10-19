@@ -1,5 +1,4 @@
 using Assets.Source.Scripts.Projectile;
-using Assets.Source.Scripts.Services;
 using UnityEngine;
 
 namespace Assets.Source.Scripts.ScriptableObjects
@@ -18,7 +17,6 @@ namespace Assets.Source.Scripts.ScriptableObjects
         [SerializeField] private AudioClip _fireSound;
         [SerializeField] private AudioClip _hitSound;
         [SerializeField] private BaseProjectile _baseProjectile;
-        [SerializeReference] private IShootingStrategy _shootingStrategy; // убрать в танк сам, и забирать уже из его даты а не из даты снаряда
 
         public int Speed => _speed;
         public int Damage => _damage;
@@ -31,6 +29,5 @@ namespace Assets.Source.Scripts.ScriptableObjects
         public ParticleSystem HitEffect => _hitEffect;
         public AudioClip FireSound => _fireSound;
         public AudioClip HitSound => _hitSound;
-        public IShootingStrategy ShootingStrategy => _shootingStrategy;
     }
 }

@@ -34,7 +34,8 @@ namespace Assets.Source.Scripts.ShootingStrategy
             if (projectileData.MuzzleFlash == null)
                 return;
 
-            GameObject.Instantiate(projectileData.MuzzleFlash, firePoint.position, firePoint.rotation);
+            var effect = GameObject.Instantiate(projectileData.MuzzleFlash, firePoint.position, firePoint.rotation);
+            GameObject.Destroy(effect.gameObject, projectileData.LifeTime);
         }
 
         public Transform FindTargetInCrosshair(float radius)

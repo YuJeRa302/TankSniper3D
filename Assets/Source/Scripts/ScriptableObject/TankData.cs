@@ -1,3 +1,4 @@
+using Assets.Source.Scripts.Services;
 using Assets.Source.Scripts.Upgrades;
 using UnityEngine;
 
@@ -11,11 +12,13 @@ namespace Assets.Source.Scripts.ScriptableObjects
         [SerializeField] private int _starCount;
         [SerializeField] private int _level;
         [SerializeField] private ProjectileData _projectileData;
+        [SerializeReference] private IShootingStrategy _shootingStrategy;
 
         public int StarCount => _starCount;
         public int Level => _level;
         public TankView MainTankView => _mainTankView;
         public Sprite Icon => _icon;
         public ProjectileData ProjectileData => _projectileData;
+        public IShootingStrategy ShootingStrategy => _shootingStrategy;
     }
 }

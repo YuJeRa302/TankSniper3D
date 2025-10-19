@@ -50,7 +50,15 @@ namespace Assets.Source.Scripts.Projectile
                 return;
 
             var effect = Instantiate(projectileData.HitEffect, hitPoint, Quaternion.identity);
-            Destroy(effect, _lifeTimeHitEffect);
+            Destroy(effect.gameObject, _lifeTimeHitEffect);
+        }
+
+        protected void CreateSoundEffect(ProjectileData projectileData, Vector3 hitPoint)
+        {
+            if (projectileData.FireSound == null)
+                return;
+
+            AudioSource.PlayClipAtPoint(projectileData.HitSound, hitPoint);
         }
     }
 }

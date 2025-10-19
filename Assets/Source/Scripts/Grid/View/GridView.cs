@@ -89,7 +89,7 @@ namespace Assets.Source.Scripts.Grid
         {
             currentLevel++;
             _gridModel.IncreaseMainTankLevel(currentLevel);
-            CreateGirdTank(gridCellView, currentLevel);
+            CreateGridTank(gridCellView, currentLevel);
             UpdateMainTank();
         }
 
@@ -134,14 +134,14 @@ namespace Assets.Source.Scripts.Grid
             {
                 if (!cell.IsOccupied)
                 {
-                    CreateGirdTank(cell, _gridModel.CurrentGridTankLevel);
+                    CreateGridTank(cell, _gridModel.CurrentGridTankLevel);
                     UpdateMainTank();
                     break;
                 }
             }
         }
 
-        private void CreateGirdTank(GridCellView gridCellView, int currentTankLevel)
+        private void CreateGridTank(GridCellView gridCellView, int currentTankLevel)
         {
             GridTankData gridTankData = _gridConfig.GetGridTankDataByLevel(currentTankLevel);
             GridTankState gridTankState = _gridModel.GetGridTankState(gridTankData);

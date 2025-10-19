@@ -18,10 +18,10 @@ MonoBehaviour:
   _reloadTime: 3
   _lifeTime: 5
   _spread: 0
-  _muzzleFlash: {fileID: 0}
-  _hitEffect: {fileID: 0}
-  _fireSound: {fileID: 0}
-  _hitSound: {fileID: 0}
+  _muzzleFlash: {fileID: 6974459100858477288, guid: 7ba5c56478141274c8ecf4296d2da977, type: 3}
+  _hitEffect: {fileID: 30685999186260522, guid: f0138d95b6d4af24391983891e108c9c, type: 3}
+  _fireSound: {fileID: 8300000, guid: e4a2a98ee03890d40a06b28d95d492a0, type: 3}
+  _hitSound: {fileID: 8300000, guid: 79c3cb7a26813d146b07c293b0324039, type: 3}
   _baseProjectile: {fileID: 6836442744894961241, guid: 4a00386636441814b8b922fcaabc13fd, type: 3}
   _shootingStrategy:
     rid: 2278159931352285189

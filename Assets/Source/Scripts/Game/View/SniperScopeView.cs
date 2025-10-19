@@ -1,3 +1,4 @@
+using Assets.Source.Game.Scripts.Enemy;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
@@ -22,23 +23,21 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private Sprite _noneEnergySprite;
         [Space(20)]
         [SerializeField] private Image _superShotImage;
+        [Space(20)]
+        [SerializeField] private SniperCrosshairView _sniperCrosshairView;
 
         private bool _isAiming = false;
         private CompositeDisposable _disposables = new();
-
-        private void Awake()
-        {
-            Initialize();
-        }
 
         private void OnDestroy()
         {
             RemoveListeners();
         }
 
-        public void Initialize()
+        public void Initialize(List<Enemy> enemies)
         {
             gameObject.SetActive(false);
+            _sniperCrosshairView.Initialize(enemies);
             AddListeners();
             Fill();
         }

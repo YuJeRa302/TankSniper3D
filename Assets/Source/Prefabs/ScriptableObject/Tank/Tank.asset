@@ -18,4 +18,12 @@ MonoBehaviour:
   _icon: {fileID: 21300000, guid: 1a0cea5e1920d634991a506fe426a00f, type: 3}
   _starCount: 4
   _level: 1
-  _projectileData: {fileID: 11400000, guid: 2a907e36becd3a141b65156a903cfcf2, type: 2}
+  _projectileData: {fileID: 11400000, guid: 08241be5cff836147a7f9e92cd4dd518, type: 2}
+  _shootingStrategy:
+    rid: 2278159949591740428
+  references:
+    version: 2
+    RefIds:
+    - rid: 2278159949591740428
+      type: {class: DoubleLaserShootingStrategy, ns: Assets.Source.Scripts.ShootingStrategy, asm: Assembly-CSharp}
+      data: 

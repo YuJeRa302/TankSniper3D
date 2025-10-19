@@ -34,6 +34,7 @@ namespace Assets.Source.Scripts.Projectile
             }
 
             CreateHitEffect(_projectileData, hitPoint);
+            CreateSoundEffect(_projectileData, hitPoint);
             Destroy(gameObject);
         }
     }

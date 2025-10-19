@@ -12,7 +12,6 @@ namespace Assets.Source.Scripts.ShootingStrategy
 {
     public class LaserShootingStrategy : BaseShootingStrategy
     {
-        private readonly float _laserDelay = 0.2f;
         private readonly float _widthMultiplier = 0.1f;
         private readonly float _attackRange = 35f;
 
@@ -62,15 +61,13 @@ namespace Assets.Source.Scripts.ShootingStrategy
 
         private void CreateLaserTrail(Transform firePoint, Vector3 direction)
         {
-            GameObject laserObject = new("LaserLine");
-            LineRenderer lineRenderer = laserObject.AddComponent<LineRenderer>();
-            lineRenderer.useWorldSpace = true;
-            lineRenderer.positionCount = 2;
-            lineRenderer.SetPosition(0, firePoint.position);
-            lineRenderer.SetPosition(1, firePoint.position + direction * _attackRange);
-            lineRenderer.material = _material;
-            lineRenderer.widthMultiplier = _widthMultiplier;
-            GameObject.Destroy(laserObject, _projectileData.LifeTime);
+            List<Vector3> points = new()
+            {
+                firePoint.position,
+                firePoint.position + direction * _attackRange
+            };
+
+            _coroutineRunner.StartCoroutine(DrawLaserCoroutine(points, _projectileData.LifeTime));
         }
 
         private void LaserBounceAttack(Transform firePoint, Transform nextTarget)
@@ -102,17 +99,17 @@ namespace Assets.Source.Scripts.ShootingStrategy
                 }
                 else
                 {
-                    laserPoints.Add(currentPosition + currentDirection * 50f);
+                    laserPoints.Add(currentPosition + currentDirection * _attackRange);
                     break;
                 }
             }
 
-            _coroutineRunner.StartCoroutine(DrawLaser(laserPoints));
+            _coroutineRunner.StartCoroutine(DrawLaserCoroutine(laserPoints, _projectileData.LifeTime));
         }
 
-        private IEnumerator DrawLaser(List<Vector3> points)
+        private IEnumerator DrawLaserCoroutine(List<Vector3> points, float duration)
         {
-            GameObject laserObject = new("LaserBeam");
+            GameObject laserObject = new("LaserLine");
             LineRenderer lineRenderer = laserObject.AddComponent<LineRenderer>();
 
             lineRenderer.useWorldSpace = true;
@@ -121,7 +118,7 @@ namespace Assets.Source.Scripts.ShootingStrategy
             lineRenderer.positionCount = points.Count;
             lineRenderer.SetPositions(points.ToArray());
 
-            yield return new WaitForSeconds(_laserDelay);
+            yield return new WaitForSeconds(duration);
 
             GameObject.Destroy(laserObject);
         }

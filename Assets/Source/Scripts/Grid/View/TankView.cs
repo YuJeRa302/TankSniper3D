@@ -14,6 +14,7 @@ namespace Assets.Source.Scripts.Upgrades
         [SerializeField] private List<MeshRenderer> _decals;
         [SerializeField] private List<MeshRenderer> _tankMaterials;
         [SerializeField] private Transform _heroSpawnPoint;
+        [SerializeField] private Transform _turretTransform;
 
         private TypeHeroSpawn _typeHeroSpawn;
         private DecorationData _decalData;
@@ -24,6 +25,7 @@ namespace Assets.Source.Scripts.Upgrades
 
         public int Level { get; private set; }
         public TankState TankState => _tankState;
+        public Transform TurretTransform => _turretTransform;
 
         public void Initialize(
             TankState tankState,
@@ -48,7 +50,7 @@ namespace Assets.Source.Scripts.Upgrades
             if (pattern.Id != _patternData.Id)
                 UpdatePattern(pattern);
 
-            if (heroData != null) 
+            if (heroData != null)
             {
                 if (heroData.Id != _heroData.Id)
                     CreateHero(heroData, _typeHeroSpawn);

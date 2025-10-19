@@ -1,3 +1,4 @@
+using Assets.Source.Game.Scripts.States;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
 
@@ -17,6 +18,11 @@ namespace Assets.Source.Scripts.Models
         public TankData GetTankData()
         {
             return _upgradeConfig.GetTankDataById(_persistentDataService.PlayerProgress.CurrentPlayerTankId);
+        }
+
+        public TankState GetTankState(TankData tankData)
+        {
+            return _persistentDataService.PlayerProgress.TankService.GetState(tankData);
         }
 
         public int GetMoney()

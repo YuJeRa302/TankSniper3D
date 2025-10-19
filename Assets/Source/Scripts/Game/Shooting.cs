@@ -37,7 +37,7 @@ namespace Assets.Source.Scripts.Game
         {
             _tankData = tankData;
             _currentProjectileCount = _maxProjectileCount;
-            _shootingStrategy = _tankData.ProjectileData.ShootingStrategy;
+            _shootingStrategy = _tankData.ShootingStrategy;
             _shootingStrategy.Construct(_tankData.ProjectileData, _shotPoint);
         }
 
