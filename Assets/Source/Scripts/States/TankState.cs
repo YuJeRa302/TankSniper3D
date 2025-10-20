@@ -7,15 +7,17 @@ namespace Assets.Source.Game.Scripts.States
     public class TankState
     {
         [SerializeField] private int _id;
+        [SerializeField] private int _level;
         [SerializeField] private bool _isOpened;
         [SerializeField] private bool _isEquipped;
         [SerializeField] private int _decalId;
         [SerializeField] private int _patternId;
         [SerializeField] private int _heroId;
 
-        public TankState(int id, bool isOpened, bool isEquipped, int decalId, int patternId, int heroId)
+        public TankState(int id, int level, bool isOpened, bool isEquipped, int decalId, int patternId, int heroId)
         {
             _id = id;
+            _level = level;
             _isOpened = isOpened;
             _isEquipped = isEquipped;
             _decalId = decalId;
@@ -24,6 +26,7 @@ namespace Assets.Source.Game.Scripts.States
         }
 
         public int Id => _id;
+        public int Level => _level;
         public bool IsOpened => _isOpened;
         public bool IsEquipped => _isEquipped;
         public int DecalId => _decalId;

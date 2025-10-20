@@ -109,8 +109,7 @@ namespace Assets.Source.Scripts.Upgrades
             CreateSelectionButtons();
             TankState tankState = _upgradeModel.GetTankStateByEquip();
             _upgradeModel.SelectTank(tankState);
-            CreateTank(tankState, _typeHeroSpawn);
-            CreateHero(tankState.HeroId, _typeHeroSpawn);
+            CreateTankEntities(tankState, _typeHeroSpawn);
             SelectTankButton();
         }
 
@@ -139,7 +138,7 @@ namespace Assets.Source.Scripts.Upgrades
         {
             Message.Publish(new M_DeselectCards(tankCardView.TankData.Id));
             _upgradeModel.SelectTank(tankCardView.TankState);
-            CreateTank(tankCardView.TankState, _typeHeroSpawn);
+            CreateTankEntities(tankCardView.TankState, _typeHeroSpawn);
             AnimateSelectionObject(_tankView.gameObject);
         }
 
@@ -204,7 +203,7 @@ namespace Assets.Source.Scripts.Upgrades
             }
         }
 
-        private void CreateTank(TankState tankState, TypeHeroSpawn typeHeroSpawn)
+        private void CreateTankEntities(TankState tankState, TypeHeroSpawn typeHeroSpawn)
         {
             ClearTankView();
             TankData tankData = _upgradeConfig.GetTankDataById(tankState.Id);
@@ -225,11 +224,13 @@ namespace Assets.Source.Scripts.Upgrades
 
             _tankView.Initialize(
                 tankState,
-                tankData.Level,
+                tankData,
                 _upgradeConfig.GetDecalDataById(tankState.DecalId),
                 _upgradeConfig.GetPatternDataById(tankState.PatternId),
                 _upgradeConfig.GetHeroDataById(tankState.HeroId),
                 typeHeroSpawn);
+
+            CreateHero(tankState.HeroId, _typeHeroSpawn);
         }
 
         private void CreateHero(int id, TypeHeroSpawn typeHeroSpawn)

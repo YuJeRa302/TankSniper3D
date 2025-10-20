@@ -39,7 +39,12 @@ namespace Assets.Source.Scripts.Models
             return false;
         }
 
-        public TankState GetTankState(TankData tankData)
+        public TankState GetTankStateByEquip()
+        {
+            return _persistentDataService.PlayerProgress.TankService.GetStateByEquip();
+        }
+
+        public TankState GetTankStateByData(TankData tankData)
         {
             return _persistentDataService.PlayerProgress.TankService.GetState(tankData);
         }

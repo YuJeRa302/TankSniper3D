@@ -1,4 +1,5 @@
 using Assets.Source.Game.Scripts.Enemy;
+using Assets.Source.Game.Scripts.Enums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,17 +9,19 @@ namespace Assets.Source.Scripts.Game
 {
     public class SniperCrosshairView : MonoBehaviour
     {
+        private readonly Color _selectZone = new(1f, 0f, 0f, 20f / 255f);
+        private readonly Color _deselectZone = new(1f, 0f, 0f, 0f);
+
         [Header("References")]
-        [SerializeField] private RectTransform crosshairUI;
-        [SerializeField] private RectTransform indicatorPrefab;
-        [SerializeField] private Image[] dangerZones; // 0: Top, 1: Bottom, 2: Left, 3: Right
-        [SerializeField] private Camera mainCamera;
-
+        [SerializeField] private RectTransform _crosshairBorder;
+        [SerializeField] private EnemyDirectionIndicator _indicatorPrefab;
+        [SerializeField] private Image[] _dangerZones;
         [Header("Settings")]
-        [SerializeField] private float edgeOffset = 30f;
+        [SerializeField] private float _edgeOffset = 30f;
 
+        private Camera _mainCamera;
         private List<Enemy> _enemies = new();
-        private List<RectTransform> _activeIndicators = new();
+        private List<EnemyDirectionIndicator> _activeIndicators = new();
         private int[] _zoneEnemyCounts = new int[4];
         private Coroutine _updateRoutine;
 
@@ -39,6 +42,7 @@ namespace Assets.Source.Scripts.Game
         public void Initialize(List<Enemy> enemies)
         {
             _enemies = enemies;
+            _mainCamera = Camera.main;
         }
 
         private IEnumerator UpdateCrosshairRoutine()
@@ -50,9 +54,10 @@ namespace Assets.Source.Scripts.Game
 
                 foreach (var enemy in _enemies)
                 {
-                    if (enemy == null) continue;
+                    if (enemy == null)
+                        continue;
 
-                    Vector3 viewportPos = mainCamera.WorldToViewportPoint(enemy.transform.position);
+                    Vector3 viewportPos = _mainCamera.WorldToViewportPoint(enemy.transform.position);
 
                     bool isBehind = viewportPos.z < 0;
                     bool isOutside = viewportPos.x < 0 || viewportPos.x > 1 || viewportPos.y < 0 || viewportPos.y > 1;
@@ -86,17 +91,15 @@ namespace Assets.Source.Scripts.Game
 
         private void ShowDirectionIndicator(Vector3 enemyWorldPos, Transform enemyTransform)
         {
-            RectTransform indicator = Instantiate(indicatorPrefab, crosshairUI);
-            var component = indicator.gameObject.AddComponent<EnemyDirectionIndicator>();
-            component.Initialize(enemyTransform, mainCamera, crosshairUI);
-
+            var indicator = Instantiate(_indicatorPrefab, _crosshairBorder);
+            indicator.Initialize(enemyTransform, _mainCamera, _crosshairBorder);
             _activeIndicators.Add(indicator);
         }
 
         private void UpdateZoneHighlight(Vector3 enemyWorldPos)
         {
-            Vector3 dirToEnemy = (enemyWorldPos - mainCamera.transform.position).normalized;
-            Vector3 localDir = mainCamera.transform.InverseTransformDirection(dirToEnemy);
+            Vector3 dirToEnemy = (enemyWorldPos - _mainCamera.transform.position).normalized;
+            Vector3 localDir = _mainCamera.transform.InverseTransformDirection(dirToEnemy);
 
             float x = localDir.x;
             float y = localDir.y;
@@ -104,33 +107,27 @@ namespace Assets.Source.Scripts.Game
             if (Mathf.Abs(x) > Mathf.Abs(y))
             {
                 if (x > 0)
-                    _zoneEnemyCounts[3]++; // Right
+                    _zoneEnemyCounts[(int)IndexDangerZone.BottomRight]++;
                 else
-                    _zoneEnemyCounts[2]++; // Left
+                    _zoneEnemyCounts[(int)IndexDangerZone.BottomLeft]++;
             }
             else
             {
                 if (y > 0)
-                    _zoneEnemyCounts[0]++; // Top
+                    _zoneEnemyCounts[(int)IndexDangerZone.TopLeft]++;
                 else
-                    _zoneEnemyCounts[1]++; // Bottom
+                    _zoneEnemyCounts[(int)IndexDangerZone.TopRight]++;
             }
         }
 
         private void UpdateZoneColors()
         {
-            for (int i = 0; i < dangerZones.Length; i++)
+            for (int i = 0; i < _dangerZones.Length; i++)
             {
                 if (_zoneEnemyCounts[i] > 0)
-                {
-                    // Красный с альфой 20 из 255
-                    dangerZones[i].color = new Color(1f, 0f, 0f, 20f / 255f);
-                }
+                    _dangerZones[i].color = _selectZone;
                 else
-                {
-                    // Полностью прозрачный
-                    dangerZones[i].color = new Color(1f, 0f, 0f, 0f);
-                }
+                    _dangerZones[i].color = _deselectZone;
             }
         }
     }

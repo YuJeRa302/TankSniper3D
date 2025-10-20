@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7f5e5e30a48b5c4fbe748148365f5e6, type: 3}
+  m_Name: GameData
+  m_EditorClassIdentifier: 
+  _biomsConfig: {fileID: 11400000, guid: 67ea884647fdd3347a2c17b30bdc52f3, type: 2}
+  _sniperScopeViewPrefab: {fileID: 1880294499833559438, guid: 9c8893aabf1608943b3cf07c663a0b01, type: 3}
+  _droneScopeViewPrefab: {fileID: 0}

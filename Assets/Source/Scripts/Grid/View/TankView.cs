@@ -9,12 +9,15 @@ namespace Assets.Source.Scripts.Upgrades
 {
     public class TankView : MonoBehaviour
     {
+        private readonly Color _defaultMaterial = new Color(0, 0, 204, 255);
         private readonly string _materialName = "Main";
 
         [SerializeField] private List<MeshRenderer> _decals;
         [SerializeField] private List<MeshRenderer> _tankMaterials;
         [SerializeField] private Transform _heroSpawnPoint;
         [SerializeField] private Transform _turretTransform;
+        [Space(20)]
+        [SerializeField] private TankHealth _tankHealth;
 
         private TypeHeroSpawn _typeHeroSpawn;
         private DecorationData _decalData;
@@ -29,14 +32,15 @@ namespace Assets.Source.Scripts.Upgrades
 
         public void Initialize(
             TankState tankState,
-            int level,
+            TankData tankData,
             DecorationData decal,
             DecorationData pattern,
             HeroData heroData,
             TypeHeroSpawn typeHeroSpawn)
         {
-            Level = level;
+            Level = tankData.Level;
             _tankState = tankState;
+            _tankHealth.Initialize(tankData.Health);
             UpdateDecal(decal);
             UpdatePattern(pattern);
             CreateHero(heroData, typeHeroSpawn);
@@ -50,10 +54,14 @@ namespace Assets.Source.Scripts.Upgrades
             if (pattern.Id != _patternData.Id)
                 UpdatePattern(pattern);
 
-            if (heroData != null)
+            if (_heroData != null)
             {
                 if (heroData.Id != _heroData.Id)
                     CreateHero(heroData, _typeHeroSpawn);
+            }
+            else
+            {
+                CreateHero(heroData, _typeHeroSpawn);
             }
         }
 
@@ -79,10 +87,20 @@ namespace Assets.Source.Scripts.Upgrades
                     foreach (var material in meshRenderer.materials)
                     {
                         if (material.name.Contains(_materialName))
-                            material.mainTexture = decorationData.Texture;
+                            UpdateMaterial(material, _patternData);
                     }
                 }
             }
+        }
+
+        private void UpdateMaterial(Material material, DecorationData patternData)
+        {
+            if (patternData.Texture != null)
+                material.color = Color.white;
+            else
+                material.color = _defaultMaterial;
+
+            material.mainTexture = patternData.Texture;
         }
 
         private void CreateHero(HeroData newHeroData, TypeHeroSpawn typeHeroSpawn)

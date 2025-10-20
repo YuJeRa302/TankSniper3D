@@ -108,13 +108,13 @@ namespace Assets.Source.Scripts.Grid
         {
             if (_mainTank == null)
             {
-                CreateMainTank();
+                CreateMainTank(_gridModel.CurrentMainTankLevel);
             }
 
             if (_mainTank.Level < _gridModel.CurrentMainTankLevel)
             {
                 Destroy(_mainTank.gameObject);
-                CreateMainTank();
+                CreateMainTank(_gridModel.CurrentMainTankLevel);
             }
 
             UpdateMainTankUI();
@@ -122,10 +122,20 @@ namespace Assets.Source.Scripts.Grid
 
         private void UpdateTankEntities()
         {
-            _mainTank.UpdateTankEntities(
-                _upgradeConfig.GetDecalDataById(_mainTank.TankState.DecalId),
-                _upgradeConfig.GetPatternDataById(_mainTank.TankState.PatternId),
-                _upgradeConfig.GetHeroDataById(_mainTank.TankState.HeroId));
+            if (_gridModel.GetTankStateByEquip().Id != _mainTank.TankState.Id)
+            {
+                Destroy(_mainTank.gameObject);
+                CreateMainTank(_gridModel.GetTankStateByEquip().Level);
+            }
+            else
+            {
+                _mainTank.UpdateTankEntities(
+                    _upgradeConfig.GetDecalDataById(_mainTank.TankState.DecalId),
+                    _upgradeConfig.GetPatternDataById(_mainTank.TankState.PatternId),
+                    _upgradeConfig.GetHeroDataById(_mainTank.TankState.HeroId));
+            }
+
+            UpdateMainTankUI();
         }
 
         private void SpawnObjectInFirstAvailableCell()
@@ -157,10 +167,10 @@ namespace Assets.Source.Scripts.Grid
             gridCellView.SetOccupied(tank);
         }
 
-        private void CreateMainTank()
+        private void CreateMainTank(int currentLevel)
         {
-            TankData tankData = _gridConfig.GetMainTankDataByLevel(_gridModel.CurrentMainTankLevel);
-            TankState tankState = _gridModel.GetTankState(tankData);
+            TankData tankData = _gridConfig.GetMainTankDataByLevel(currentLevel);
+            TankState tankState = _gridModel.GetTankStateByData(tankData);
             _gridModel.ChangeEquippedTank(tankState);
 
             _mainTank = Instantiate(tankData.MainTankView, new Vector3(
@@ -178,7 +188,7 @@ namespace Assets.Source.Scripts.Grid
 
             _mainTank.Initialize(
                 tankState,
-                tankData.Level,
+                tankData,
                 _upgradeConfig.GetDecalDataById(tankState.DecalId),
                 _upgradeConfig.GetPatternDataById(tankState.PatternId),
                 _upgradeConfig.GetHeroDataById(tankState.HeroId),

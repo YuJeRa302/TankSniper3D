@@ -1,7 +1,6 @@
 using Assets.Source.Game.Scripts.States;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
-using UnityEngine;
 
 namespace Assets.Source.Scripts.Models
 {

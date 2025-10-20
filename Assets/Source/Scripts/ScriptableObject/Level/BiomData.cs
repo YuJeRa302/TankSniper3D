@@ -15,5 +15,16 @@ namespace Assets.Source.Scripts.ScriptableObjects
         public List<LevelData> LevelDatas => _levelDatas;
         public LevelData HeroLevel => _heroLevel;
         public Sprite Icon => _icon;
+
+        public LevelData GetLevelDataById(int id)
+        {
+            foreach (var levelData in _levelDatas)
+            {
+                if (levelData.Id == id)
+                    return levelData;
+            }
+
+            return default;
+        }
     }
 }

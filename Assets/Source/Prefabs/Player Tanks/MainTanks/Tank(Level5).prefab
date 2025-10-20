@@ -263,6 +263,7 @@ GameObject:
   - component: {fileID: 5162382393018455674}
   - component: {fileID: 434579040759922049}
   - component: {fileID: 2533333112790535250}
+  - component: {fileID: 4346762516836846635}
   m_Layer: 0
   m_Name: Tank(Level5)
   m_TagString: Untagged
@@ -327,6 +328,20 @@ MonoBehaviour:
   - {fileID: 6146628357037158356}
   - {fileID: 4522092973925890073}
   _heroSpawnPoint: {fileID: 7493471190957485983}
+  _turretTransform: {fileID: 6134841847898175255}
+  _tankHealth: {fileID: 4346762516836846635}
+--- !u!114 &4346762516836846635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3606778354296938323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8c6543766c8bff46bed0048f7391367, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6287366834282691758
 GameObject:
   m_ObjectHideFlags: 0

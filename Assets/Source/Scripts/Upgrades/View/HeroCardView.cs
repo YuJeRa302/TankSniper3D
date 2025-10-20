@@ -95,11 +95,15 @@ namespace Assets.Source.Scripts.Upgrades
             if (_heroState.IsBuyed != true)
                 return;
 
+            if (_heroState.IsOpened != true)
+                return;
+
             _selectButton.interactable = true;
             _scrollStarView.gameObject.SetActive(true);
             _mainImage.gameObject.SetActive(true);
             _selectButtonImage.color = _defaultColor;
             _lockStarImage.gameObject.SetActive(false);
+            _buyButton.gameObject.SetActive(false);
         }
 
         private void AddListeners()

@@ -1,18 +1,28 @@
 using Assets.Source.Game.Scripts.States;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Source.Scripts.Models
 {
     public class GameModel
     {
+        private readonly GameData _gameData;
         private readonly UpgradeConfig _upgradeConfig;
         private readonly PersistentDataService _persistentDataService;
 
-        public GameModel(PersistentDataService persistentDataService, UpgradeConfig upgradeConfig)
+        public GameModel(PersistentDataService persistentDataService, UpgradeConfig upgradeConfig, GameData gameData)
         {
             _persistentDataService = persistentDataService;
             _upgradeConfig = upgradeConfig;
+            _gameData = gameData;
+        }
+
+        public LevelData GetLevelData()
+        {
+            return _gameData.BiomsConfig.
+                GetBiomDataById(_persistentDataService.PlayerProgress.CurrentBiomId).
+                GetLevelDataById(_persistentDataService.PlayerProgress.CurrentLevelId);
         }
 
         public TankData GetTankData()
@@ -28,6 +38,11 @@ namespace Assets.Source.Scripts.Models
         public int GetMoney()
         {
             return _persistentDataService.PlayerProgress.Money;
+        }
+
+        public void ReloadScene()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 }

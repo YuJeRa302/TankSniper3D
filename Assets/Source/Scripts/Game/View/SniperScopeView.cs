@@ -14,7 +14,6 @@ namespace Assets.Source.Scripts.Game
 
         [SerializeField] private List<Image> _bulletImages;
         [SerializeField] private List<Image> _energyImages;
-        [SerializeField] private Button _sniperScopeButton;
         [Space(20)]
         [SerializeField] private Sprite _ammoSprite;
         [SerializeField] private Sprite _noneAmmoSprite;
@@ -26,6 +25,7 @@ namespace Assets.Source.Scripts.Game
         [Space(20)]
         [SerializeField] private SniperCrosshairView _sniperCrosshairView;
 
+        private Button _sniperScopeButton;
         private bool _isAiming = false;
         private CompositeDisposable _disposables = new();
 
@@ -34,10 +34,11 @@ namespace Assets.Source.Scripts.Game
             RemoveListeners();
         }
 
-        public void Initialize(List<Enemy> enemies)
+        public void Initialize(List<Enemy> enemies, Button sniperScopeButton)
         {
             gameObject.SetActive(false);
             _sniperCrosshairView.Initialize(enemies);
+            _sniperScopeButton = sniperScopeButton;
             AddListeners();
             Fill();
         }

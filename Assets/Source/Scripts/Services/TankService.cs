@@ -21,29 +21,6 @@ namespace Assets.Source.Scripts.Services
             }
         }
 
-        public void SetStateByUnlock(TankState newTankState)
-        {
-            if (_tankStates != null)
-            {
-                TankState tankState = FindState(newTankState.Id);
-
-                if (tankState == null)
-                {
-                    _tankStates.Add(new(
-                        newTankState.Id,
-                        newTankState.IsOpened,
-                        newTankState.IsEquipped,
-                        newTankState.DecalId,
-                        newTankState.PatternId,
-                        newTankState.HeroId));
-                }
-                else
-                {
-                    tankState.ChangeOpenState(newTankState.IsOpened);
-                }
-            }
-        }
-
         public TankState GetStateByEquip()
         {
             if (_tankStates != null)
@@ -84,7 +61,7 @@ namespace Assets.Source.Scripts.Services
 
         private TankState InitState(TankData tankData)
         {
-            TankState tankState = new(tankData.Id, false, false, 0, 0, 0);
+            TankState tankState = new(tankData.Id, tankData.Level, false, false, 0, 0, 0);
             _tankStates.Add(tankState);
             return tankState;
         }
