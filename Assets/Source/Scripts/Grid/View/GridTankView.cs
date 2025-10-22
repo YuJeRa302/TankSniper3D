@@ -16,16 +16,13 @@ namespace Assets.Source.Scripts.Grid
         private bool _isHolding = false;
         private GridCellView _targetCell = null;
         private GridTankState _gridTankState;
-        private GridTankData _gridItemData;
 
         public int Level { get; private set; }
         public GridCellView OriginalCell { get; private set; }
         public GridTankState GridTankState => _gridTankState;
-        public GridTankData GridItemData => _gridItemData;
 
         public void Initialize(GridTankData gridTankData, GridTankState gridTankState)
         {
-            _gridItemData = gridTankData;
             _gridTankState = gridTankState;
             Level = gridTankData.Level;
             _itemLevelView.SetLevelValue(Level);
@@ -77,7 +74,7 @@ namespace Assets.Source.Scripts.Grid
         public void ChangeOriginalCell(GridCellView originalCell)
         {
             OriginalCell = originalCell;
-            _gridTankState.ChangeOriginalCell(OriginalCell.transform.position);
+            _gridTankState.ChangeOriginalCellId(OriginalCell.Id);
         }
 
         private void DeselectTargetCell()

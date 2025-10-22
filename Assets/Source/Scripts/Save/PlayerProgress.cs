@@ -6,9 +6,12 @@ namespace Assets.Source.Scripts.Saves
     {
         public int Money;
         public int Score;
+        public int CurrentGridTankCost;
+        public int CountBuyedGridTank;
         public float AmbientVolume;
         public float SfxVolume;
         public bool IsMuted;
+        public bool IsVibro;
         public bool IsGamePause = false;
         public int CurrentPlayerTankId;
         public int CurrentBiomId;

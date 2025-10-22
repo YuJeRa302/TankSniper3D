@@ -18,3 +18,13 @@ MonoBehaviour:
   _icon: {fileID: 21300000, guid: 3207ae5d6ffafe740ab62ce12e93b3cf, type: 3}
   _starCount: 5
   _level: 5
+  _health: 300
+  _projectileData: {fileID: 11400000, guid: 08241be5cff836147a7f9e92cd4dd518, type: 2}
+  _shootingStrategy:
+    rid: 2278160015533277195
+  references:
+    version: 2
+    RefIds:
+    - rid: 2278160015533277195
+      type: {class: LaserShootingStrategy, ns: Assets.Source.Scripts.ShootingStrategy, asm: Assembly-CSharp}
+      data: 

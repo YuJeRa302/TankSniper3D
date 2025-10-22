@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &156439962149721802
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6933390469973823403}
+  m_Layer: 0
+  m_Name: Fire Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6933390469973823403
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156439962149721802}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -2, z: 95.7}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6063911453543297803}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2440524668446758707
 GameObject:
   m_ObjectHideFlags: 0
@@ -33,6 +64,7 @@ Transform:
   m_Children:
   - {fileID: 1021232768496401354}
   - {fileID: 8061606934700351344}
+  - {fileID: 6933390469973823403}
   m_Father: {fileID: 2788609291041436921}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1959243983309704991
@@ -383,6 +415,7 @@ GameObject:
   - component: {fileID: 6426009825016629781}
   - component: {fileID: 7654416845016585674}
   - component: {fileID: 1894491938355530933}
+  - component: {fileID: 4071550696536352342}
   m_Layer: 0
   m_Name: Tank(Level4)
   m_TagString: Untagged
@@ -448,7 +481,9 @@ MonoBehaviour:
   - {fileID: 6596756413995062736}
   _heroSpawnPoint: {fileID: 7227532977351346815}
   _turretTransform: {fileID: 6063911453543297803}
+  _firePoint: {fileID: 6933390469973823403}
   _tankHealth: {fileID: 1894491938355530933}
+  _tankRecoil: {fileID: 4071550696536352342}
 --- !u!114 &1894491938355530933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -461,6 +496,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8c6543766c8bff46bed0048f7391367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4071550696536352342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8350834376130707141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02d534e0d40664b45a0d82795aa24059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  recoilDistance: 0.3
+  recoilDuration: 0.08
+  returnDuration: 0.12
 --- !u!1 &8883952665122364512
 GameObject:
   m_ObjectHideFlags: 0

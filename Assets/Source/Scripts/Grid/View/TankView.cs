@@ -16,8 +16,11 @@ namespace Assets.Source.Scripts.Upgrades
         [SerializeField] private List<MeshRenderer> _tankMaterials;
         [SerializeField] private Transform _heroSpawnPoint;
         [SerializeField] private Transform _turretTransform;
+        [SerializeField] private Transform _firePoint;
         [Space(20)]
         [SerializeField] private TankHealth _tankHealth;
+        [Space(20)]
+        [SerializeField] private TankRecoil _tankRecoil;
 
         private TypeHeroSpawn _typeHeroSpawn;
         private DecorationData _decalData;
@@ -41,6 +44,7 @@ namespace Assets.Source.Scripts.Upgrades
             Level = tankData.Level;
             _tankState = tankState;
             _tankHealth.Initialize(tankData.Health);
+            _tankRecoil.Initialize(tankData, _firePoint);
             UpdateDecal(decal);
             UpdatePattern(pattern);
             CreateHero(heroData, typeHeroSpawn);

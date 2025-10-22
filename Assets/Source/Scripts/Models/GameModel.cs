@@ -27,7 +27,8 @@ namespace Assets.Source.Scripts.Models
 
         public TankData GetTankData()
         {
-            return _upgradeConfig.GetTankDataById(_persistentDataService.PlayerProgress.CurrentPlayerTankId);
+            return _upgradeConfig
+                .GetTankDataById(_persistentDataService.PlayerProgress.TankService.GetStateByEquip().Id);
         }
 
         public TankState GetTankState(TankData tankData)

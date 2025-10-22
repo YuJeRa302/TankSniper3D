@@ -1,15 +1,17 @@
+using Assets.Source.Game.Scripts.Utility;
 using Assets.Source.Scripts.Grid;
 using Assets.Source.Scripts.Levels;
 using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.Saves;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
+using Reflex.Core;
 using UnityEngine;
 using YG;
 
 namespace Assets.Source.Scripts.Upgrades
 {
-    public class UpgradeConstruct : MonoBehaviour
+    public class UpgradeConstruct : MonoBehaviour, IInstaller
     {
         [SerializeField] private BiomsConfig _biomsConfig;
         [SerializeField] private ConfigData _configData;
@@ -20,6 +22,8 @@ namespace Assets.Source.Scripts.Upgrades
         [SerializeField] private GridView _gridView;
         [SerializeField] private UpgradeView _upgradeView;
         [SerializeField] private LevelsView _levelsView;
+        [Space(20)]
+        [SerializeField] private CoroutineRunner _coroutineRunner;
 
         private SaveAndLoader _saveAndLoader;
         private PersistentDataService _persistentDataService;
@@ -33,6 +37,11 @@ namespace Assets.Source.Scripts.Upgrades
 
             if (YG2.isGameplaying != true)
                 InitYandexGameEntities();
+        }
+
+        public void InstallBindings(ContainerBuilder containerBuilder)
+        {
+            containerBuilder.AddSingleton(_coroutineRunner, typeof(ICoroutineRunner));
         }
 
         private void InitYandexGameEntities()
@@ -50,8 +59,9 @@ namespace Assets.Source.Scripts.Upgrades
         private void Construct()
         {
             _upgradeModel = new UpgradeModel(_persistentDataService);
-            _gridModel = new GridModel(_persistentDataService);
+            _gridModel = new GridModel(_persistentDataService, _coroutineRunner, _saveAndLoader, _biomsConfig);
             _levelModel = new LevelModel(_persistentDataService, _biomsConfig);
+            _gridPlacer.Initialize();
             _gridView.Initialize(_gridModel, _gridItemConfig, _upgradeConfig, _gridPlacer);
             _upgradeView.Initialize(_upgradeModel, _upgradeConfig);
             _levelsView.Initialize(_levelModel, _biomsConfig);
@@ -61,11 +71,11 @@ namespace Assets.Source.Scripts.Upgrades
         {
             _persistentDataService = new PersistentDataService();
             _saveAndLoader = new(_persistentDataService, _configData);
-            _saveAndLoader.LoadDataFromConfig();
-            //if (_saveAndLoader.TryGetGameData())
-            //    _saveAndLoader.LoadDataFromCloud();
-            //else
-            //    _saveAndLoader.LoadDataFromConfig();
+
+            if (_saveAndLoader.TryGetGameData())
+                _saveAndLoader.LoadDataFromCloud();
+            else
+                _saveAndLoader.LoadDataFromConfig();
         }
     }
 }

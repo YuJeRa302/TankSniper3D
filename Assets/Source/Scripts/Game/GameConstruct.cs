@@ -102,8 +102,7 @@ namespace Assets.Source.Scripts.Game
         {
             _persistentDataService = new PersistentDataService();
             _saveAndLoader = new(_persistentDataService, _configData);
-            _saveAndLoader.LoadDataFromConfig();
-            //_saveAndLoader.LoadDataFromPrefs();
+            _saveAndLoader.LoadDataFromPrefs();
         }
 
         private void InitEnemy()

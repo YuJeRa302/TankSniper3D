@@ -13,12 +13,19 @@ namespace Assets.Source.Scripts.Services
 
         public List<LevelState> LevelStates => _levelStates;
 
-        public void SetStates(LevelState[] levelStates)
+        public void SetStates(List<LevelState> levelStates)
         {
-            for (int index = 0; index < levelStates.Length; index++)
-            {
-                _levelStates.Add(levelStates[index]);
-            }
+            _levelStates = levelStates;
+        }
+
+        public void AddLevelState(int id, int biomId, bool isComplete)
+        {
+            LevelState levelState = FindState(id, biomId);
+
+            if (levelState.IsComplete == true)
+                return;
+            else
+                levelState.SetComplete(isComplete);
         }
 
         public LevelState GetState(LevelData levelData, int biomId)

@@ -13,12 +13,9 @@ namespace Assets.Source.Scripts.Services
 
         public List<TankState> TankStates => _tankStates;
 
-        public void SetStates(TankState[] tankStates)
+        public void SetStates(List<TankState> tankStates)
         {
-            for (int index = 0; index < tankStates.Length; index++)
-            {
-                _tankStates.Add(tankStates[index]);
-            }
+            _tankStates = tankStates;
         }
 
         public TankState GetStateByEquip()

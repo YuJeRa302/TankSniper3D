@@ -2,7 +2,6 @@ using Assets.Source.Game.Scripts.States;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
 using Assets.Source.Scripts.Utility;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using YG;
@@ -31,6 +30,27 @@ namespace Assets.Source.Scripts.Saves
             return YG2.saves.HasSave;
         }
 
+        public void LoadDataFromCloud()
+        {
+            _persistentDataService.PlayerProgress.AmbientVolume = YG2.saves.AmbientVolume;
+            _persistentDataService.PlayerProgress.SfxVolume = YG2.saves.SfxVolumeVolume;
+            _persistentDataService.PlayerProgress.Score = YG2.saves.Score;
+            _persistentDataService.PlayerProgress.Money = YG2.saves.Money;
+            _persistentDataService.PlayerProgress.IsVibro = YG2.saves.IsVibro;
+            _persistentDataService.PlayerProgress.IsMuted = YG2.saves.IsMuted;
+            _persistentDataService.PlayerProgress.CurrentBiomId = YG2.saves.CurrentBiomId;
+            _persistentDataService.PlayerProgress.CurrentLevel = YG2.saves.CurrentLevel;
+            _persistentDataService.PlayerProgress.CurrentLevelId = YG2.saves.CurrentLevelId;
+            _persistentDataService.PlayerProgress.CurrentPlayerTankId = YG2.saves.CurrentPlayerTankId;
+            _persistentDataService.PlayerProgress.CurrentGridTankCost = YG2.saves.CurrentGridTankCost;
+            _persistentDataService.PlayerProgress.CountBuyedGridTank = YG2.saves.CountBuyedGridTank;
+            _persistentDataService.PlayerProgress.LevelService.SetStates(YG2.saves.LevelStates);
+            _persistentDataService.PlayerProgress.HeroService.SetStates(YG2.saves.HeroStates);
+            _persistentDataService.PlayerProgress.TankService.SetStates(YG2.saves.TankStates);
+            _persistentDataService.PlayerProgress.DecorationService.SetStates(_configData.DecorationStates);
+            _persistentDataService.PlayerProgress.GridService.SetStates(_configData.GridTankStates);
+        }
+
         public void LoadDataFromConfig()
         {
             _persistentDataService.PlayerProgress.AmbientVolume = _configData.AmbientVolume;
@@ -38,10 +58,13 @@ namespace Assets.Source.Scripts.Saves
             _persistentDataService.PlayerProgress.Score = _defaultIntValue;
             _persistentDataService.PlayerProgress.Money = _configData.Money;
             _persistentDataService.PlayerProgress.IsMuted = _configData.IsMuted;
+            _persistentDataService.PlayerProgress.IsVibro = _configData.IsVibro;
             _persistentDataService.PlayerProgress.CurrentPlayerTankId = _configData.CurrentPlayerTankId;
             _persistentDataService.PlayerProgress.CurrentBiomId = _configData.CurrentBiomId;
             _persistentDataService.PlayerProgress.CurrentLevelId = _configData.CurrentLevelId;
             _persistentDataService.PlayerProgress.CurrentLevel = _configData.CurrentLevel;
+            _persistentDataService.PlayerProgress.CurrentGridTankCost = _configData.CurrentGridTankCost;
+            _persistentDataService.PlayerProgress.CountBuyedGridTank = _configData.CountBuyedGridTank;
             _persistentDataService.PlayerProgress.LevelService.SetStates(_configData.LevelStates);
             _persistentDataService.PlayerProgress.HeroService.SetStates(_configData.HeroStates);
             _persistentDataService.PlayerProgress.TankService.SetStates(_configData.TankStates);
@@ -67,66 +90,56 @@ namespace Assets.Source.Scripts.Saves
             PlayerPrefs.Save();
         }
 
-        //    public void SaveGameProgerss(
-        //int score,
-        //int coins,
-        //int upgradePoints,
-        //int levelId,
-        //bool isComplete,
-        //bool isGameInterrupted)
-        //    {
-        //        if (isGameInterrupted)
-        //            return;
+        public void SaveGameProgerss(int score, int money, int biomId, int levelId, bool isComplete)
+        {
+            _persistentDataService.PlayerProgress.Score += score;
+            _persistentDataService.PlayerProgress.Money += money;
+            _persistentDataService.PlayerProgress.LevelService.AddLevelState(levelId, biomId, isComplete);
+            SaveData();
+        }
 
-        //        _persistentDataService.PlayerProgress.Score += score;
-        //        _persistentDataService.PlayerProgress.Coins += coins;
-        //        _persistentDataService.PlayerProgress.UpgradePoints += upgradePoints;
-        //        _persistentDataService.PlayerProgress.LevelService.AddLevelState(levelId, isComplete);
-        //        SaveData();
-        //    }
+        public void SaveData()
+        {
+            var newSaveData = new SavesYG
+            {
+                Money = _persistentDataService.PlayerProgress.Money,
+                AmbientVolume = _persistentDataService.PlayerProgress.AmbientVolume,
+                SfxVolumeVolume = _persistentDataService.PlayerProgress.SfxVolume,
+                IsMuted = _persistentDataService.PlayerProgress.IsMuted,
+                IsVibro = _persistentDataService.PlayerProgress.IsVibro,
+                Level = _persistentDataService.PlayerProgress.CurrentLevel,
+                Score = _persistentDataService.PlayerProgress.Score,
+                CurrentBiomId = _persistentDataService.PlayerProgress.CurrentBiomId,
+                CurrentLevelId = _persistentDataService.PlayerProgress.CurrentLevelId,
+                CurrentPlayerTankId = _persistentDataService.PlayerProgress.CurrentPlayerTankId,
+                CurrentGridTankCost = _persistentDataService.PlayerProgress.CurrentGridTankCost,
+                CountBuyedGridTank = _persistentDataService.PlayerProgress.CountBuyedGridTank,
+                HasSave = true,
 
-        //    public void SaveData()
-        //    {
-        //        var newSaveData = new SavesYG
-        //        {
-        //            Coins = _persistentDataService.PlayerProgress.Coins,
-        //            AmbientVolume = _persistentDataService.PlayerProgress.AmbientVolume,
-        //            SfxVolumeVolume = _persistentDataService.PlayerProgress.SfxVolume,
-        //            IsMuted = _persistentDataService.PlayerProgress.IsMuted,
-        //            UpgradePoints = _persistentDataService.PlayerProgress.UpgradePoints,
+                TankStates = new List<TankState>(
+                    _persistentDataService.PlayerProgress.TankService.TankStates),
 
-        //            UpgradeStates = new List<UpgradeState>(
-        //                _persistentDataService.PlayerProgress.UpgradeService.UpgradeStates),
+                DecorationStates = new List<DecorationState>(
+                    _persistentDataService.PlayerProgress.DecorationService.DecorationStates),
 
-        //            ClassAbilityStates = new List<ClassAbilityState>(
-        //                _persistentDataService.PlayerProgress.ClassAbilityService.ClassAbilityStates),
+                HeroStates = new List<HeroState>(
+                    _persistentDataService.PlayerProgress.HeroService.HeroStates),
 
-        //            DefaultWeaponState = new WeaponState[
-        //            _persistentDataService.PlayerProgress.WeaponService.WeaponStates.Count],
+                LevelStates = new List<LevelState>(
+                    _persistentDataService.PlayerProgress.LevelService.LevelStates),
 
-        //            DefaultLevelState = new LevelState[
-        //            _persistentDataService.PlayerProgress.LevelService.LevelStates.Count],
+                GridTankStates = new List<GridTankState>(
+                    _persistentDataService.PlayerProgress.GridService.GridTankStates)
+            };
 
-        //            Score = _persistentDataService.PlayerProgress.Score,
-        //            HasSave = true
-        //        };
+            string oldDataJson = JsonUtility.ToJson(YG2.saves);
+            string newDatatJson = JsonUtility.ToJson(newSaveData);
 
-        //        Array.Copy(
-        //            _persistentDataService.PlayerProgress.WeaponService.WeaponStates.ToArray(),
-        //            newSaveData.DefaultWeaponState, newSaveData.DefaultWeaponState.Length);
-
-        //        Array.Copy(
-        //            _persistentDataService.PlayerProgress.LevelService.LevelStates.ToArray(),
-        //            newSaveData.DefaultLevelState, newSaveData.DefaultLevelState.Length);
-
-        //        string oldDataJson = JsonUtility.ToJson(YG2.saves);
-        //        string newDatatJson = JsonUtility.ToJson(newSaveData);
-
-        //        if (oldDataJson != newDatatJson)
-        //        {
-        //            YG2.saves = newSaveData;
-        //            YG2.SaveProgress();
-        //        }
-        //    }
+            if (oldDataJson != newDatatJson)
+            {
+                YG2.saves = newSaveData;
+                YG2.SaveProgress();
+            }
+        }
     }
 }

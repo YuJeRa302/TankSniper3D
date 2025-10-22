@@ -7,36 +7,43 @@ namespace Assets.Source.Scripts.Grid
     {
         public static readonly IMessageBroker Message = new MessageBroker();
 
+        private readonly int _maxTankLevelMerge = 8;
         private readonly Color _defaultColor = new Color32(197, 197, 197, 255);
         private readonly Color _selectColor = Color.green;
         private readonly Color _blockedColor = Color.red;
 
         [SerializeField] private Renderer _cellRenderer;
 
-        private GridTankView _currentItem;
+        private GridTankView _currentTank;
 
+        public int Id { get; private set; }
         public bool IsOccupied { get; private set; } = false;
 
-        public void SetOccupied(GridTankView gridItemView)
+        public void Initialize(int id)
+        {
+            Id = id;
+        }
+
+        public void SetOccupied(GridTankView gridTankView)
         {
             IsOccupied = true;
-            _currentItem = gridItemView;
+            _currentTank = gridTankView;
         }
 
         public void SetFree()
         {
             IsOccupied = false;
-            _currentItem = null;
+            _currentTank = null;
             Deselect();
         }
 
-        public void Select(GridTankView newItem)
+        public void Select(GridTankView newTank)
         {
-            if (this != newItem.OriginalCell)
+            if (this != newTank.OriginalCell)
             {
                 if (IsOccupied == true)
                 {
-                    if (newItem.Level == _currentItem.Level)
+                    if (newTank.Level == _currentTank.Level)
                         Highlighting(true, _selectColor);
                     else
                         Highlighting(true, _blockedColor);
@@ -48,13 +55,16 @@ namespace Assets.Source.Scripts.Grid
             }
         }
 
-        public bool TryToMerge(GridTankView newItem)
+        public bool TryToMerge(GridTankView newTank)
         {
-            if (_currentItem != newItem)
+            if (_currentTank.Level == _maxTankLevelMerge)
+                return false;
+
+            if (_currentTank != newTank)
             {
-                if (newItem.Level == _currentItem.Level)
+                if (newTank.Level == _currentTank.Level)
                 {
-                    MergeTank(newItem);
+                    MergeTank(newTank);
                     return true;
                 }
             }
@@ -67,13 +77,21 @@ namespace Assets.Source.Scripts.Grid
             Highlighting(false, _defaultColor);
         }
 
-        private void MergeTank(GridTankView newItem)
+        private void MergeTank(GridTankView newTank)
         {
-            newItem.OriginalCell.SetFree();
+            newTank.OriginalCell.SetFree();
             Deselect();
-            Destroy(newItem.gameObject);
-            Destroy(_currentItem.gameObject);
-            Message.Publish(new M_ItemMerged(_currentItem.Level, this));
+
+            var first = newTank.GridTankState;
+            var second = _currentTank.GridTankState;
+            Destroy(newTank.gameObject);
+            Destroy(_currentTank.gameObject);
+
+            Message.Publish(new M_ItemMerged(
+                _currentTank.Level,
+                this,
+                first,
+                second));
         }
 
         private void Highlighting(bool isOn, Color color)

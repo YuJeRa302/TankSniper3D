@@ -14,12 +14,9 @@ namespace Assets.Source.Scripts.Services
 
         public List<DecorationState> DecorationStates => _decorationStates;
 
-        public void SetStates(DecorationState[] decorationStates)
+        public void SetStates(List<DecorationState> decorationStates)
         {
-            for (int index = 0; index < decorationStates.Length; index++)
-            {
-                _decorationStates.Add(decorationStates[index]);
-            }
+            _decorationStates = decorationStates;
         }
 
         public DecorationState GetState(DecorationData decorationData)

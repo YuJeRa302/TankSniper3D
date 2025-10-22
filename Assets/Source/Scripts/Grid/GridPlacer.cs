@@ -11,21 +11,17 @@ namespace Assets.Source.Scripts.Grid
         [SerializeField] private int _columns;
         [SerializeField] private int _cellSize;
 
+        private int _cellId = 0;
         private List<GridCellView> _gridCellViews = new();
 
         public List<GridCellView> GridCellViews => _gridCellViews;
-
-        private void Awake()
-        {
-            CreateGrid();
-        }
 
         private void OnDestroy()
         {
             ClearGrid();
         }
 
-        private void CreateGrid()
+        public void Initialize()
         {
             if (_gridCellView == null)
                 return;
@@ -40,9 +36,22 @@ namespace Assets.Source.Scripts.Grid
                         transform.position.y + column * _cellSize), Quaternion.identity);
 
                     cell.transform.SetParent(transform, false);
+                    cell.Initialize(_cellId);
                     _gridCellViews.Add(cell);
+                    _cellId++;
                 }
             }
+        }
+
+        public GridCellView GetGridCellById(int cellId)
+        {
+            foreach (var gridCellView in _gridCellViews)
+            {
+                if (gridCellView.Id == cellId)
+                    return gridCellView;
+            }
+
+            return default;
         }
 
         private void ClearGrid()

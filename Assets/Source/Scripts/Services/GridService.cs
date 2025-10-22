@@ -1,5 +1,4 @@
 using Assets.Source.Game.Scripts.States;
-using Assets.Source.Scripts.Grid;
 using Assets.Source.Scripts.ScriptableObjects;
 using System;
 using System.Collections.Generic;
@@ -12,56 +11,28 @@ namespace Assets.Source.Scripts.Services
     {
         [SerializeField] private List<GridTankState> _gridTankStates = new();
 
-        public List<GridTankState> GridTankState => _gridTankStates;
+        public List<GridTankState> GridTankStates => _gridTankStates;
 
-        public void SetStates(GridTankState[] gridTankStates)
+        public void SetStates(List<GridTankState> gridTankStates)
         {
-            for (int index = 0; index < gridTankStates.Length; index++)
-            {
-                _gridTankStates.Add(gridTankStates[index]);
-            }
+            _gridTankStates = gridTankStates;
         }
 
-        //public void SetOriginalCell(GridTankView gridTankView)
-        //{
-        //    if (_gridTankStates != null)
-        //    {
-        //        GridTankState gridTankState = FindState(gridTankView.GridItemData.Id);
-
-        //        if (gridTankState == null)
-        //            gridTankState = InitState(gridTankView.GridItemData);
-        //        else
-        //            gridTankState.ChangeOriginalCell(gridTankView.OriginalCell.transform.position);
-        //    }
-        //}
-
-        public GridTankState GetState(GridTankData gridTankData)
+        public void RemoveGridTankStateByMerge(GridTankState gridTankState)
         {
-            GridTankState gridTankState = FindState(gridTankData.Id);
+            if (gridTankState != null)
+                _gridTankStates.Remove(gridTankState);
+        }
 
-            if (gridTankState == null)
-                gridTankState = InitState(gridTankData);
-
+        public GridTankState CreateState(GridTankData gridTankData)
+        {
+            GridTankState gridTankState = InitState(gridTankData);
             return gridTankState;
-        }
-
-        private GridTankState FindState(int id)
-        {
-            if (_gridTankStates != null)
-            {
-                foreach (GridTankState gridTankState in _gridTankStates)
-                {
-                    if (gridTankState.Id == id)
-                        return gridTankState;
-                }
-            }
-
-            return null;
         }
 
         private GridTankState InitState(GridTankData gridTankData)
         {
-            GridTankState gridTankState = new(gridTankData.Id, Vector3.zero);
+            GridTankState gridTankState = new(gridTankData.Level, 0);
             _gridTankStates.Add(gridTankState);
             return gridTankState;
         }

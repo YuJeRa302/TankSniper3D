@@ -14,6 +14,9 @@ namespace Assets.Source.Scripts.Projectile
         private ProjectileData _projectileData;
         private int _damage;
 
+        public override ProjectileData ProjectileData => _projectileData;
+        public override int Damage => _damage;
+
         public override void Initialize(ProjectileData projectileData)
         {
             base.Initialize(projectileData);

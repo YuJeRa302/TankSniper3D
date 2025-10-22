@@ -1,3 +1,5 @@
+using Assets.Source.Game.Scripts.Enemy;
+using Assets.Source.Scripts.Game;
 using Assets.Source.Scripts.ScriptableObjects;
 using UnityEngine;
 
@@ -12,6 +14,9 @@ namespace Assets.Source.Scripts.Projectile
         private Transform _target;
         private int _speed;
         private float _lifeTime;
+
+        public abstract ProjectileData ProjectileData { get; }
+        public abstract int Damage { get; }
 
         private void Start()
         {
@@ -42,7 +47,38 @@ namespace Assets.Source.Scripts.Projectile
             transform.position += transform.forward * _speed * Time.deltaTime;
         }
 
-        protected abstract void Hit(Collider collider);
+        protected void OnCollisionEnter(Collision collision)
+        {
+            if (collision.collider.TryGetComponent(out IndestructibleObject indestructibleObject))
+            {
+                ContactPoint contact = collision.GetContact(0);
+                Vector3 hitPoint = contact.point;
+                CreateHitEffect(ProjectileData, hitPoint);
+                CreateSoundEffect(ProjectileData, hitPoint);
+                Destroy(gameObject);
+            }
+        }
+
+        protected virtual void Hit(Collider collider)
+        {
+            Vector3 hitPoint = transform.position;
+
+            if (collider.TryGetComponent(out DestructibleObjectView destructibleObjectView))
+            {
+                hitPoint = collider.ClosestPoint(transform.position);
+                destructibleObjectView.ApplyDamage(hitPoint);
+            }
+
+            if (collider.TryGetComponent(out DamageableArea damageableArea))
+            {
+                hitPoint = collider.ClosestPoint(transform.position);
+                damageableArea.ApplyDamage(Damage, hitPoint);
+            }
+
+            CreateHitEffect(ProjectileData, hitPoint);
+            CreateSoundEffect(ProjectileData, hitPoint);
+            Destroy(gameObject);
+        }
 
         protected void CreateHitEffect(ProjectileData projectileData, Vector3 hitPoint)
         {

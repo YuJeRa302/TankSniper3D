@@ -5,21 +5,21 @@ namespace Assets.Source.Game.Scripts.States
     [System.Serializable]
     public class GridTankState
     {
-        [SerializeField] private int _id;
-        [SerializeField] private Vector3 _originalCell = new ();
+        [SerializeField] private int _level;
+        [SerializeField] private int _gridCellId;
 
-        public GridTankState(int id, Vector3 originalCell)
+        public GridTankState(int level, int gridCellId)
         {
-            _id = id;
-            _originalCell = originalCell;
+            _level = level;
+            _gridCellId = gridCellId;
         }
 
-        public int Id => _id;
-        public Vector3 OriginalCell => _originalCell;
+        public int Level => _level;
+        public int GridCellId => _gridCellId;
 
-        public void ChangeOriginalCell(Vector3 originalCell)
+        public void ChangeOriginalCellId(int gridCellId)
         {
-            _originalCell = originalCell;
+            _gridCellId = gridCellId;
         }
     }
 }

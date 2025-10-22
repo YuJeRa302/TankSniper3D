@@ -13,12 +13,9 @@ namespace Assets.Source.Scripts.Services
 
         public List<HeroState> HeroStates => _heroStates;
 
-        public void SetStates(HeroState[] heroStates)
+        public void SetStates(List<HeroState> heroStates)
         {
-            for (int index = 0; index < heroStates.Length; index++)
-            {
-                _heroStates.Add(heroStates[index]);
-            }
+            _heroStates = heroStates;
         }
 
         public void SetStateByReward(HeroState newHeroState)

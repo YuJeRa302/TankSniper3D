@@ -83,6 +83,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &1163788924701049452
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2809263724949096935}
+  m_Layer: 0
+  m_Name: Fire Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2809263724949096935
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1163788924701049452}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: -1.556, z: -0.0007}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5377823810572985876}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &1305500950791432962
 GameObject:
   m_ObjectHideFlags: 0
@@ -263,6 +294,7 @@ Transform:
   - {fileID: 5695669069424602058}
   - {fileID: 4876267127218653663}
   - {fileID: 9035126617125519824}
+  - {fileID: 2809263724949096935}
   m_Father: {fileID: 1890319253665859669}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!33 &6501983470792485977
@@ -498,6 +530,7 @@ GameObject:
   - component: {fileID: 3709954088272415907}
   - component: {fileID: 4637138748083103147}
   - component: {fileID: 5708591360998511832}
+  - component: {fileID: 3653129966512186474}
   m_Layer: 0
   m_Name: Tank(Level2)
   m_TagString: Untagged
@@ -563,7 +596,9 @@ MonoBehaviour:
   - {fileID: 5520191438375141596}
   _heroSpawnPoint: {fileID: 64001538931283315}
   _turretTransform: {fileID: 1890319253665859669}
+  _firePoint: {fileID: 2809263724949096935}
   _tankHealth: {fileID: 5708591360998511832}
+  _tankRecoil: {fileID: 3653129966512186474}
 --- !u!114 &5708591360998511832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -576,3 +611,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8c6543766c8bff46bed0048f7391367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3653129966512186474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6453093525200245256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02d534e0d40664b45a0d82795aa24059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  recoilDistance: 0.3
+  recoilDuration: 0.08
+  returnDuration: 0.12

@@ -22,7 +22,7 @@ namespace Assets.Source.Scripts.Game
             Destroy(hitPoint);
         }
 
-        private void SetPartsObjectVisible() 
+        private void SetPartsObjectVisible()
         {
             foreach (var part in _pieces)
             {
@@ -43,19 +43,19 @@ namespace Assets.Source.Scripts.Game
             if (_collider)
                 _collider.enabled = false;
 
-            foreach (var p in _pieces)
+            foreach (var piece in _pieces)
             {
-                if (p == null)
+                if (piece == null)
                     continue;
 
-                var rb = p.GetComponent<Rigidbody>();
+                var rigidbody = piece.GetComponent<Rigidbody>();
 
-                if (rb != null)
+                if (rigidbody != null)
                 {
-                    rb.isKinematic = false;
-                    Vector3 dir = (p.transform.position - hitPoint).normalized + Vector3.up * _pieceUpwards;
-                    rb.AddForce(dir.normalized * _pieceForce, ForceMode.Impulse);
-                    rb.AddTorque(Random.insideUnitSphere * _pieceTorque, ForceMode.Impulse);
+                    rigidbody.isKinematic = false;
+                    Vector3 dir = (piece.transform.position - hitPoint).normalized + Vector3.up * _pieceUpwards;
+                    rigidbody.AddForce(dir.normalized * _pieceForce, ForceMode.Impulse);
+                    rigidbody.AddTorque(Random.insideUnitSphere * _pieceTorque, ForceMode.Impulse);
                 }
             }
         }

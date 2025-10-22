@@ -18,15 +18,21 @@ namespace Assets.Source.Scripts.Grid
 
         [SerializeField] private Image _levelMainTankImage;
         [SerializeField] private TMP_Text _levelMainTankText;
+        [SerializeField] private TMP_Text _moneyText;
+        [SerializeField] private TMP_Text _tankCostText;
         [SerializeField] private Vector3 _gridTankSpawnRotation;
         [Space(20)]
-        [SerializeField] private Button _createGridItemButton;
+        [SerializeField] private Button _createGridTankButton;
         [SerializeField] private Button _openUpgrade;
+        [SerializeField] private Button _loadGameSceneButton;
         [Space(20)]
         [SerializeField] private Transform _mainTankSpawnPoint;
         [SerializeField] private Transform _gridTankTransformParent;
         [Space(20)]
         [SerializeField] private GameObject _sceneGameObjects;
+        [Space(20)]
+        [SerializeField] private Slider _buyTankSlider;
+        [SerializeField] private TMP_Text _currentGridTankLevelText;
 
         private GridModel _gridModel;
         private GridConfig _gridConfig;
@@ -40,7 +46,11 @@ namespace Assets.Source.Scripts.Grid
             RemoveListeners();
         }
 
-        public void Initialize(GridModel gridModel, GridConfig gridConfig, UpgradeConfig upgradeConfig, GridPlacer gridPlacer)
+        public void Initialize(
+            GridModel gridModel,
+            GridConfig gridConfig,
+            UpgradeConfig upgradeConfig,
+            GridPlacer gridPlacer)
         {
             _gridConfig = gridConfig;
             _upgradeConfig = upgradeConfig;
@@ -48,16 +58,25 @@ namespace Assets.Source.Scripts.Grid
             _gridModel = gridModel;
             AddListeners();
             ChangeSetActiveObjects(gameObject, _sceneGameObjects, true);
+            CreateTankBySaves();
+            CreateGridTanksBySaves();
+            UpdateBuyTankSlider(_gridModel.GetMaxTankCountForBuy(), _gridModel.GetCountBuyedTanks());
+            UpdateMoneyTextValue();
         }
 
         private void AddListeners()
         {
-            _createGridItemButton.onClick.AddListener(SpawnObjectInFirstAvailableCell);
+            _createGridTankButton.onClick.AddListener(SpawnObjectInFirstAvailableCell);
             _openUpgrade.onClick.AddListener(Close);
+            _loadGameSceneButton.onClick.AddListener(OnLoadGameSceneButtonClicked);
 
             GridCellView.Message
                 .Receive<M_ItemMerged>()
-                .Subscribe(m => OnItemMerged(m.CurrentLevel, m.GridCellView))
+                .Subscribe(m => OnItemMerged(
+                    m.CurrentLevel,
+                    m.GridCellView,
+                    m.FirstMergedTank,
+                    m.SecondMergedTank))
                 .AddTo(_disposables);
 
             UpgradeView.Message
@@ -68,8 +87,9 @@ namespace Assets.Source.Scripts.Grid
 
         private void RemoveListeners()
         {
-            _createGridItemButton.onClick.RemoveListener(SpawnObjectInFirstAvailableCell);
+            _createGridTankButton.onClick.RemoveListener(SpawnObjectInFirstAvailableCell);
             _openUpgrade.onClick.RemoveListener(Close);
+            _loadGameSceneButton.onClick.RemoveListener(OnLoadGameSceneButtonClicked);
             _disposables?.Dispose();
         }
 
@@ -79,16 +99,27 @@ namespace Assets.Source.Scripts.Grid
             Message.Publish(new M_CloseGrid());
         }
 
+        private void OnLoadGameSceneButtonClicked()
+        {
+            _gridModel.LoadGameScene();
+        }
+
         private void OnOpen()
         {
             ChangeSetActiveObjects(gameObject, _sceneGameObjects, true);
             UpdateTankEntities();
         }
 
-        private void OnItemMerged(int currentLevel, GridCellView gridCellView)
+        private void OnItemMerged(
+            int currentLevel,
+            GridCellView gridCellView,
+            GridTankState firstMergedTank,
+            GridTankState secondMergedTank)
         {
             currentLevel++;
             _gridModel.IncreaseMainTankLevel(currentLevel);
+            _gridModel.RemoveGridTankStateByMerge(firstMergedTank);
+            _gridModel.RemoveGridTankStateByMerge(secondMergedTank);
             CreateGridTank(gridCellView, currentLevel);
             UpdateMainTank();
         }
@@ -138,23 +169,64 @@ namespace Assets.Source.Scripts.Grid
             UpdateMainTankUI();
         }
 
+        private void UpdateMoneyTextValue()
+        {
+            _currentGridTankLevelText.text = "Уровень" + _gridModel.CurrentGridTankLevel.ToString();
+            _moneyText.text = _gridModel.GetCurrentCountMoney().ToString();
+            _tankCostText.text = _gridModel.GetCurrentTankCost().ToString();
+        }
+
+        private void UpdateBuyTankSlider(int maxValue, int currentValue)
+        {
+            _buyTankSlider.maxValue = maxValue;
+            _buyTankSlider.value = currentValue;
+        }
+
         private void SpawnObjectInFirstAvailableCell()
         {
             foreach (GridCellView cell in _gridPlacer.GridCellViews)
             {
                 if (!cell.IsOccupied)
                 {
-                    CreateGridTank(cell, _gridModel.CurrentGridTankLevel);
-                    UpdateMainTank();
+                    if (_gridModel.TryBuyGridTank(_gridModel.GetCurrentTankCost()))
+                    {
+                        CreateGridTank(cell, _gridModel.CurrentGridTankLevel);
+                        UpdateMainTank();
+                        UpdateBuyTankSlider(_gridModel.GetMaxTankCountForBuy(), _gridModel.GetCountBuyedTanks());
+                        UpdateMoneyTextValue();
+                    }
                     break;
                 }
+            }
+        }
+
+        private void CreateTankBySaves()
+        {
+            if (_gridModel.GetTankStateByEquip() == null)
+                return;
+
+            CreateMainTank(_gridModel.GetTankStateByEquip().Level);
+            UpdateMainTankUI();
+        }
+
+        private void CreateGridTanksBySaves()
+        {
+            if (_gridModel.GetGridTankStates().Count == 0)
+                return;
+
+            for (int index = 0; index < _gridModel.GetGridTankStates().Count; index++)
+            {
+                CreateGridTank(_gridPlacer
+                    .GetGridCellById(
+                    _gridModel.GetGridTankStates()[index].GridCellId),
+                    _gridModel.GetGridTankStates()[index].Level);
             }
         }
 
         private void CreateGridTank(GridCellView gridCellView, int currentTankLevel)
         {
             GridTankData gridTankData = _gridConfig.GetGridTankDataByLevel(currentTankLevel);
-            GridTankState gridTankState = _gridModel.GetGridTankState(gridTankData);
+            GridTankState gridTankState = _gridModel.CreateGridTankState(gridTankData);
 
             GridTankView tank = Instantiate(gridTankData.TankView, new Vector3(
                 gridCellView.transform.position.x,
