@@ -62,6 +62,7 @@ namespace Assets.Source.Scripts.Grid
             CreateGridTanksBySaves();
             UpdateBuyTankSlider(_gridModel.GetMaxTankCountForBuy(), _gridModel.GetCountBuyedTanks());
             UpdateMoneyTextValue();
+            UnlockUpgradeButton();
         }
 
         private void AddListeners()
@@ -182,6 +183,12 @@ namespace Assets.Source.Scripts.Grid
             _buyTankSlider.value = currentValue;
         }
 
+        private void UnlockUpgradeButton() 
+        {
+            if(_gridModel.GetTankStateByEquip() != null)
+                _openUpgrade.gameObject.SetActive(true);
+        }
+
         private void SpawnObjectInFirstAvailableCell()
         {
             foreach (GridCellView cell in _gridPlacer.GridCellViews)
@@ -194,6 +201,7 @@ namespace Assets.Source.Scripts.Grid
                         UpdateMainTank();
                         UpdateBuyTankSlider(_gridModel.GetMaxTankCountForBuy(), _gridModel.GetCountBuyedTanks());
                         UpdateMoneyTextValue();
+                        UnlockUpgradeButton();
                     }
                     break;
                 }

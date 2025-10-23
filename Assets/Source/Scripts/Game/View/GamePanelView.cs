@@ -15,7 +15,8 @@ namespace Assets.Source.Scripts.Game
     {
         public static readonly IMessageBroker Message = new MessageBroker();
 
-        private readonly TypeHeroSpawn _typeHeroSpawn = TypeHeroSpawn.Tank;
+        private readonly TypeHeroSpawn _droneHero = TypeHeroSpawn.Drone;
+        private readonly TypeHeroSpawn _tankHero = TypeHeroSpawn.Tank;
         private readonly float _rotationAngle = -90f;
         private readonly float _rotationDuration = 0.5f;
         private readonly float _moveDuration = 1f;
@@ -40,8 +41,6 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private Button _reloadLevelButton;
         [SerializeField] private Button _cancelButton;
         [SerializeField] private Button _backButton;
-        [Space(20)]
-        [SerializeField] private Button _sniperScopeButton;
 
         private Transform _turret;
         private TankView _mainTank;
@@ -51,20 +50,25 @@ namespace Assets.Source.Scripts.Game
         private CompositeDisposable _disposables = new();
         private Quaternion _initialRotation;
 
-        public Button SniperScopeButton => _sniperScopeButton;
         public Transform TransformPlayerTank => _mainTank.transform;
+        public Transform TransformPlayerDrone => _startPosition;
 
         private void OnDestroy()
         {
             RemoveListeners();
         }
 
-        public void Initialize(GameModel gameModel, UpgradeConfig upgradeConfig, GameData gameData)
+        public void Initialize(GameModel gameModel, UpgradeConfig upgradeConfig, GameData gameData, LevelData levelData)
         {
             _gameModel = gameModel;
             _upgradeConfig = upgradeConfig;
             _gameData = gameData;
-            CreateMainTank();
+
+            if (levelData.TypeLevel == TypeLevel.Drone)
+                CreateDroneEntities();
+            else
+                CreateMainTank();
+
             AddListeners();
         }
 
@@ -78,7 +82,22 @@ namespace Assets.Source.Scripts.Game
 
             SniperScopeView.Message
                 .Receive<M_Aiming>()
-                .Subscribe(m => OnSniperScopeUsed(m.IsAiming))
+                .Subscribe(m => OnTankSniperScopeUsed(m.IsAiming))
+                .AddTo(_disposables);
+
+            SniperScopeView.Message
+                .Receive<M_CloseScope>()
+                .Subscribe(m => OnTankSniperScopeUsed(false))
+                .AddTo(_disposables);
+
+            DroneScopeView.Message
+                .Receive<M_Aiming>()
+                .Subscribe(m => OnDroneSniperScopeUsed(m.IsAiming))
+                .AddTo(_disposables);
+
+            DroneHealth.Message
+                .Receive<M_DeathDrone>()
+                .Subscribe(m => OnDroneDeath())
                 .AddTo(_disposables);
         }
 
@@ -114,7 +133,13 @@ namespace Assets.Source.Scripts.Game
 
         }
 
-        private void OnSniperScopeUsed(bool state)
+        private void OnDroneSniperScopeUsed(bool state)
+        {
+            ChangeSetActive();
+            gameObject.SetActive(!state);
+        }
+
+        private void OnTankSniperScopeUsed(bool state)
         {
             ChangeSetActive();
             gameObject.SetActive(!state);
@@ -123,6 +148,12 @@ namespace Assets.Source.Scripts.Game
                 RotateAndMoveFirePosition();
             else
                 RotateAndMoveBack();
+        }
+
+        private void OnDroneDeath()
+        {
+            if (_gameModel.TryCreateDrone())
+                CreateDrone();
         }
 
         private void ChangeSetActive()
@@ -134,6 +165,35 @@ namespace Assets.Source.Scripts.Game
             _moneyBar.SetActive(false);
             _openReloadPanelButton.gameObject.SetActive(true);
             _gameParametersView.gameObject.SetActive(true);
+        }
+
+        private void CreateDroneEntities()
+        {
+            CreateDrone();
+            CreateHero();
+        }
+
+        private void CreateHero()
+        {
+            HeroData heroData = _upgradeConfig.GetHeroDataById(_gameModel.GetHeroId());
+
+            if (heroData == null)
+                return;
+
+            var hero = Instantiate(heroData.HeroView, _startPosition);
+            hero.Initialize(heroData, _droneHero);
+        }
+
+        private void CreateDrone()
+        {
+            var drone = Instantiate(_gameData.DroneViewPrefab, new Vector3(
+                _firePosition.position.x,
+                _firePosition.position.y + _gameData.DroneViewPrefab.transform.position.y,
+                _firePosition.position.z),
+                Quaternion.identity);
+
+            drone.Initialize();
+            Message.Publish(new M_CreateDrone(drone));
         }
 
         private void CreateMainTank()
@@ -162,7 +222,7 @@ namespace Assets.Source.Scripts.Game
                 _upgradeConfig.GetDecalDataById(tankState.DecalId),
                 _upgradeConfig.GetPatternDataById(tankState.PatternId),
                 _upgradeConfig.GetHeroDataById(tankState.HeroId),
-                _typeHeroSpawn);
+                _tankHero);
         }
 
         private void RotateAndMoveFirePosition()

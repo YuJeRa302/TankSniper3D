@@ -29,6 +29,9 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private GameParametersView _gameParametersView;
         [Space(20)]
         [SerializeField] private Transform _scopeParent;
+        //[SerializeField] private LevelData _levelData; для тестирования дрона
+        [Space(20)]
+        [SerializeField] private Button _sniperScopeButton;
 
         private GamePauseService _gamePauseService;
         private SaveAndLoader _saveAndLoader;
@@ -45,7 +48,6 @@ namespace Assets.Source.Scripts.Game
         private void Start()
         {
             Construct();
-            InitEnemy();
         }
 
         public void InstallBindings(ContainerBuilder containerBuilder)
@@ -60,17 +62,15 @@ namespace Assets.Source.Scripts.Game
 
         private void CreateUI()
         {
-            _gamePanelView.Initialize(_gameModel, _upgradeConfig, _gameData);
+            CreateScope(_sniperScopeButton);
+            _gamePanelView.Initialize(_gameModel, _upgradeConfig, _gameData, _levelData);
             _shooting.Initialize(_gameModel.GetTankData());
             _levelsView.Initialize(_levelModel, _gameData.BiomsConfig);
             _gameParametersView.Initialize(_gameModel.GetTankData().Health, _enemies.Count);
-            CreateScope(_gamePanelView.SniperScopeButton);
         }
 
         private void CreateScope(Button sniperScopeButton)
         {
-            _levelData = _gameModel.GetLevelData();
-
             if (_levelData.TypeLevel == TypeLevel.Drone)
                 CreateDroneScope(sniperScopeButton);
             else
@@ -84,7 +84,12 @@ namespace Assets.Source.Scripts.Game
             crosshairInstance.Initialize(_enemies, sniperScopeButton);
         }
 
-        private void CreateDroneScope(Button sniperScopeButton) { }
+        private void CreateDroneScope(Button sniperScopeButton)
+        {
+            var crosshairInstance = Instantiate(_gameData.DroneScopeView);
+            crosshairInstance.transform.SetParent(_scopeParent, false);
+            crosshairInstance.Initialize(sniperScopeButton);
+        }
 
         private void CreateInstanceBindings()
         {
@@ -95,7 +100,13 @@ namespace Assets.Source.Scripts.Game
         {
             _gameModel = new GameModel(_persistentDataService, _upgradeConfig, _gameData);
             _levelModel = new LevelModel(_persistentDataService, _gameData.BiomsConfig);
+            _levelData = _gameModel.GetLevelData();
             CreateUI();
+
+            if (_levelData.TypeLevel == TypeLevel.Drone)
+                InitEnemy(_gamePanelView.TransformPlayerDrone);
+            else
+                InitEnemy(_gamePanelView.TransformPlayerTank);
         }
 
         private void LoadData()
@@ -103,13 +114,14 @@ namespace Assets.Source.Scripts.Game
             _persistentDataService = new PersistentDataService();
             _saveAndLoader = new(_persistentDataService, _configData);
             _saveAndLoader.LoadDataFromPrefs();
+            //_saveAndLoader.LoadDataFromConfig(); для тестирования дрона
         }
 
-        private void InitEnemy()
+        private void InitEnemy(Transform playerTransform)
         {
             foreach (Enemy enemy in _enemies)
             {
-                enemy.Initialize(_gamePanelView.TransformPlayerTank);
+                enemy.Initialize(playerTransform);
             }
         }
     }

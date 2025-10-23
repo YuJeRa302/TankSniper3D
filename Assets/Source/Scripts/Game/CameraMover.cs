@@ -31,6 +31,11 @@ namespace Assets.Source.Scripts.Game
                 .Receive<M_Aiming>()
                 .Subscribe(m => SetCameraZoom(m.IsAiming))
                 .AddTo(_disposables);
+
+            SniperScopeView.Message
+                .Receive<M_CloseScope>()
+                .Subscribe(m => SetCameraZoom(false))
+                .AddTo(_disposables);
         }
 
         private void OnDestroy()
@@ -77,10 +82,7 @@ namespace Assets.Source.Scripts.Game
                 _rotationY += Input.GetAxis("Mouse X") * sensitivity;
                 _rotationX -= Input.GetAxis("Mouse Y") * sensitivity;
 
-                // Ограничиваем угол по X (наклон вверх/вниз)
                 _rotationX = Mathf.Clamp(_rotationX, -45f, 45f);
-
-                // Ограничиваем угол по Y (вращение влево/вправо), например, от -60 до 60 градусов
                 _rotationY = Mathf.Clamp(_rotationY, -60f, 60f);
                 _mainCamera.transform.localRotation = Quaternion.Euler(_rotationX, _rotationY, 0);
             }

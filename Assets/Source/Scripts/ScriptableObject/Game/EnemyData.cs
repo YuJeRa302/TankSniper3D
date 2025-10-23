@@ -8,6 +8,7 @@ namespace Assets.Source.Scripts.ScriptableObjects
         [SerializeField] private int _health;
         [SerializeField] private float _moveSpeed = 3f;
         [SerializeField] private float _rotateSpeed = 5f;
+        [SerializeField] private int _moneyReward;
         [SerializeField] private ParticleSystem _explosionEffect;
         [SerializeField] private AudioClip _movingAudioClip;
         [SerializeField] private AudioClip _standingAudioClip;
@@ -17,6 +18,7 @@ namespace Assets.Source.Scripts.ScriptableObjects
         public int Health => _health;
         public float MoveSpeed => _moveSpeed;
         public float RotationSpeed => _rotateSpeed;
+        public int MoneyReward => _moneyReward;
         public ParticleSystem ExplosionEffect => _explosionEffect;
         public AudioClip MovingAudioClip => _movingAudioClip;
         public AudioClip ExplosionSound => _explosionSound;

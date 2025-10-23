@@ -7,13 +7,15 @@ namespace Assets.Source.Game.Scripts.Enemy
         public static readonly IMessageBroker Message = new MessageBroker();
 
         private readonly int _maxHealth;
+        private readonly Enemy _enemy;
 
         private bool _isDead = false;
         private int _currentHealth;
 
         public EnemyHealth(Enemy enemy)
         {
-            _maxHealth = enemy.Health;
+            _enemy = enemy;
+            _maxHealth = _enemy.Health;
             _currentHealth = _maxHealth;
         }
 
@@ -29,7 +31,7 @@ namespace Assets.Source.Game.Scripts.Enemy
 
             if (_currentHealth <= 0)
             {
-                Message.Publish(new M_DeathEnemy());
+                Message.Publish(new M_DeathEnemy(_enemy.MoneyReward));
                 _currentHealth = 0;
                 _isDead = true;
             }

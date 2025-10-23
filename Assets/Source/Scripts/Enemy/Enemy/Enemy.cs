@@ -46,6 +46,7 @@ namespace Assets.Source.Game.Scripts.Enemy
         public float MoveSpeed => _enemyData.MoveSpeed;
         public int Health => _enemyData.Health;
         public float RotateSpeed => _enemyData.RotationSpeed;
+        public int MoneyReward => _enemyData.MoneyReward;
 
         private void OnDestroy()
         {
@@ -61,6 +62,11 @@ namespace Assets.Source.Game.Scripts.Enemy
             _damageableAreas.ForEach(s => s.Initialize(_enemyHealth));
 
             Shooting.Message
+                .Receive<M_Shoot>()
+                .Subscribe(m => OnPlayerFirstShot())
+                .AddTo(_disposables);
+
+            DroneScopeView.Message
                 .Receive<M_Shoot>()
                 .Subscribe(m => OnPlayerFirstShot())
                 .AddTo(_disposables);

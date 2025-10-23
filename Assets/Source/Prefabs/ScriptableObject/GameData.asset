@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _biomsConfig: {fileID: 11400000, guid: 67ea884647fdd3347a2c17b30bdc52f3, type: 2}
   _sniperScopeViewPrefab: {fileID: 1880294499833559438, guid: 9c8893aabf1608943b3cf07c663a0b01, type: 3}
-  _droneScopeViewPrefab: {fileID: 0}
+  _droneScopeViewPrefab: {fileID: 8041128787121417801, guid: a55f5aa88add80d4b9c1c20c4a345ad6, type: 3}
+  _droneViewPrefab: {fileID: 272564715847281911, guid: cd868f813dd69d14ba8d3630064ed3cb, type: 3}

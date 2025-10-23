@@ -23,6 +23,8 @@ namespace Assets.Source.Scripts.Game
         [Space(20)]
         [SerializeField] private Image _superShotImage;
         [Space(20)]
+        [SerializeField] private Button _closeScope;
+        [Space(20)]
         [SerializeField] private SniperCrosshairView _sniperCrosshairView;
 
         private Button _sniperScopeButton;
@@ -59,6 +61,7 @@ namespace Assets.Source.Scripts.Game
         private void AddListeners()
         {
             _sniperScopeButton.onClick.AddListener(OnSniperScopeButtonClicked);
+            _closeScope.onClick.AddListener(OnCloseButtonClicked);
 
             Shooting.Message
                 .Receive<M_Reloading>()
@@ -90,6 +93,7 @@ namespace Assets.Source.Scripts.Game
         private void RemoveListeners()
         {
             _sniperScopeButton.onClick.RemoveListener(OnSniperScopeButtonClicked);
+            _closeScope.onClick.RemoveListener(OnCloseButtonClicked);
             _disposables?.Dispose();
         }
 
@@ -140,6 +144,14 @@ namespace Assets.Source.Scripts.Game
             _sniperScopeButton.gameObject.SetActive(true);
             gameObject.SetActive(false);
             Message.Publish(new M_Aiming(false));
+        }
+
+        private void OnCloseButtonClicked()
+        {
+            gameObject.SetActive(false);
+            _isAiming = false;
+            _sniperScopeButton.gameObject.SetActive(true);
+            Message.Publish(new M_CloseScope());
         }
 
         private void OnSniperScopeButtonClicked()
