@@ -19,6 +19,8 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private Shooting _shooting;
         [SerializeField] private List<Enemy> _enemies;
         [Space(20)]
+        [SerializeField] private CameraMover _cameraMover;
+        [Space(20)]
         [SerializeField] private CoroutineRunner _coroutineRunner;
         [Space(20)]
         [SerializeField] private ConfigData _configData;
@@ -58,7 +60,7 @@ namespace Assets.Source.Scripts.Game
         public void InstallBindings(ContainerBuilder containerBuilder)
         {
             LoadData();
-            CreateInstanceBindings();
+            _gamePauseService = new GamePauseService(_persistentDataService);
 
             containerBuilder
                 .AddSingleton(_gamePauseService)
@@ -97,17 +99,13 @@ namespace Assets.Source.Scripts.Game
             crosshairInstance.Initialize(sniperScopeButton);
         }
 
-        private void CreateInstanceBindings()
-        {
-            _gamePauseService = new GamePauseService(_persistentDataService);
-        }
-
         private void Construct()
         {
             _gameModel = new GameModel(_persistentDataService, _upgradeConfig, _gameData);
             _levelModel = new LevelModel(_persistentDataService, _gameData.BiomsConfig);
             _settingsModel = new SettingsModel(_persistentDataService, _audioPlayer, _gamePauseService);
             _levelData = _gameModel.GetLevelData();
+            _cameraMover.Initialize(_gamePauseService);
             CreateUI();
 
             if (_levelData.TypeLevel == TypeLevel.Drone)

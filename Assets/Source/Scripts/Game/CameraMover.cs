@@ -1,3 +1,4 @@
+using Assets.Source.Scripts.Services;
 using System.Collections;
 using UniRx;
 using UnityEngine;
@@ -18,16 +19,37 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private float _normalSensitivity = 0.42f;
         [SerializeField] private float _sniperSensitivity = 0.05f;
 
+        private GamePauseService _gamePauseService;
         private Coroutine _zoomCoroutine;
         private CompositeDisposable _disposables = new();
         private bool _isSniperMode = false;
+        private bool _isCanRotation = true;
         private Vector3 _normalPosition;
         private float _rotationX = 0f;
         private float _rotationY = 0f;
 
-        private void Awake()
+        private void OnDestroy()
         {
+            RemoveListeners();
+        }
+
+        private void Update()
+        {
+            if (_isCanRotation)
+                RotationCamera();
+        }
+
+        public void Initialize(GamePauseService gamePauseService)
+        {
+            _gamePauseService = gamePauseService;
             SetCameraParameters();
+            AddListeners();
+        }
+
+        private void AddListeners()
+        {
+            _gamePauseService.GamePaused += OnGamePause;
+            _gamePauseService.GameResumed += OnGameResume;
 
             SniperScopeView.Message
                 .Receive<M_Aiming>()
@@ -40,14 +62,21 @@ namespace Assets.Source.Scripts.Game
                 .AddTo(_disposables);
         }
 
-        private void OnDestroy()
+        private void RemoveListeners()
         {
             _disposables.Dispose();
+            _gamePauseService.GamePaused -= OnGamePause;
+            _gamePauseService.GameResumed -= OnGameResume;
         }
 
-        private void Update()
+        private void OnGamePause(bool state)
         {
-            RotationCamera();
+            _isCanRotation = false;
+        }
+
+        private void OnGameResume(bool state)
+        {
+            _isCanRotation = true;
         }
 
         private void SetCameraParameters()

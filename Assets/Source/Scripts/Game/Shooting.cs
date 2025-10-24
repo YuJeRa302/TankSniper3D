@@ -37,7 +37,8 @@ namespace Assets.Source.Scripts.Game
 
         public void Initialize(GameModel gameModel)
         {
-            _tankData = gameModel.GetTankData();
+            _gameModel = gameModel;
+            _tankData = _gameModel.GetTankData();
             _currentProjectileCount = _maxProjectileCount;
             _shootingStrategy = _tankData.ShootingStrategy;
             _shootingStrategy.Construct(_tankData.ProjectileData, _shotPoint);

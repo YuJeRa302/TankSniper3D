@@ -882,6 +882,105 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4918615623361133833, guid: c040ab9b6f143dc419e9278a27bcad9b, type: 3}
   m_PrefabInstance: {fileID: 91475068}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &92972141
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 92972142}
+  - component: {fileID: 92972144}
+  - component: {fileID: 92972143}
+  - component: {fileID: 92972145}
+  m_Layer: 5
+  m_Name: Settings Panel View
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &92972142
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 92972141}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1593045917}
+  m_Father: {fileID: 1741394545}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &92972143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 92972141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.65882355}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &92972144
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 92972141}
+  m_CullTransparentMesh: 1
+--- !u!114 &92972145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 92972141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1f4f16e8c81124438ad58f7d35e6e9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _vibroButton: {fileID: 565021162}
+  _soundButton: {fileID: 1740666186}
+  _backButton: {fileID: 775803661}
+  _openButton: {fileID: 1385452398}
+  _soundImage: {fileID: 1255800422}
+  _soundMuteSprite: {fileID: 21300000, guid: b098a08a116068e408ebc093e20668b1, type: 3}
+  _soundUnmuteSprite: {fileID: 21300000, guid: 02906cd07b9c6a34bb82503585680461, type: 3}
+  _vibroImage: {fileID: 1168367139}
+  _vibroEnableSprite: {fileID: 21300000, guid: 4697b11e0f6d9b94b9229e58fcab16f7, type: 3}
+  _vibroDisableSprite: {fileID: 21300000, guid: 7b781ea92b499264d9e50043ae6c199f, type: 3}
 --- !u!1001 &101958952
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2197,6 +2296,82 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 270906105}
+  m_CullTransparentMesh: 1
+--- !u!1 &276363789
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 276363790}
+  - component: {fileID: 276363792}
+  - component: {fileID: 276363791}
+  m_Layer: 5
+  m_Name: Relaod Level Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &276363790
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276363789}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1011180530}
+  m_Father: {fileID: 1741394545}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &276363791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276363789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.65882355}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &276363792
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276363789}
   m_CullTransparentMesh: 1
 --- !u!1 &282038240
 GameObject:
@@ -5303,12 +5478,13 @@ MonoBehaviour:
   - {fileID: 1896180865783075208}
   - {fileID: 6460092766599636516}
   - {fileID: 8798949005415847925}
+  _cameraMover: {fileID: 601809575}
   _coroutineRunner: {fileID: 601809577}
   _configData: {fileID: 11400000, guid: 3b700c3564c723245b8b2a15be250f7d, type: 2}
   _gameData: {fileID: 11400000, guid: 7aae2804ad2a2484ab5388d3c44fe694, type: 2}
   _upgradeConfig: {fileID: 11400000, guid: a220a536bbeca2a4398d24d5a21ab861, type: 2}
   _levelsView: {fileID: 1790635290}
-  _settingsView: {fileID: 1593045918}
+  _settingsView: {fileID: 92972145}
   _gamePanelView: {fileID: 1956963868}
   _gameParametersView: {fileID: 440822532}
   _scopeParent: {fileID: 585441999}
@@ -8841,12 +9017,12 @@ GameObject:
   - component: {fileID: 1011180532}
   - component: {fileID: 1011180531}
   m_Layer: 5
-  m_Name: Relaod Level Panel
+  m_Name: Relaod Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1011180530
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8854,7 +9030,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1011180529}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -8865,7 +9041,7 @@ RectTransform:
   - {fileID: 986602595}
   - {fileID: 138814704}
   - {fileID: 1044651065}
-  m_Father: {fileID: 1741394545}
+  m_Father: {fileID: 276363790}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -14224,9 +14400,8 @@ GameObject:
   - component: {fileID: 1593045917}
   - component: {fileID: 1593045920}
   - component: {fileID: 1593045919}
-  - component: {fileID: 1593045918}
   m_Layer: 5
-  m_Name: Settings Panel View
+  m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14239,7 +14414,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1593045916}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -14249,34 +14424,13 @@ RectTransform:
   - {fileID: 1082925707}
   - {fileID: 775803660}
   - {fileID: 354851077}
-  m_Father: {fileID: 1741394545}
+  m_Father: {fileID: 92972142}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 700, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1593045918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1593045916}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1f4f16e8c81124438ad58f7d35e6e9c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _vibroButton: {fileID: 565021162}
-  _soundButton: {fileID: 1740666186}
-  _backButton: {fileID: 775803661}
-  _soundImage: {fileID: 1255800422}
-  _soundMuteSprite: {fileID: 21300000, guid: b098a08a116068e408ebc093e20668b1, type: 3}
-  _soundUnmuteSprite: {fileID: 21300000, guid: 02906cd07b9c6a34bb82503585680461, type: 3}
-  _vibroImage: {fileID: 1168367139}
-  _vibroEnableSprite: {fileID: 21300000, guid: 4697b11e0f6d9b94b9229e58fcab16f7, type: 3}
-  _vibroDisableSprite: {fileID: 21300000, guid: 7b781ea92b499264d9e50043ae6c199f, type: 3}
 --- !u!114 &1593045919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15398,11 +15552,11 @@ RectTransform:
   - {fileID: 585441999}
   - {fileID: 1790635289}
   - {fileID: 1956963867}
-  - {fileID: 1593045917}
-  - {fileID: 1011180530}
   - {fileID: 440822531}
   - {fileID: 1562450547}
   - {fileID: 1200097244}
+  - {fileID: 92972142}
+  - {fileID: 276363790}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -17045,13 +17199,12 @@ MonoBehaviour:
   _gameParametersView: {fileID: 440822532}
   _levelsView: {fileID: 1790635290}
   _moneyBar: {fileID: 72038534}
-  _settingsButton: {fileID: 1385452398}
   _openReloadPanelButton: {fileID: 435944873}
   _startPosition: {fileID: 665696399}
   _firePosition: {fileID: 1384493305}
   _mainTankParent: {fileID: 1137548141}
   _tankSpawnRotation: {x: 0, y: 90, z: 0}
-  _reloadPanel: {fileID: 1011180529}
+  _reloadPanel: {fileID: 276363789}
   _reloadLevelButton: {fileID: 1094898618}
   _cancelButton: {fileID: 986602596}
   _backButton: {fileID: 282038242}

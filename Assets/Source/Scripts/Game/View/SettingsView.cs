@@ -10,6 +10,7 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private Button _vibroButton;
         [SerializeField] private Button _soundButton;
         [SerializeField] private Button _backButton;
+        [SerializeField] private Button _openButton;
         [Space(20)]
         [SerializeField] private Image _soundImage;
         [SerializeField] private Sprite _soundMuteSprite;
@@ -28,6 +29,7 @@ namespace Assets.Source.Scripts.Game
             _soundButton.onClick.AddListener(OnSoundButtonClicked);
             _vibroButton.onClick.AddListener(OnVibroButtonClicked);
             _backButton.onClick.AddListener(Close);
+            _openButton.onClick.AddListener(Open);
         }
 
         private void OnDestroy()
@@ -35,6 +37,7 @@ namespace Assets.Source.Scripts.Game
             _soundButton.onClick.RemoveListener(OnSoundButtonClicked);
             _vibroButton.onClick.RemoveListener(OnVibroButtonClicked);
             _backButton.onClick.RemoveListener(Close);
+            _openButton.onClick.RemoveListener(Open);
         }
 
         public void Initialize(SettingsModel settingsModel, AudioPlayer audioPlayer)
@@ -58,6 +61,7 @@ namespace Assets.Source.Scripts.Game
         {
             var vibroState = !_settingsModel.GetVibroState();
             _settingsModel.SetVibroState(vibroState);
+            ChangeImageSprite(_vibroImage, _vibroEnableSprite, _vibroDisableSprite, vibroState);
         }
 
         private void OnSoundButtonClicked()
@@ -65,6 +69,7 @@ namespace Assets.Source.Scripts.Game
             var mute = !_settingsModel.IsMuted;
             _settingsModel.SetMute(mute);
             _audioPlayer.MuteSound(mute);
+            ChangeImageSprite(_soundImage, _soundUnmuteSprite, _soundMuteSprite, mute);
         }
     }
 }

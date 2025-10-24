@@ -30,7 +30,6 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private LevelsView _levelsView;
         [SerializeField] private GameObject _moneyBar;
         [Space(20)]
-        [SerializeField] private Button _settingsButton;
         [SerializeField] private Button _openReloadPanelButton;
         [Space(20)]
         [SerializeField] private Transform _startPosition;
@@ -78,7 +77,6 @@ namespace Assets.Source.Scripts.Game
 
         private void AddListeners()
         {
-            _settingsButton.onClick.AddListener(OnSettingsButton);
             _cancelButton.onClick.AddListener(OnCloseReloadPanelClicked);
             _backButton.onClick.AddListener(OnCloseReloadPanelClicked);
             _reloadLevelButton.onClick.AddListener(OnSceneReloaded);
@@ -107,7 +105,6 @@ namespace Assets.Source.Scripts.Game
 
         private void RemoveListeners()
         {
-            _settingsButton.onClick.RemoveListener(OnSettingsButton);
             _cancelButton.onClick.RemoveListener(OnCloseReloadPanelClicked);
             _backButton.onClick.RemoveListener(OnCloseReloadPanelClicked);
             _reloadLevelButton.onClick.RemoveListener(OnSceneReloaded);
@@ -131,11 +128,6 @@ namespace Assets.Source.Scripts.Game
         {
             _gameModel.ReloadScene();
             Message.Publish(new M_ReloadLevel());
-        }
-
-        private void OnSettingsButton()
-        {
-
         }
 
         private void OnDroneSniperScopeUsed(bool state)
