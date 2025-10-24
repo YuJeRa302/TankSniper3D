@@ -52,7 +52,11 @@ namespace Assets.Source.Scripts.Upgrades
             CreateHero(heroData, typeHeroSpawn);
         }
 
-        public void UpdateTankEntities(DecorationData decal, DecorationData pattern, HeroData heroData)
+        public void UpdateTankEntities(
+            DecorationData decal,
+            DecorationData pattern,
+            HeroData heroData,
+            TypeHeroSpawn typeHeroSpawn)
         {
             if (decal.Id != _decalData.Id)
                 UpdateDecal(decal);
@@ -63,11 +67,11 @@ namespace Assets.Source.Scripts.Upgrades
             if (_heroData != null)
             {
                 if (heroData.Id != _heroData.Id)
-                    CreateHero(heroData, _typeHeroSpawn);
+                    CreateHero(heroData, typeHeroSpawn);
             }
             else
             {
-                CreateHero(heroData, _typeHeroSpawn);
+                CreateHero(heroData, typeHeroSpawn);
             }
         }
 

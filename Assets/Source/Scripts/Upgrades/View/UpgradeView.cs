@@ -191,7 +191,8 @@ namespace Assets.Source.Scripts.Upgrades
             _tankView.UpdateTankEntities(
                 _upgradeConfig.GetDecalDataById(_tankView.TankState.DecalId),
                 _upgradeConfig.GetPatternDataById(_tankView.TankState.PatternId),
-                _upgradeConfig.GetHeroDataById(_tankView.TankState.HeroId));
+                _upgradeConfig.GetHeroDataById(_tankView.TankState.HeroId),
+                _typeHeroSpawn);
         }
 
         private void SelectButton(SelectionButtonView selectionButtonView)

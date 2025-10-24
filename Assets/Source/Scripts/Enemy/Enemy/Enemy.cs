@@ -37,6 +37,7 @@ namespace Assets.Source.Game.Scripts.Enemy
         private EnemySoundPlayer _enemySoundPlayer;
         private CompositeDisposable _disposables = new();
 
+        public EnemyHealth EnemyHealth => _enemyHealth;
         public EnemySoundPlayer EnemySoundPlayer => _enemySoundPlayer;
         public Transform RotationPartToPlayer => _rotationPartToPlayer;
         public Transform Player => _player;

@@ -23,10 +23,10 @@ namespace Assets.Source.Game.Scripts.Enemy
                 transform.LookAt(_playerCamera.transform);
         }
 
-        public void Initialize(int health)
+        public void Initialize(EnemyHealth enemyHealth)
         {
             _playerCamera = Camera.main;
-            SetSliderValue(health);
+            SetSliderValue(enemyHealth.CurrentHealth.Value);
 
             _enemyHealth.CurrentHealth
                 .Subscribe(OnChangeHealth)

@@ -126,7 +126,13 @@ namespace Assets.Source.Scripts.Grid
             _gridModel.RemoveGridTankStateByMerge(firstMergedTank);
             _gridModel.RemoveGridTankStateByMerge(secondMergedTank);
             CreateGridTank(gridCellView, currentLevel, true);
-            UpdateMainTank();
+
+            if (_mainTank.Level < _gridModel.CurrentMainTankLevel)
+            {
+                Destroy(_mainTank.gameObject);
+                CreateMainTank(_gridModel.CurrentMainTankLevel);
+                UpdateMainTankUI();
+            }
         }
 
         private void UpdateMainTankUI()
@@ -143,15 +149,7 @@ namespace Assets.Source.Scripts.Grid
         private void UpdateMainTank()
         {
             if (_mainTank == null)
-            {
                 CreateMainTank(_gridModel.CurrentMainTankLevel);
-            }
-
-            if (_mainTank.Level < _gridModel.CurrentMainTankLevel)
-            {
-                Destroy(_mainTank.gameObject);
-                CreateMainTank(_gridModel.CurrentMainTankLevel);
-            }
 
             UpdateMainTankUI();
         }
@@ -168,7 +166,8 @@ namespace Assets.Source.Scripts.Grid
                 _mainTank.UpdateTankEntities(
                     _upgradeConfig.GetDecalDataById(_mainTank.TankState.DecalId),
                     _upgradeConfig.GetPatternDataById(_mainTank.TankState.PatternId),
-                    _upgradeConfig.GetHeroDataById(_mainTank.TankState.HeroId));
+                    _upgradeConfig.GetHeroDataById(_mainTank.TankState.HeroId),
+                    _typeHeroSpawn);
             }
 
             UpdateMainTankUI();

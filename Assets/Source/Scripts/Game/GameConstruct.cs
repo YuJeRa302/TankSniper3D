@@ -6,6 +6,7 @@ using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.Saves;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
+using Assets.Source.Scripts.Sound;
 using Reflex.Core;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +26,7 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private UpgradeConfig _upgradeConfig;
         [Space(20)]
         [SerializeField] private LevelsView _levelsView;
+        [SerializeField] private SettingsView _settingsView;
         [SerializeField] private GamePanelView _gamePanelView;
         [SerializeField] private GameParametersView _gameParametersView;
         [Space(20)]
@@ -32,12 +34,15 @@ namespace Assets.Source.Scripts.Game
         //[SerializeField] private LevelData _levelData; для тестирования дрона
         [Space(20)]
         [SerializeField] private Button _sniperScopeButton;
+        [Space(20)]
+        [SerializeField] private AudioPlayer _audioPlayer;
 
         private GamePauseService _gamePauseService;
         private SaveAndLoader _saveAndLoader;
         private PersistentDataService _persistentDataService;
         private GameModel _gameModel;
         private LevelModel _levelModel;
+        private SettingsModel _settingsModel;
         private LevelData _levelData;
 
         private void OnDestroy()
@@ -64,9 +69,10 @@ namespace Assets.Source.Scripts.Game
         {
             CreateScope(_sniperScopeButton);
             _gamePanelView.Initialize(_gameModel, _upgradeConfig, _gameData, _levelData);
-            _shooting.Initialize(_gameModel.GetTankData());
+            _shooting.Initialize(_gameModel);
             _levelsView.Initialize(_levelModel, _gameData.BiomsConfig);
             _gameParametersView.Initialize(_gameModel.GetTankData().Health, _enemies.Count);
+            _settingsView.Initialize(_settingsModel, _audioPlayer);
         }
 
         private void CreateScope(Button sniperScopeButton)
@@ -100,6 +106,7 @@ namespace Assets.Source.Scripts.Game
         {
             _gameModel = new GameModel(_persistentDataService, _upgradeConfig, _gameData);
             _levelModel = new LevelModel(_persistentDataService, _gameData.BiomsConfig);
+            _settingsModel = new SettingsModel(_persistentDataService, _audioPlayer, _gamePauseService);
             _levelData = _gameModel.GetLevelData();
             CreateUI();
 

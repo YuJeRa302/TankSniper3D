@@ -30,22 +30,24 @@ namespace Assets.Source.Scripts.ShootingStrategy
             _coroutineRunner = container.Resolve<ICoroutineRunner>();
         }
 
-        public override void ShootWithEnergy()
+        public override void ShootWithEnergy(bool isVibroEnabled)
         {
             Transform target = FindTargetInCrosshair(FindTargetradius);
             var projectile = _projectileData.BaseProjectile;
             projectile.Initialize(_projectileData);
             LaserBounceAttack(_firePoint, target);
+            CreateVibration(isVibroEnabled);
             CreateFireSound(_projectileData, _firePoint);
             CreateMuzzleFlash(_projectileData, _firePoint);
         }
 
-        public override void ShootWithoutEnergy()
+        public override void ShootWithoutEnergy(bool isVibroEnabled)
         {
             var projectile = _projectileData.BaseProjectile;
             projectile.Initialize(_projectileData);
             CreateRaycast();
             CreateLaserTrail(_firePoint, _firePoint.forward);
+            CreateVibration(isVibroEnabled);
             CreateFireSound(_projectileData, _firePoint);
             CreateMuzzleFlash(_projectileData, _firePoint);
         }

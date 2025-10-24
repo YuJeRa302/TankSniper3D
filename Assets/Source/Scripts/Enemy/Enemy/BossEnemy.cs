@@ -20,7 +20,7 @@ namespace Assets.Source.Game.Scripts.Enemy
         {
             base.Initialize(tankTransform, gameModel);
             _enemyShootingStrategy.Construct(this, _projectileData, _firePoints);
-            _enemyHealthBar.Initialize(Health);
+            _enemyHealthBar.Initialize(EnemyHealth);
             EnemyStateStrategy.Initialize(this, _enemyShootingStrategy);
         }
     }

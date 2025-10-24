@@ -1,3 +1,4 @@
+using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
 using UniRx;
@@ -15,6 +16,7 @@ namespace Assets.Source.Scripts.Game
 
         private IShootingStrategy _shootingStrategy;
         private CompositeDisposable _disposables = new();
+        private GameModel _gameModel;
         private TankData _tankData;
         private int _shotsCount = 0;
         private int _shotsForSuper = 3;
@@ -33,9 +35,9 @@ namespace Assets.Source.Scripts.Game
             _disposables?.Dispose();
         }
 
-        public void Initialize(TankData tankData)
+        public void Initialize(GameModel gameModel)
         {
-            _tankData = tankData;
+            _tankData = gameModel.GetTankData();
             _currentProjectileCount = _maxProjectileCount;
             _shootingStrategy = _tankData.ShootingStrategy;
             _shootingStrategy.Construct(_tankData.ProjectileData, _shotPoint);
@@ -65,7 +67,7 @@ namespace Assets.Source.Scripts.Game
         {
             _shotsCount++;
             _currentProjectileCount--;
-            _shootingStrategy.ShootWithoutEnergy();
+            _shootingStrategy.ShootWithoutEnergy(_gameModel.GetVibroState());
             Message.Publish(new M_Shoot());
             Reloading();
         }
@@ -74,7 +76,7 @@ namespace Assets.Source.Scripts.Game
         {
             _shotsCount = 0;
             _currentProjectileCount--;
-            _shootingStrategy.ShootWithEnergy();
+            _shootingStrategy.ShootWithEnergy(_gameModel.GetVibroState());
             Message.Publish(new M_SuperShoot());
             Reloading();
         }

@@ -23,15 +23,17 @@ namespace Assets.Source.Scripts.ShootingStrategy
             _coroutineRunner = container.Resolve<ICoroutineRunner>();
         }
 
-        public override void ShootWithEnergy()
+        public override void ShootWithEnergy(bool isVibroEnabled)
         {
+            CreateVibration(isVibroEnabled);
             _coroutineRunner.StartCoroutine(DelayedDoubleShot());
         }
 
-        public override void ShootWithoutEnergy()
+        public override void ShootWithoutEnergy(bool isVibroEnabled)
         {
             var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, _firePoint.position, _firePoint.rotation);
             projectile.Initialize(_projectileData);
+            CreateVibration(isVibroEnabled);
             CreateFireSound(_projectileData, _firePoint);
             CreateMuzzleFlash(_projectileData, _firePoint);
         }

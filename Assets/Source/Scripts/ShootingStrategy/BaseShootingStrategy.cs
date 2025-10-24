@@ -13,12 +13,22 @@ namespace Assets.Source.Scripts.ShootingStrategy
         {
         }
 
-        public virtual void ShootWithEnergy()
+        public virtual void ShootWithEnergy(bool isVibroEnabled)
         {
         }
 
-        public virtual void ShootWithoutEnergy()
+        public virtual void ShootWithoutEnergy(bool isVibroEnabled)
         {
+        }
+
+        public void CreateVibration(bool isVibroEnabled) 
+        {
+            if (!isVibroEnabled)
+                return;
+
+#if UNITY_ANDROID || UNITY_IOS
+        Handheld.Vibrate();
+#endif
         }
 
         public void CreateFireSound(ProjectileData projectileData, Transform firePoint)

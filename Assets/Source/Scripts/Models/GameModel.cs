@@ -66,6 +66,11 @@ namespace Assets.Source.Scripts.Models
             return _persistentDataService.PlayerProgress.Money;
         }
 
+        public bool GetVibroState()
+        {
+            return _persistentDataService.PlayerProgress.IsVibro;
+        }
+
         public int GetEarnedMoney()
         {
             return _moneyEarned;
