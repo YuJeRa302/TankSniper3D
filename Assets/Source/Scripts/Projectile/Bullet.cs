@@ -1,5 +1,4 @@
 using Assets.Source.Scripts.ScriptableObjects;
-using UnityEngine;
 
 namespace Assets.Source.Scripts.Projectile
 {
@@ -16,17 +15,6 @@ namespace Assets.Source.Scripts.Projectile
             base.Initialize(projectileData);
             _projectileData = projectileData;
             _damage = _projectileData.Damage;
-        }
-
-        protected override void Hit(Collider collider)
-        {
-            //if (collision.collider.TryGetComponent(out DestructibleObjectView destructibleObjectView))
-            //{
-            //    Vector3 hitPoint = collision.contacts[0].point;
-            //    destructibleObjectView.ApplyDamage(hitPoint);
-            //}
-
-            //Destroy(gameObject);
         }
     }
 }

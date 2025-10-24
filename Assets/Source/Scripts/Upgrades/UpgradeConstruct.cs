@@ -5,6 +5,7 @@ using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.Saves;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
+using Assets.Source.Scripts.Sound;
 using Reflex.Core;
 using UnityEngine;
 using YG;
@@ -24,6 +25,8 @@ namespace Assets.Source.Scripts.Upgrades
         [SerializeField] private LevelsView _levelsView;
         [Space(20)]
         [SerializeField] private CoroutineRunner _coroutineRunner;
+        [Space(20)]
+        [SerializeField] private AudioPlayer _audioPlayer;
 
         private SaveAndLoader _saveAndLoader;
         private PersistentDataService _persistentDataService;
@@ -61,8 +64,8 @@ namespace Assets.Source.Scripts.Upgrades
             _upgradeModel = new UpgradeModel(_persistentDataService);
             _gridModel = new GridModel(_persistentDataService, _coroutineRunner, _saveAndLoader, _biomsConfig);
             _levelModel = new LevelModel(_persistentDataService, _biomsConfig);
-            _gridPlacer.Initialize();
-            _gridView.Initialize(_gridModel, _gridItemConfig, _upgradeConfig, _gridPlacer);
+            _gridPlacer.Initialize(_audioPlayer);
+            _gridView.Initialize(_gridModel, _gridItemConfig, _upgradeConfig, _gridPlacer, _audioPlayer);
             _upgradeView.Initialize(_upgradeModel, _upgradeConfig);
             _levelsView.Initialize(_levelModel, _biomsConfig);
         }
@@ -71,11 +74,12 @@ namespace Assets.Source.Scripts.Upgrades
         {
             _persistentDataService = new PersistentDataService();
             _saveAndLoader = new(_persistentDataService, _configData);
+            _saveAndLoader.LoadDataFromConfig();
 
-            if (_saveAndLoader.TryGetGameData())
-                _saveAndLoader.LoadDataFromCloud();
-            else
-                _saveAndLoader.LoadDataFromConfig();
+            //if (_saveAndLoader.TryGetGameData())
+            //    _saveAndLoader.LoadDataFromCloud();
+            //else
+            //    _saveAndLoader.LoadDataFromConfig();
         }
     }
 }

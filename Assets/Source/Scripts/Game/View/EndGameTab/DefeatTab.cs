@@ -8,13 +8,13 @@ namespace Assets.Source.Scripts.Game
     public class DefeatTab : MonoBehaviour
     {
         [Header("UI Elements")]
-        [SerializeField] private Image timerCircle;        // круг с Fill Amount
+        [SerializeField] private Image timerCircle;
         [SerializeField] private TextMeshProUGUI timerText;
         [SerializeField] private Button continueButton;
         [SerializeField] private Button noThanksButton;
 
         [Header("Timer Settings")]
-        [SerializeField] private float totalTime = 5f;     // общее время таймера (в секундах)
+        [SerializeField] private float totalTime = 5f;
         [SerializeField] private Color normalColor = Color.white;
         [SerializeField] private Color warningColor = Color.red;
 
@@ -48,7 +48,6 @@ namespace Assets.Source.Scripts.Game
                 timerCircle.fillAmount = normalized;
                 timerText.text = Mathf.CeilToInt(timeLeft).ToString();
 
-                // меняем цвет, если время почти вышло
                 if (timeLeft < 1.5f)
                     timerCircle.color = warningColor;
                 else
@@ -70,14 +69,18 @@ namespace Assets.Source.Scripts.Game
 
         public void OnContinuePressed()
         {
-            if (!isRunning) return;
+            if (!isRunning)
+                return;
+
             isRunning = false;
             StopAllCoroutines();
         }
 
         public void OnNoThanksPressed()
         {
-            if (!isRunning) return;
+            if (!isRunning)
+                return;
+
             isRunning = false;
             StopAllCoroutines();
         }

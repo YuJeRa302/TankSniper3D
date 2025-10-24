@@ -8,6 +8,7 @@ namespace Assets.Source.Game.Scripts.Enemy
     {
         [SerializeField] private Slider _sliderHP;
 
+        private EnemyHealth _enemyHealth;
         private Camera _playerCamera;
         private CompositeDisposable _disposables = new();
 
@@ -27,15 +28,13 @@ namespace Assets.Source.Game.Scripts.Enemy
             _playerCamera = Camera.main;
             SetSliderValue(health);
 
-            EnemyHealth.Message
-                .Receive<M_EnemyHealthChanged>()
-                .Subscribe(m => OnChangeHealth(m.CurrentHealth))
-                .AddTo(_disposables);
+            _enemyHealth.CurrentHealth
+                .Subscribe(OnChangeHealth)
+                .AddTo(this);
 
-            EnemyHealth.Message
-                .Receive<M_DeathEnemy>()
-                .Subscribe(m => OnEnemyDeath())
-                .AddTo(_disposables);
+            _enemyHealth.OnDeath
+                .Subscribe(_ => OnEnemyDeath())
+                .AddTo(this);
         }
 
         private void SetSliderValue(int value)

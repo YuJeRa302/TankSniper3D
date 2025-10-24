@@ -1,19 +1,23 @@
+using Assets.Source.Game.Scripts.Enemy;
 using Assets.Source.Game.Scripts.States;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
+using UniRx;
 using UnityEngine.SceneManagement;
 
 namespace Assets.Source.Scripts.Models
 {
     public class GameModel
     {
-        private readonly int _maxDroneCount = 10;
+        public static readonly IMessageBroker Message = new MessageBroker();
 
+        private readonly int _maxDroneCount = 10;
         private readonly GameData _gameData;
         private readonly UpgradeConfig _upgradeConfig;
         private readonly PersistentDataService _persistentDataService;
 
         private int _currentDroneCount;
+        private int _moneyEarned = 0;
 
         public GameModel(PersistentDataService persistentDataService, UpgradeConfig upgradeConfig, GameData gameData)
         {
@@ -62,8 +66,20 @@ namespace Assets.Source.Scripts.Models
             return _persistentDataService.PlayerProgress.Money;
         }
 
+        public int GetEarnedMoney()
+        {
+            return _moneyEarned;
+        }
+
+        public void SetEarnedMoney(int earnedMoney)
+        {
+            _moneyEarned += earnedMoney;
+            Message.Publish(new M_DeathEnemy());
+        }
+
         public void ReloadScene()
         {
+            _moneyEarned = 0;
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }

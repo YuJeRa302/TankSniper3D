@@ -9,7 +9,7 @@ namespace Assets.Source.Scripts.Upgrades
 {
     public class TankView : MonoBehaviour
     {
-        private readonly Color _defaultMaterial = new Color(0, 0, 204, 255);
+        private readonly Color _defaultMaterial = new(0, 0, 204, 255);
         private readonly string _materialName = "Main";
 
         [SerializeField] private List<MeshRenderer> _decals;
@@ -30,6 +30,7 @@ namespace Assets.Source.Scripts.Upgrades
         private TankState _tankState;
 
         public int Level { get; private set; }
+        public string Name { get; private set; }
         public TankState TankState => _tankState;
         public Transform TurretTransform => _turretTransform;
 
@@ -42,9 +43,10 @@ namespace Assets.Source.Scripts.Upgrades
             TypeHeroSpawn typeHeroSpawn)
         {
             Level = tankData.Level;
+            Name = tankData.Name;
             _tankState = tankState;
             _tankHealth.Initialize(tankData.Health);
-            _tankRecoil.Initialize(tankData, _firePoint);
+            _tankRecoil.Initialize(tankData, _firePoint, typeHeroSpawn);
             UpdateDecal(decal);
             UpdatePattern(pattern);
             CreateHero(heroData, typeHeroSpawn);

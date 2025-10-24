@@ -1,3 +1,4 @@
+using Assets.Source.Scripts.Sound;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,7 +22,7 @@ namespace Assets.Source.Scripts.Grid
             ClearGrid();
         }
 
-        public void Initialize()
+        public void Initialize(AudioPlayer audioPlayer)
         {
             if (_gridCellView == null)
                 return;
@@ -36,7 +37,7 @@ namespace Assets.Source.Scripts.Grid
                         transform.position.y + column * _cellSize), Quaternion.identity);
 
                     cell.transform.SetParent(transform, false);
-                    cell.Initialize(_cellId);
+                    cell.Initialize(_cellId, audioPlayer);
                     _gridCellViews.Add(cell);
                     _cellId++;
                 }

@@ -10,6 +10,8 @@ namespace Assets.Source.Scripts.Game
         [Space(20)]
         [SerializeField] private float _normalFOV = 60f;
         [SerializeField] private float _sniperFOV = 20f;
+        [SerializeField] private float _angleRotationY = 60f;
+        [SerializeField] private float _angleRotationX = 45f;
         [SerializeField] private float _zoomSpeed = 8f;
         [SerializeField] private Vector3 _sniperPositionOffset = new(0, 0.5f, 0.5f);
         [Space(20)]
@@ -82,8 +84,8 @@ namespace Assets.Source.Scripts.Game
                 _rotationY += Input.GetAxis("Mouse X") * sensitivity;
                 _rotationX -= Input.GetAxis("Mouse Y") * sensitivity;
 
-                _rotationX = Mathf.Clamp(_rotationX, -45f, 45f);
-                _rotationY = Mathf.Clamp(_rotationY, -60f, 60f);
+                _rotationX = Mathf.Clamp(_rotationX, -_angleRotationX, _angleRotationX);
+                _rotationY = Mathf.Clamp(_rotationY, -_angleRotationY, _angleRotationY);
                 _mainCamera.transform.localRotation = Quaternion.Euler(_rotationX, _rotationY, 0);
             }
         }

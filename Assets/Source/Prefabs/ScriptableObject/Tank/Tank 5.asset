@@ -18,7 +18,8 @@ MonoBehaviour:
   _icon: {fileID: 21300000, guid: 77de6f7211deecf4b9bc1adc9923233b, type: 3}
   _starCount: 5
   _level: 6
-  _health: 0
+  _health: 350
+  _name: "\u0417\u0435\u043D\u0438\u0442"
   _projectileData: {fileID: 11400000, guid: 08241be5cff836147a7f9e92cd4dd518, type: 2}
   _shootingStrategy:
     rid: 2278160015533277196

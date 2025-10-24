@@ -1,39 +1,34 @@
+using System;
 using UniRx;
 
 namespace Assets.Source.Game.Scripts.Enemy
 {
     public class EnemyHealth
     {
-        public static readonly IMessageBroker Message = new MessageBroker();
-
-        private readonly int _maxHealth;
         private readonly Enemy _enemy;
+        private readonly ReactiveProperty<bool> _isDead = new(false);
 
-        private bool _isDead = false;
-        private int _currentHealth;
+        public ReactiveProperty<int> CurrentHealth { get; }
+        public bool IsDead => _isDead.Value;
+        public IObservable<Unit> OnDeath => _isDead.Where(dead => dead).AsUnitObservable();
 
         public EnemyHealth(Enemy enemy)
         {
             _enemy = enemy;
-            _maxHealth = _enemy.Health;
-            _currentHealth = _maxHealth;
+            CurrentHealth = new ReactiveProperty<int>(_enemy.Health);
         }
-
-        public bool IsDead => _isDead;
 
         public void TakeDamage(int damage)
         {
-            if (_currentHealth <= 0)
+            if (_isDead.Value)
                 return;
 
-            _currentHealth -= damage;
-            Message.Publish(new M_EnemyHealthChanged(_currentHealth));
+            CurrentHealth.Value -= damage;
 
-            if (_currentHealth <= 0)
+            if (CurrentHealth.Value <= 0)
             {
-                Message.Publish(new M_DeathEnemy(_enemy.MoneyReward));
-                _currentHealth = 0;
-                _isDead = true;
+                CurrentHealth.Value = 0;
+                _isDead.Value = true;
             }
         }
     }

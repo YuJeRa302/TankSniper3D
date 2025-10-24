@@ -23,6 +23,7 @@ namespace Assets.Source.Scripts.Upgrades
         private readonly float _tweenAnimationScaler = 1.2f;
         private readonly float _delay = 0.25f;
 
+        [SerializeField] private TMP_Text _moneyText;
         [SerializeField] private TMP_Text _nameTankText;
         [SerializeField] private TMP_Text _levelTankText;
         [SerializeField] private TMP_Text _nameButtonText;
@@ -107,10 +108,12 @@ namespace Assets.Source.Scripts.Upgrades
         {
             ChangeSetActiveObjects(gameObject, _sceneGameObjects, true);
             CreateSelectionButtons();
+            _moneyText.text = _upgradeModel.GetMoney().ToString();
             TankState tankState = _upgradeModel.GetTankStateByEquip();
             _upgradeModel.SelectTank(tankState);
             CreateTankEntities(tankState, _typeHeroSpawn);
             SelectTankButton();
+            UpdateTankDescription();
         }
 
         private void OnRewardTaked() // возможно нужно будет убрать TypeCard
@@ -139,6 +142,7 @@ namespace Assets.Source.Scripts.Upgrades
             Message.Publish(new M_DeselectCards(tankCardView.TankData.Id));
             _upgradeModel.SelectTank(tankCardView.TankState);
             CreateTankEntities(tankCardView.TankState, _typeHeroSpawn);
+            UpdateTankDescription();
             AnimateSelectionObject(_tankView.gameObject);
         }
 
@@ -174,6 +178,12 @@ namespace Assets.Source.Scripts.Upgrades
             CreateTankButtons();
             _placePreviewView.ResetRotation();
             SelectButton(selectionButtonView);
+        }
+
+        private void UpdateTankDescription()
+        {
+            _levelTankText.text = "Уровень " + _tankView.Level;
+            _nameTankText.text = _tankView.Name;
         }
 
         private void UpdateTankEntities()

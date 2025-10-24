@@ -5,6 +5,7 @@ using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Upgrades;
 using DG.Tweening;
+using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,6 +24,8 @@ namespace Assets.Source.Scripts.Game
         private readonly Ease _rotationEase = Ease.InOutSine;
         private readonly Ease _moveEase = Ease.InOutQuad;
 
+        [SerializeField] private TMP_Text _moneyText;
+        [Space(20)]
         [SerializeField] private GameParametersView _gameParametersView;
         [SerializeField] private LevelsView _levelsView;
         [SerializeField] private GameObject _moneyBar;
@@ -63,6 +66,7 @@ namespace Assets.Source.Scripts.Game
             _gameModel = gameModel;
             _upgradeConfig = upgradeConfig;
             _gameData = gameData;
+            _moneyText.text = _gameModel.GetMoney().ToString();
 
             if (levelData.TypeLevel == TypeLevel.Drone)
                 CreateDroneEntities();
@@ -126,6 +130,7 @@ namespace Assets.Source.Scripts.Game
         private void OnSceneReloaded()
         {
             _gameModel.ReloadScene();
+            Message.Publish(new M_ReloadLevel());
         }
 
         private void OnSettingsButton()

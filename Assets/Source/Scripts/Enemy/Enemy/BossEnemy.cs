@@ -1,3 +1,4 @@
+using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
 using System.Collections.Generic;
@@ -15,9 +16,9 @@ namespace Assets.Source.Game.Scripts.Enemy
         [Space(20)]
         [SerializeReference] private IEnemyShootingStrategy _enemyShootingStrategy;
 
-        public override void Initialize(Transform tankTransform)
+        public override void Initialize(Transform tankTransform, GameModel gameModel)
         {
-            base.Initialize(tankTransform);
+            base.Initialize(tankTransform, gameModel);
             _enemyShootingStrategy.Construct(this, _projectileData, _firePoints);
             _enemyHealthBar.Initialize(Health);
             EnemyStateStrategy.Initialize(this, _enemyShootingStrategy);

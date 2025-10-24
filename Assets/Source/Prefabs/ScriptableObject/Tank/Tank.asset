@@ -19,6 +19,7 @@ MonoBehaviour:
   _starCount: 4
   _level: 1
   _health: 250
+  _name: "\u0420\u0435\u0439\u043D\u0434\u0436\u0435\u0440"
   _projectileData: {fileID: 11400000, guid: b5f6597a964ce3d4fbe88e0eb33baad4, type: 2}
   _shootingStrategy:
     rid: 2278160015533277191

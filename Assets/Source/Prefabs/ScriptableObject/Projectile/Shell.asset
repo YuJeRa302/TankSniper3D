@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Shell
   m_EditorClassIdentifier: 
   _speed: 100
-  _damage: 0
+  _damage: 50
   _projectileCount: 3
   _reloadTime: 4
   _lifeTime: 5
@@ -23,11 +23,3 @@ MonoBehaviour:
   _fireSound: {fileID: 8300000, guid: e4a2a98ee03890d40a06b28d95d492a0, type: 3}
   _hitSound: {fileID: 8300000, guid: 79c3cb7a26813d146b07c293b0324039, type: 3}
   _baseProjectile: {fileID: 6836442744894961241, guid: 4a00386636441814b8b922fcaabc13fd, type: 3}
-  _shootingStrategy:
-    rid: 2278159699402031104
-  references:
-    version: 2
-    RefIds:
-    - rid: 2278159699402031104
-      type: {class: SimpleShootingStrategy, ns: Assets.Source.Scripts.ShootingStrategy, asm: Assembly-CSharp}
-      data: 

@@ -1,3 +1,4 @@
+using Assets.Source.Scripts.Sound;
 using UniRx;
 using UnityEngine;
 
@@ -7,21 +8,25 @@ namespace Assets.Source.Scripts.Grid
     {
         public static readonly IMessageBroker Message = new MessageBroker();
 
+        private readonly float _effectLifeTime = 1f;
         private readonly int _maxTankLevelMerge = 8;
         private readonly Color _defaultColor = new Color32(197, 197, 197, 255);
         private readonly Color _selectColor = Color.green;
         private readonly Color _blockedColor = Color.red;
 
         [SerializeField] private Renderer _cellRenderer;
+        [SerializeField] private ParticleSystem _mergeEffect;
 
+        private AudioPlayer _audioPlayer;
         private GridTankView _currentTank;
 
         public int Id { get; private set; }
         public bool IsOccupied { get; private set; } = false;
 
-        public void Initialize(int id)
+        public void Initialize(int id, AudioPlayer audioPlayer)
         {
             Id = id;
+            _audioPlayer = audioPlayer;
         }
 
         public void SetOccupied(GridTankView gridTankView)
@@ -92,12 +97,21 @@ namespace Assets.Source.Scripts.Grid
                 this,
                 first,
                 second));
+
+            _audioPlayer.PlayMergeTankAudioClip();
+            CreateMergeEffect();
         }
 
         private void Highlighting(bool isOn, Color color)
         {
             _cellRenderer.gameObject.SetActive(isOn);
             _cellRenderer.material.color = color;
+        }
+
+        private void CreateMergeEffect()
+        {
+            var effect = Instantiate(_mergeEffect, transform.position, _mergeEffect.transform.rotation);
+            GameObject.Destroy(effect.gameObject, _effectLifeTime);
         }
     }
 }

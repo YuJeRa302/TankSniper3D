@@ -1,4 +1,5 @@
 using Assets.Source.Scripts.Game;
+using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.ScriptableObjects;
 using System.Collections.Generic;
 using UniRx;
@@ -30,6 +31,7 @@ namespace Assets.Source.Game.Scripts.Enemy
         [SerializeField] private EnemyStateStrategy _enemyStateStrategy;
 
         private Transform _player;
+        private GameModel _gameModel;
         private EnemyHealth _enemyHealth;
         private EnemyAnimation _enemyAnimation;
         private EnemySoundPlayer _enemySoundPlayer;
@@ -46,20 +48,20 @@ namespace Assets.Source.Game.Scripts.Enemy
         public float MoveSpeed => _enemyData.MoveSpeed;
         public int Health => _enemyData.Health;
         public float RotateSpeed => _enemyData.RotationSpeed;
-        public int MoneyReward => _enemyData.MoneyReward;
 
         private void OnDestroy()
         {
             _disposables?.Dispose();
         }
 
-        public virtual void Initialize(Transform tankTransform)
+        public virtual void Initialize(Transform tankTransform, GameModel gameModel)
         {
             _player = tankTransform;
             _enemyAnimation = new EnemyAnimation(_animator);
             _enemyHealth = new EnemyHealth(this);
             _enemySoundPlayer = new EnemySoundPlayer(_enemyData, _audioSource);
             _damageableAreas.ForEach(s => s.Initialize(_enemyHealth));
+            _gameModel = gameModel;
 
             Shooting.Message
                 .Receive<M_Shoot>()
@@ -70,6 +72,10 @@ namespace Assets.Source.Game.Scripts.Enemy
                 .Receive<M_Shoot>()
                 .Subscribe(m => OnPlayerFirstShot())
                 .AddTo(_disposables);
+
+            _enemyHealth.OnDeath
+                .Subscribe(_ => OnEnemyDeath())
+                .AddTo(this);
         }
 
         public void CreateExplosionEffect()
@@ -106,6 +112,11 @@ namespace Assets.Source.Game.Scripts.Enemy
                     rigidbody.AddTorque(Random.insideUnitSphere * _pieceTorque, ForceMode.Impulse);
                 }
             }
+        }
+
+        protected virtual void OnEnemyDeath()
+        {
+            _gameModel.SetEarnedMoney(_enemyData.MoneyReward);
         }
 
         private void OnPlayerFirstShot()

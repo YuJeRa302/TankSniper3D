@@ -1,3 +1,4 @@
+using Assets.Source.Scripts.Models;
 using UniRx;
 using UnityEngine;
 
@@ -17,19 +18,16 @@ namespace Assets.Source.Game.Scripts.Enemy
             _disposables?.Dispose();
         }
 
-        public override void Initialize(Transform tankTransform)
+        public override void Initialize(Transform tankTransform, GameModel gameModel)
         {
-            base.Initialize(tankTransform);
+            base.Initialize(tankTransform, gameModel);
             EnemyStateStrategy.Initialize(this, null);
-
-            EnemyHealth.Message
-                .Receive<M_DeathEnemy>()
-                .Subscribe(m => OnEnemyDeath())
-                .AddTo(_disposables);
         }
 
-        private void OnEnemyDeath()
+        protected override void OnEnemyDeath()
         {
+            base.OnEnemyDeath();
+
             if (_enemyInVehicle != null)
                 _enemyInVehicle.ApplyDamage(_killZoneDamage, _hitPoint);
         }

@@ -17,6 +17,11 @@ namespace Assets.Source.Scripts.Models
 
         public TankState TankState => _currentTankState;
 
+        public int GetMoney()
+        {
+            return _persistentDataService.PlayerProgress.Money;
+        }
+
         public TankState GetTankStateByEquip()
         {
             return _persistentDataService.PlayerProgress.TankService.GetStateByEquip();

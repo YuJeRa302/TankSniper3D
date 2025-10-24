@@ -375,9 +375,9 @@ MonoBehaviour:
   _crosshairBorder: {fileID: 7248181154737886203}
   _indicatorPrefab: {fileID: 6418867382784128593, guid: f95e9ce9b68663343bf0508b98e55eee, type: 3}
   _dangerZones:
-  - {fileID: 2521990315970617470}
   - {fileID: 3960829398052252040}
   - {fileID: 7999929578146525326}
+  - {fileID: 2521990315970617470}
   - {fileID: 1892313942270245876}
   _edgeOffset: 30
 --- !u!1 &1603609542217917082
@@ -519,9 +519,9 @@ RectTransform:
   m_Father: {fileID: 691025382821087016}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 122.71954, y: 661.01}
-  m_SizeDelta: {x: 242.7423, y: -1324.6}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -418.45465, y: 661.01}
+  m_SizeDelta: {x: -836.9093, y: -1324.6}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &4188675749810065326
 CanvasRenderer:
@@ -983,10 +983,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 691025382821087016}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -121.97009, y: 661.01}
-  m_SizeDelta: {x: 243.9433, y: -1324.6}
+  m_AnchoredPosition: {x: 418.5291, y: 661.01}
+  m_SizeDelta: {x: -837.0582, y: -1324.6}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &5100070838754147937
 CanvasRenderer:

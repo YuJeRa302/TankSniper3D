@@ -1,6 +1,7 @@
 using Assets.Source.Game.Scripts.Enemy;
 using Assets.Source.Scripts.Game;
 using Assets.Source.Scripts.ScriptableObjects;
+using Assets.Source.Scripts.Upgrades;
 using UnityEngine;
 
 namespace Assets.Source.Scripts.Projectile
@@ -73,6 +74,12 @@ namespace Assets.Source.Scripts.Projectile
             {
                 hitPoint = collider.ClosestPoint(transform.position);
                 damageableArea.ApplyDamage(Damage, hitPoint);
+            }
+
+            if (collider.TryGetComponent(out TankHealth tankHealth))
+            {
+                hitPoint = collider.ClosestPoint(transform.position);
+                tankHealth.TakeDamage(Damage);
             }
 
             CreateHitEffect(ProjectileData, hitPoint);

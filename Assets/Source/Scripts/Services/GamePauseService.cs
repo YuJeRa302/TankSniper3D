@@ -33,12 +33,12 @@ namespace Assets.Source.Scripts.Services
             YG2.onFocusWindowGame += OnVisibilityWindowGame;
             MessageBroker.Default.Receive<M_ClosePanel>().Subscribe(m => OnResumeByMenu()).AddTo(_disposables);
             MessageBroker.Default.Receive<M_OpenPanel>().Subscribe(m => OnPauseByMenu()).AddTo(_disposables);
+            GamePanelView.Message.Receive<M_ReloadLevel>().Subscribe(m => OnResumeByReloadLevel()).AddTo(_disposables);
         }
 
         private void RemoveListener()
         {
             YG2.onFocusWindowGame -= OnVisibilityWindowGame;
-
             _disposables?.Dispose();
         }
 
@@ -54,6 +54,29 @@ namespace Assets.Source.Scripts.Services
             Time.timeScale = _pauseValue;
             GamePaused?.Invoke(_persistentDataService.PlayerProgress.IsMuted);
             _persistentDataService.PlayerProgress.IsGamePause = true;
+        }
+
+        private void OnResumeByReloadLevel()
+        {
+            Time.timeScale = _resumeValue;
+            GameResumed?.Invoke(_persistentDataService.PlayerProgress.IsMuted);
+            _persistentDataService.PlayerProgress.IsGamePause = false;
+        }
+
+        private void OnResumeByReward()
+        {
+            if (_persistentDataService.PlayerProgress.IsGamePause == true)
+                Time.timeScale = _pauseValue;
+            else
+                Time.timeScale = _resumeValue;
+
+            GameResumed?.Invoke(_persistentDataService.PlayerProgress.IsMuted);
+        }
+
+        private void OnPauseByReward()
+        {
+            Time.timeScale = _pauseValue;
+            GamePaused?.Invoke(true);
         }
 
         private void PauseGameByVisibilityWindow(bool state)

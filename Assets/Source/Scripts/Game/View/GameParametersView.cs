@@ -1,4 +1,5 @@
 using Assets.Source.Game.Scripts.Enemy;
+using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.Upgrades;
 using TMPro;
 using UniRx;
@@ -33,7 +34,7 @@ namespace Assets.Source.Scripts.Game
                 .Subscribe(m => OnChangeHealth(m.CurrentHealth))
                 .AddTo(_disposables);
 
-            EnemyHealth.Message
+            GameModel.Message
                 .Receive<M_DeathEnemy>()
                 .Subscribe(m => OnChangeEnemyCount())
                 .AddTo(_disposables);

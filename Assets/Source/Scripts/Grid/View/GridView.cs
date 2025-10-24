@@ -2,6 +2,7 @@ using Assets.Source.Game.Scripts.Enums;
 using Assets.Source.Game.Scripts.States;
 using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.ScriptableObjects;
+using Assets.Source.Scripts.Sound;
 using Assets.Source.Scripts.Upgrades;
 using TMPro;
 using UniRx;
@@ -34,6 +35,7 @@ namespace Assets.Source.Scripts.Grid
         [SerializeField] private Slider _buyTankSlider;
         [SerializeField] private TMP_Text _currentGridTankLevelText;
 
+        private AudioPlayer _audioPlayer;
         private GridModel _gridModel;
         private GridConfig _gridConfig;
         private UpgradeConfig _upgradeConfig;
@@ -50,19 +52,21 @@ namespace Assets.Source.Scripts.Grid
             GridModel gridModel,
             GridConfig gridConfig,
             UpgradeConfig upgradeConfig,
-            GridPlacer gridPlacer)
+            GridPlacer gridPlacer,
+            AudioPlayer audioPlayer)
         {
             _gridConfig = gridConfig;
             _upgradeConfig = upgradeConfig;
             _gridPlacer = gridPlacer;
             _gridModel = gridModel;
+            _audioPlayer = audioPlayer;
             AddListeners();
             ChangeSetActiveObjects(gameObject, _sceneGameObjects, true);
             CreateTankBySaves();
             CreateGridTanksBySaves();
             UpdateBuyTankSlider(_gridModel.GetMaxTankCountForBuy(), _gridModel.GetCountBuyedTanks());
             UpdateMoneyTextValue();
-            UnlockUpgradeButton();
+            UnlockButtons();
         }
 
         private void AddListeners()
@@ -121,7 +125,7 @@ namespace Assets.Source.Scripts.Grid
             _gridModel.IncreaseMainTankLevel(currentLevel);
             _gridModel.RemoveGridTankStateByMerge(firstMergedTank);
             _gridModel.RemoveGridTankStateByMerge(secondMergedTank);
-            CreateGridTank(gridCellView, currentLevel);
+            CreateGridTank(gridCellView, currentLevel, true);
             UpdateMainTank();
         }
 
@@ -183,10 +187,13 @@ namespace Assets.Source.Scripts.Grid
             _buyTankSlider.value = currentValue;
         }
 
-        private void UnlockUpgradeButton() 
+        private void UnlockButtons()
         {
-            if(_gridModel.GetTankStateByEquip() != null)
-                _openUpgrade.gameObject.SetActive(true);
+            if (_gridModel.GetTankStateByEquip() == null)
+                return;
+
+            _openUpgrade.gameObject.SetActive(true);
+            _loadGameSceneButton.gameObject.SetActive(true);
         }
 
         private void SpawnObjectInFirstAvailableCell()
@@ -197,11 +204,11 @@ namespace Assets.Source.Scripts.Grid
                 {
                     if (_gridModel.TryBuyGridTank(_gridModel.GetCurrentTankCost()))
                     {
-                        CreateGridTank(cell, _gridModel.CurrentGridTankLevel);
+                        CreateGridTank(cell, _gridModel.CurrentGridTankLevel, false);
                         UpdateMainTank();
                         UpdateBuyTankSlider(_gridModel.GetMaxTankCountForBuy(), _gridModel.GetCountBuyedTanks());
                         UpdateMoneyTextValue();
-                        UnlockUpgradeButton();
+                        UnlockButtons();
                     }
                     break;
                 }
@@ -227,11 +234,12 @@ namespace Assets.Source.Scripts.Grid
                 CreateGridTank(_gridPlacer
                     .GetGridCellById(
                     _gridModel.GetGridTankStates()[index].GridCellId),
-                    _gridModel.GetGridTankStates()[index].Level);
+                    _gridModel.GetGridTankStates()[index].Level,
+                    true);
             }
         }
 
-        private void CreateGridTank(GridCellView gridCellView, int currentTankLevel)
+        private void CreateGridTank(GridCellView gridCellView, int currentTankLevel, bool isCreateSoundMute)
         {
             GridTankData gridTankData = _gridConfig.GetGridTankDataByLevel(currentTankLevel);
             GridTankState gridTankState = _gridModel.CreateGridTankState(gridTankData);
@@ -245,6 +253,9 @@ namespace Assets.Source.Scripts.Grid
             tank.Initialize(gridTankData, gridTankState);
             tank.ChangeOriginalCell(gridCellView);
             gridCellView.SetOccupied(tank);
+
+            if (isCreateSoundMute == false)
+                _audioPlayer.PlayCreateTankAudio();
         }
 
         private void CreateMainTank(int currentLevel)

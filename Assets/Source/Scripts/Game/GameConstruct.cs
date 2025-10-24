@@ -121,7 +121,7 @@ namespace Assets.Source.Scripts.Game
         {
             foreach (Enemy enemy in _enemies)
             {
-                enemy.Initialize(playerTransform);
+                enemy.Initialize(playerTransform, _gameModel);
             }
         }
     }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Bullet
   m_EditorClassIdentifier: 
   _speed: 100
-  _damage: 0
+  _damage: 15
   _projectileCount: 3
   _reloadTime: 1
   _lifeTime: 5
@@ -23,11 +23,3 @@ MonoBehaviour:
   _fireSound: {fileID: 8300000, guid: 2dcd5da12751d034bb710af85ad18450, type: 3}
   _hitSound: {fileID: 8300000, guid: 11390b4b43824e54e9eaada95422a366, type: 3}
   _baseProjectile: {fileID: 8935895550186741627, guid: e8eb4ee10284bd24b8473f38c5f7e25b, type: 3}
-  _shootingStrategy:
-    rid: 2278159699402031104
-  references:
-    version: 2
-    RefIds:
-    - rid: 2278159699402031104
-      type: {class: SimpleShootingStrategy, ns: Assets.Source.Scripts.ShootingStrategy, asm: Assembly-CSharp}
-      data: 

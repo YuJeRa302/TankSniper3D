@@ -1,3 +1,4 @@
+using Assets.Source.Game.Scripts.Enums;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
 using DG.Tweening;
@@ -17,19 +18,33 @@ namespace Assets.Source.Scripts.Upgrades
         [SerializeField] private float returnDuration = 0.12f;
 
         private float _shotInterval = 4.0f;
+        private TypeHeroSpawn _typeHeroSpawn;
         private IShootingStrategy _shootingStrategy;
         private bool _isFiring = false;
+        private Coroutine _fireCoroutine;
 
-        public void Initialize(TankData tankData, Transform firePoint)
+        public void Initialize(TankData tankData, Transform firePoint, TypeHeroSpawn typeHeroSpawn)
         {
             _shootingStrategy = tankData.ShootingStrategy;
+            _typeHeroSpawn = typeHeroSpawn;
             _shootingStrategy.Construct(tankData.ProjectileData, firePoint);
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            if (!_isFiring)
-                StartCoroutine(Firing());
+            if (_typeHeroSpawn != TypeHeroSpawn.Upgrade)
+            {
+                if (!_isFiring)
+                    SetFire();
+            }
+        }
+
+        private void SetFire()
+        {
+            if (_fireCoroutine != null)
+                StopCoroutine(_fireCoroutine);
+
+            _fireCoroutine = StartCoroutine(Firing());
         }
 
         private IEnumerator Firing()
