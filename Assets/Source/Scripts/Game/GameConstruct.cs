@@ -31,6 +31,8 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private SettingsView _settingsView;
         [SerializeField] private GamePanelView _gamePanelView;
         [SerializeField] private GameParametersView _gameParametersView;
+        [SerializeField] private ReloadLevelTab _reloadLevelTab;
+        [SerializeField] private DefeatTab _defeatTab;
         [Space(20)]
         [SerializeField] private Transform _scopeParent;
         //[SerializeField] private LevelData _levelData; для тестирования дрона
@@ -75,6 +77,8 @@ namespace Assets.Source.Scripts.Game
             _levelsView.Initialize(_levelModel, _gameData.BiomsConfig);
             _gameParametersView.Initialize(_gameModel.GetTankData().Health, _enemies.Count);
             _settingsView.Initialize(_settingsModel, _audioPlayer);
+            _reloadLevelTab.Initialize(_gameModel);
+            _defeatTab.Initialize(_gameModel);
         }
 
         private void CreateScope(Button sniperScopeButton)

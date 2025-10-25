@@ -1,6 +1,7 @@
 using Assets.Source.Scripts.Game;
 using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.ScriptableObjects;
+using Assets.Source.Scripts.Upgrades;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
@@ -69,6 +70,16 @@ namespace Assets.Source.Game.Scripts.Enemy
                 .Subscribe(m => OnPlayerFirstShot())
                 .AddTo(_disposables);
 
+            TankHealth.Message
+                .Receive<M_DeathTank>()
+                .Subscribe(m => OnTankDeath())
+                .AddTo(_disposables);
+
+            DefeatTab.Message
+                .Receive<M_RecoveryTankHealth>()
+                .Subscribe(m => OnRecoveryTankHealth())
+                .AddTo(_disposables);
+
             DroneScopeView.Message
                 .Receive<M_Shoot>()
                 .Subscribe(m => OnPlayerFirstShot())
@@ -126,6 +137,16 @@ namespace Assets.Source.Game.Scripts.Enemy
                 return;
 
             _isPlayerShot = true;
+        }
+
+        private void OnRecoveryTankHealth()
+        {
+            _isPlayerShot = true;
+        }
+
+        private void OnTankDeath()
+        {
+            _isPlayerShot = false;
         }
     }
 }

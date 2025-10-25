@@ -1,4 +1,5 @@
 using Assets.Source.Game.Scripts.Enemy;
+using Assets.Source.Scripts.Upgrades;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
@@ -81,6 +82,11 @@ namespace Assets.Source.Scripts.Game
             Shooting.Message
                 .Receive<M_SuperShoot>()
                 .Subscribe(m => OnSuperShooting())
+                .AddTo(_disposables);
+
+            TankHealth.Message
+                .Receive<M_DeathTank>()
+                .Subscribe(m => OnCloseButtonClicked())
                 .AddTo(_disposables);
         }
 

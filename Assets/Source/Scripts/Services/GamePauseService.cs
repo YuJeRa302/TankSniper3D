@@ -33,7 +33,7 @@ namespace Assets.Source.Scripts.Services
             YG2.onFocusWindowGame += OnVisibilityWindowGame;
             MessageBroker.Default.Receive<M_ClosePanel>().Subscribe(m => OnResumeByMenu()).AddTo(_disposables);
             MessageBroker.Default.Receive<M_OpenPanel>().Subscribe(m => OnPauseByMenu()).AddTo(_disposables);
-            GamePanelView.Message.Receive<M_ReloadLevel>().Subscribe(m => OnResumeByReloadLevel()).AddTo(_disposables);
+            MessageBroker.Default.Receive<M_ReloadLevel>().Subscribe(m => OnResumeByReloadLevel()).AddTo(_disposables);
         }
 
         private void RemoveListener()

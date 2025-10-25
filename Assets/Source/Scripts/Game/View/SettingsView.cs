@@ -23,23 +23,6 @@ namespace Assets.Source.Scripts.Game
         private SettingsModel _settingsModel;
         private AudioPlayer _audioPlayer;
 
-
-        private void Awake()
-        {
-            _soundButton.onClick.AddListener(OnSoundButtonClicked);
-            _vibroButton.onClick.AddListener(OnVibroButtonClicked);
-            _backButton.onClick.AddListener(Close);
-            _openButton.onClick.AddListener(Open);
-        }
-
-        private void OnDestroy()
-        {
-            _soundButton.onClick.RemoveListener(OnSoundButtonClicked);
-            _vibroButton.onClick.RemoveListener(OnVibroButtonClicked);
-            _backButton.onClick.RemoveListener(Close);
-            _openButton.onClick.RemoveListener(Open);
-        }
-
         public void Initialize(SettingsModel settingsModel, AudioPlayer audioPlayer)
         {
             gameObject.SetActive(false);
@@ -47,6 +30,24 @@ namespace Assets.Source.Scripts.Game
             _audioPlayer = audioPlayer;
             ChangeImageSprite(_soundImage, _soundUnmuteSprite, _soundMuteSprite, _settingsModel.IsMuted);
             ChangeImageSprite(_vibroImage, _vibroEnableSprite, _vibroDisableSprite, _settingsModel.GetVibroState());
+        }
+
+        protected override void AddListeners()
+        {
+            base.AddListeners();
+            _soundButton.onClick.AddListener(OnSoundButtonClicked);
+            _vibroButton.onClick.AddListener(OnVibroButtonClicked);
+            _backButton.onClick.AddListener(Close);
+            _openButton.onClick.AddListener(Open);
+        }
+
+        protected override void RemoveListeners()
+        {
+            base.RemoveListeners();
+            _soundButton.onClick.RemoveListener(OnSoundButtonClicked);
+            _vibroButton.onClick.RemoveListener(OnVibroButtonClicked);
+            _backButton.onClick.RemoveListener(Close);
+            _openButton.onClick.RemoveListener(Open);
         }
 
         private void ChangeImageSprite(Image sourceImage, Sprite endableSprite, Sprite disableSprite, bool state)

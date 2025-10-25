@@ -30,8 +30,6 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private LevelsView _levelsView;
         [SerializeField] private GameObject _moneyBar;
         [Space(20)]
-        [SerializeField] private Button _openReloadPanelButton;
-        [Space(20)]
         [SerializeField] private Transform _startPosition;
         [SerializeField] private Transform _firePosition;
         [SerializeField] private Transform _mainTankParent;
@@ -40,9 +38,7 @@ namespace Assets.Source.Scripts.Game
         [Space(20)]
         [SerializeField] private GameObject _reloadPanel;
         [Space(20)]
-        [SerializeField] private Button _reloadLevelButton;
-        [SerializeField] private Button _cancelButton;
-        [SerializeField] private Button _backButton;
+        [SerializeField] private Button _openReloadPanelButton;
 
         private Transform _turret;
         private TankView _mainTank;
@@ -77,11 +73,6 @@ namespace Assets.Source.Scripts.Game
 
         private void AddListeners()
         {
-            _cancelButton.onClick.AddListener(OnCloseReloadPanelClicked);
-            _backButton.onClick.AddListener(OnCloseReloadPanelClicked);
-            _reloadLevelButton.onClick.AddListener(OnSceneReloaded);
-            _openReloadPanelButton.onClick.AddListener(OnOpenReloadPanelClicked);
-
             SniperScopeView.Message
                 .Receive<M_Aiming>()
                 .Subscribe(m => OnTankSniperScopeUsed(m.IsAiming))
@@ -97,37 +88,37 @@ namespace Assets.Source.Scripts.Game
                 .Subscribe(m => OnDroneSniperScopeUsed(m.IsAiming))
                 .AddTo(_disposables);
 
+            DefeatTab.Message
+                .Receive<M_RecoveryTankHealth>()
+                .Subscribe(m => OnRecoveryTankHealth())
+                .AddTo(_disposables);
+
             DroneHealth.Message
                 .Receive<M_DeathDrone>()
                 .Subscribe(m => OnDroneDeath())
+                .AddTo(_disposables);
+
+            TankHealth.Message
+                .Receive<M_DeathTank>()
+                .Subscribe(m => OnTankDeath())
                 .AddTo(_disposables);
         }
 
         private void RemoveListeners()
         {
-            _cancelButton.onClick.RemoveListener(OnCloseReloadPanelClicked);
-            _backButton.onClick.RemoveListener(OnCloseReloadPanelClicked);
-            _reloadLevelButton.onClick.RemoveListener(OnSceneReloaded);
-            _openReloadPanelButton.onClick.RemoveListener(OnOpenReloadPanelClicked);
             _disposables?.Dispose();
         }
 
-        private void OnOpenReloadPanelClicked()
+        private void OnRecoveryTankHealth()
         {
-            _reloadPanel.SetActive(true);
-            MessageBroker.Default.Publish(new M_OpenPanel());
+            _gameParametersView.gameObject.SetActive(true);
+            gameObject.SetActive(true);
         }
 
-        private void OnCloseReloadPanelClicked()
+        private void OnTankDeath()
         {
-            _reloadPanel.SetActive(false);
-            MessageBroker.Default.Publish(new M_ClosePanel());
-        }
-
-        private void OnSceneReloaded()
-        {
-            _gameModel.ReloadScene();
-            Message.Publish(new M_ReloadLevel());
+            _gameParametersView.gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
 
         private void OnDroneSniperScopeUsed(bool state)
