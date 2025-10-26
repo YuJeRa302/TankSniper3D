@@ -30,7 +30,7 @@ namespace Assets.Source.Scripts.Game
         private float _currentTime;
         private Coroutine _timerCoroutine;
 
-        public override TypeLevel TypeLevel => TypeLevel.Default;
+        public override TypeReward TypeReward => TypeReward.Default;
 
         public override void Open()
         {
@@ -69,7 +69,7 @@ namespace Assets.Source.Scripts.Game
             Disposable?.Dispose();
         }
 
-        protected override void OnCloseFullscreenAdCallback()
+        protected override void OnCloseFullscreenAdCallback() // заглушка на закрытие уровня
         {
             base.OnCloseFullscreenAdCallback();
             Message.Publish(new M_RecoverPlayer());

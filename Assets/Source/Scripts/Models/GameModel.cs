@@ -12,7 +12,7 @@ namespace Assets.Source.Scripts.Models
         public static readonly IMessageBroker Message = new MessageBroker();
 
         private readonly string _upgradeSceneName = "UpgradeScene";
-        private readonly int _maxDroneCount = 2;
+        private readonly int _maxDroneCount = 10;
         private readonly GameData _gameData;
         private readonly UpgradeConfig _upgradeConfig;
         private readonly PersistentDataService _persistentDataService;
@@ -21,14 +21,14 @@ namespace Assets.Source.Scripts.Models
         private int _currentDroneCount;
         private int _moneyEarned = 0;
 
-        public GameModel(PersistentDataService persistentDataService, UpgradeConfig upgradeConfig, GameData gameData, LevelData levelData) // для теста
-        {
-            _persistentDataService = persistentDataService;
-            _upgradeConfig = upgradeConfig;
-            _gameData = gameData;
-            _currentDroneCount = _maxDroneCount;
-            _levelData = levelData;
-        }
+        //public GameModel(PersistentDataService persistentDataService, UpgradeConfig upgradeConfig, GameData gameData, LevelData levelData) // для теста
+        //{
+        //    _persistentDataService = persistentDataService;
+        //    _upgradeConfig = upgradeConfig;
+        //    _gameData = gameData;
+        //    _currentDroneCount = _maxDroneCount;
+        //    _levelData = levelData;
+        //}
 
         public GameModel(PersistentDataService persistentDataService, UpgradeConfig upgradeConfig, GameData gameData)
         {
@@ -49,17 +49,17 @@ namespace Assets.Source.Scripts.Models
             return false;
         }
 
-        public LevelData GetLevelData() // для тестирования
-        {
-            return _levelData;
-        }
-
-        //public LevelData GetLevelData()
+        //public LevelData GetLevelData() // для тестирования
         //{
-        //    return _gameData.BiomsConfig.
-        //        GetBiomDataById(_persistentDataService.PlayerProgress.CurrentBiomId).
-        //        GetLevelDataById(_persistentDataService.PlayerProgress.CurrentLevelId);
+        //    return _levelData;
         //}
+
+        public LevelData GetLevelData()
+        {
+            return _gameData.BiomsConfig.
+                GetBiomDataById(_persistentDataService.PlayerProgress.CurrentBiomId).
+                GetLevelDataById(_persistentDataService.PlayerProgress.CurrentLevelId);
+        }
 
         public TankData GetTankData()
         {

@@ -22,11 +22,11 @@ namespace Assets.Source.Scripts.Game
 
         private int _finalReward;
 
-        public override TypeLevel TypeLevel => TypeLevel.Money;
+        public override TypeReward TypeReward => TypeReward.MoneyWheel;
 
         public override void Open()
         {
-            if (TryOpen(LevelData))
+            if (TryExecute(LevelData))
                 return;
 
             base.Open();
@@ -54,6 +54,10 @@ namespace Assets.Source.Scripts.Game
 
         protected override void OnCloseFullscreenAdCallback()
         {
+            if (TryExecute(LevelData))
+                return;
+
+            base.OnCloseFullscreenAdCallback();
             GameModel.UpdateEarnedMoneyByReward(_finalReward);
             GameModel.FinishGame();
         }

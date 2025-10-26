@@ -4674,6 +4674,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rocks_Granite_56
       objectReference: {fileID: 0}
+    - target: {fileID: 1577498561216575776, guid: 870a69b38f4379044a2312e13308d06e, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1577498561216575776, guid: 870a69b38f4379044a2312e13308d06e, type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2515207878695815216, guid: 870a69b38f4379044a2312e13308d06e, type: 3}
       propertyPath: m_LocalScale.y
       value: 0.77391
@@ -7214,6 +7222,13 @@ MonoBehaviour:
   _vibroButton: {fileID: 615771714}
   _soundButton: {fileID: 344824313}
   _backButton: {fileID: 66206718}
+  _openButton: {fileID: 0}
+  _soundImage: {fileID: 0}
+  _soundMuteSprite: {fileID: 0}
+  _soundUnmuteSprite: {fileID: 0}
+  _vibroImage: {fileID: 0}
+  _vibroEnableSprite: {fileID: 0}
+  _vibroDisableSprite: {fileID: 0}
 --- !u!114 &1653031726
 MonoBehaviour:
   m_ObjectHideFlags: 0

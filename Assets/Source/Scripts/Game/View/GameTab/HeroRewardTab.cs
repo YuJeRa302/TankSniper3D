@@ -20,7 +20,7 @@ namespace Assets.Source.Scripts.Game
 
         private HeroData _heroData;
 
-        public override TypeLevel TypeLevel => TypeLevel.Hero;
+        public override TypeReward TypeReward => TypeReward.Hero;
 
         public override void Initialize(GameModel gameModel)
         {
@@ -30,7 +30,7 @@ namespace Assets.Source.Scripts.Game
 
         public override void Open()
         {
-            if (TryOpen(LevelData))
+            if (TryExecute(LevelData))
                 return;
 
             base.Open();
@@ -53,6 +53,10 @@ namespace Assets.Source.Scripts.Game
 
         protected override void OnCloseFullscreenAdCallback()
         {
+            if (TryExecute(LevelData))
+                return;
+
+            base.OnCloseFullscreenAdCallback();
             GameModel.OpenHeroByData(_heroData);
             GameModel.FinishGame();
         }

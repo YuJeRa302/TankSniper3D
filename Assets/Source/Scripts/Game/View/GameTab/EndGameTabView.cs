@@ -19,7 +19,7 @@ namespace Assets.Source.Scripts.Game
         private GameModel _gameModel;
         private CompositeDisposable _disposables = new();
 
-        public abstract TypeLevel TypeLevel { get; }
+        public abstract TypeReward TypeReward { get; }
 
         private void OnDestroy()
         {
@@ -46,9 +46,9 @@ namespace Assets.Source.Scripts.Game
             MessageBroker.Default.Publish(new M_ClosePanel());
         }
 
-        protected bool TryOpen(LevelData levelData)
+        protected bool TryExecute(LevelData levelData)
         {
-            return levelData.TypeLevel != TypeLevel;
+            return levelData.TypeReward != TypeReward;
         }
 
         protected virtual void AddListeners()

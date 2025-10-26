@@ -10,10 +10,12 @@ namespace Assets.Source.Scripts.ScriptableObjects
         [SerializeField] private string _nameScene;
         [SerializeField] private Sprite _specialSprite;
         [SerializeField] private TypeLevel _typeLevel;
+        [SerializeField] private TypeReward _typeReward;
 
         public int Id => _id;
         public string NameScene => _nameScene;
         public Sprite SpecialSprite => _specialSprite;
         public TypeLevel TypeLevel => _typeLevel;
+        public TypeReward TypeReward => _typeReward;
     }
 }

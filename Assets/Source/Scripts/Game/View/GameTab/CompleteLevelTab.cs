@@ -8,17 +8,18 @@ namespace Assets.Source.Scripts.Game
 {
     public class CompleteLevelTab : EndGameTabView
     {
+
         [SerializeField] private TMP_Text _moneyText;
         [SerializeField] private TMP_Text _levelText;
         [SerializeField] private TMP_Text _moneyEarnedText;
         [Space(20)]
         [SerializeField] private Button _continueButton;
 
-        public override TypeLevel TypeLevel => TypeLevel.Default;
+        public override TypeReward TypeReward => TypeReward.Default;
 
         public override void Open()
         {
-            if (TryOpen(LevelData))
+            if (TryExecute(LevelData))
                 return;
 
             base.Open();
