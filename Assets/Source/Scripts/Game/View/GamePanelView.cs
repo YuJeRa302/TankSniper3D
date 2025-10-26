@@ -56,14 +56,14 @@ namespace Assets.Source.Scripts.Game
             RemoveListeners();
         }
 
-        public void Initialize(GameModel gameModel, UpgradeConfig upgradeConfig, GameData gameData, LevelData levelData)
+        public void Initialize(GameModel gameModel, UpgradeConfig upgradeConfig, GameData gameData)
         {
             _gameModel = gameModel;
             _upgradeConfig = upgradeConfig;
             _gameData = gameData;
             _moneyText.text = _gameModel.GetMoney().ToString();
 
-            if (levelData.TypeLevel == TypeLevel.Drone)
+            if (_gameModel.GetLevelData().TypeLevel == TypeLevel.Drone)
                 CreateDroneEntities();
             else
                 CreateMainTank();
@@ -89,8 +89,8 @@ namespace Assets.Source.Scripts.Game
                 .AddTo(_disposables);
 
             DefeatTab.Message
-                .Receive<M_RecoveryTankHealth>()
-                .Subscribe(m => OnRecoveryTankHealth())
+                .Receive<M_RecoverPlayer>()
+                .Subscribe(m => OnRecoverPlayer())
                 .AddTo(_disposables);
 
             DroneHealth.Message
@@ -98,8 +98,18 @@ namespace Assets.Source.Scripts.Game
                 .Subscribe(m => OnDroneDeath())
                 .AddTo(_disposables);
 
+            DroneView.Message
+                .Receive<M_DeathDrone>()
+                .Subscribe(m => OnDroneDeath())
+                .AddTo(_disposables);
+
             TankHealth.Message
                 .Receive<M_DeathTank>()
+                .Subscribe(m => OnTankDeath())
+                .AddTo(_disposables);
+
+            MessageBroker.Default
+                .Receive<M_FinishGame>()
                 .Subscribe(m => OnTankDeath())
                 .AddTo(_disposables);
         }
@@ -109,10 +119,16 @@ namespace Assets.Source.Scripts.Game
             _disposables?.Dispose();
         }
 
-        private void OnRecoveryTankHealth()
+        private void OnRecoverPlayer()
         {
             _gameParametersView.gameObject.SetActive(true);
             gameObject.SetActive(true);
+
+            if (_gameModel.GetLevelData().TypeLevel == TypeLevel.Drone)
+            {
+                if (_gameModel.TryCreateDrone())
+                    CreateDrone();
+            }
         }
 
         private void OnTankDeath()
@@ -142,6 +158,8 @@ namespace Assets.Source.Scripts.Game
         {
             if (_gameModel.TryCreateDrone())
                 CreateDrone();
+            else
+                Message.Publish(new M_DefeatByDrone());
         }
 
         private void ChangeSetActive()

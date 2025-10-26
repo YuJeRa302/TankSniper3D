@@ -1,10 +1,13 @@
 using Assets.Source.Game.Scripts.Enemy;
+using UniRx;
 using UnityEngine;
 
 namespace Assets.Source.Scripts.Game
 {
     public class DroneView : MonoBehaviour
     {
+        public static readonly IMessageBroker Message = new MessageBroker();
+
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private AudioClip _hitSound;
         [SerializeField] private AudioClip _moveSound;
@@ -30,6 +33,7 @@ namespace Assets.Source.Scripts.Game
         {
             CreateHitEffect(transform.position);
             CreateSoundEffect(transform.position);
+            Message.Publish(new M_DeathDrone());
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -70,7 +74,6 @@ namespace Assets.Source.Scripts.Game
         public void Initialize()
         {
             _droneHealth.Initialize(_health);
-            Destroy(gameObject, _droneLifeTime);
         }
 
         private void UpdateDroneEntities()

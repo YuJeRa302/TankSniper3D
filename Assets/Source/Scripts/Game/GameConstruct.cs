@@ -32,10 +32,11 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private GamePanelView _gamePanelView;
         [SerializeField] private GameParametersView _gameParametersView;
         [SerializeField] private ReloadLevelTab _reloadLevelTab;
-        [SerializeField] private DefeatTab _defeatTab;
+        [Space(20)]
+        [SerializeField] private List<EndGameTabView> _endGameTabViews;
         [Space(20)]
         [SerializeField] private Transform _scopeParent;
-        //[SerializeField] private LevelData _levelData; для тестирования дрона
+        [SerializeField] private LevelData _levelData; //для тестирования дрона
         [Space(20)]
         [SerializeField] private Button _sniperScopeButton;
         [Space(20)]
@@ -47,7 +48,7 @@ namespace Assets.Source.Scripts.Game
         private GameModel _gameModel;
         private LevelModel _levelModel;
         private SettingsModel _settingsModel;
-        private LevelData _levelData;
+        //private LevelData _levelData;
 
         private void OnDestroy()
         {
@@ -72,13 +73,13 @@ namespace Assets.Source.Scripts.Game
         private void CreateUI()
         {
             CreateScope(_sniperScopeButton);
-            _gamePanelView.Initialize(_gameModel, _upgradeConfig, _gameData, _levelData);
+            _gamePanelView.Initialize(_gameModel, _upgradeConfig, _gameData);
             _shooting.Initialize(_gameModel);
             _levelsView.Initialize(_levelModel, _gameData.BiomsConfig);
             _gameParametersView.Initialize(_gameModel.GetTankData().Health, _enemies.Count);
             _settingsView.Initialize(_settingsModel, _audioPlayer);
             _reloadLevelTab.Initialize(_gameModel);
-            _defeatTab.Initialize(_gameModel);
+            InitEndGameTabs();
         }
 
         private void CreateScope(Button sniperScopeButton)
@@ -105,10 +106,10 @@ namespace Assets.Source.Scripts.Game
 
         private void Construct()
         {
-            _gameModel = new GameModel(_persistentDataService, _upgradeConfig, _gameData);
+            _gameModel = new GameModel(_persistentDataService, _upgradeConfig, _gameData, _levelData);
             _levelModel = new LevelModel(_persistentDataService, _gameData.BiomsConfig);
             _settingsModel = new SettingsModel(_persistentDataService, _audioPlayer, _gamePauseService);
-            _levelData = _gameModel.GetLevelData();
+            //_levelData = _gameModel.GetLevelData();
             _cameraMover.Initialize(_gamePauseService);
             CreateUI();
 
@@ -124,6 +125,14 @@ namespace Assets.Source.Scripts.Game
             _saveAndLoader = new(_persistentDataService, _configData);
             _saveAndLoader.LoadDataFromPrefs();
             //_saveAndLoader.LoadDataFromConfig(); для тестирования дрона
+        }
+
+        private void InitEndGameTabs()
+        {
+            foreach (EndGameTabView endGameTabView in _endGameTabViews)
+            {
+                endGameTabView.Initialize(_gameModel);
+            }
         }
 
         private void InitEnemy(Transform playerTransform)

@@ -60,6 +60,16 @@ namespace Assets.Source.Scripts.Game
                 .Receive<M_CloseScope>()
                 .Subscribe(m => SetCameraZoom(false))
                 .AddTo(_disposables);
+
+            DefeatTab.Message
+                .Receive<M_OpenPanel>()
+                .Subscribe(m => OnGamePause(false))
+                .AddTo(_disposables);
+
+            EndGameTabView.Message
+                .Receive<M_OpenPanel>()
+                .Subscribe(m => OnGamePause(false))
+                .AddTo(_disposables);
         }
 
         private void RemoveListeners()

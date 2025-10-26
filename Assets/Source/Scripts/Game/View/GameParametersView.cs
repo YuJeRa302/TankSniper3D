@@ -24,10 +24,10 @@ namespace Assets.Source.Scripts.Game
 
         public void Initialize(int health, int enemyCount)
         {
-            _currentEnemyCount = enemyCount;
+            _currentEnemyCount = 0;
             _maxEnemyCount = enemyCount;
             SetSliderValue(health);
-            SetEnemyCount(enemyCount);
+            SetEnemyCount(_currentEnemyCount);
 
             TankHealth.Message
                 .Receive<M_TankHealthChanged>()
@@ -60,8 +60,11 @@ namespace Assets.Source.Scripts.Game
 
         private void OnChangeEnemyCount()
         {
-            _currentEnemyCount = Mathf.Clamp(_currentEnemyCount - 1, 0, _maxEnemyCount);
+            _currentEnemyCount = Mathf.Clamp(_currentEnemyCount + 1, 0, _maxEnemyCount);
             SetEnemyCount(_currentEnemyCount);
+
+            if (_currentEnemyCount == _maxEnemyCount)
+                MessageBroker.Default.Publish(new M_FinishGame());
         }
     }
 }

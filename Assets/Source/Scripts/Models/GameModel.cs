@@ -11,13 +11,24 @@ namespace Assets.Source.Scripts.Models
     {
         public static readonly IMessageBroker Message = new MessageBroker();
 
-        private readonly int _maxDroneCount = 10;
+        private readonly string _upgradeSceneName = "UpgradeScene";
+        private readonly int _maxDroneCount = 2;
         private readonly GameData _gameData;
         private readonly UpgradeConfig _upgradeConfig;
         private readonly PersistentDataService _persistentDataService;
 
+        private LevelData _levelData;
         private int _currentDroneCount;
         private int _moneyEarned = 0;
+
+        public GameModel(PersistentDataService persistentDataService, UpgradeConfig upgradeConfig, GameData gameData, LevelData levelData) // для теста
+        {
+            _persistentDataService = persistentDataService;
+            _upgradeConfig = upgradeConfig;
+            _gameData = gameData;
+            _currentDroneCount = _maxDroneCount;
+            _levelData = levelData;
+        }
 
         public GameModel(PersistentDataService persistentDataService, UpgradeConfig upgradeConfig, GameData gameData)
         {
@@ -38,12 +49,17 @@ namespace Assets.Source.Scripts.Models
             return false;
         }
 
-        public LevelData GetLevelData()
+        public LevelData GetLevelData() // для тестирования
         {
-            return _gameData.BiomsConfig.
-                GetBiomDataById(_persistentDataService.PlayerProgress.CurrentBiomId).
-                GetLevelDataById(_persistentDataService.PlayerProgress.CurrentLevelId);
+            return _levelData;
         }
+
+        //public LevelData GetLevelData()
+        //{
+        //    return _gameData.BiomsConfig.
+        //        GetBiomDataById(_persistentDataService.PlayerProgress.CurrentBiomId).
+        //        GetLevelDataById(_persistentDataService.PlayerProgress.CurrentLevelId);
+        //}
 
         public TankData GetTankData()
         {
@@ -61,6 +77,22 @@ namespace Assets.Source.Scripts.Models
             return _persistentDataService.PlayerProgress.TankService.GetStateByEquip().HeroId;
         }
 
+        public HeroData GetNewHeroData()
+        {
+            foreach (var state in _persistentDataService.PlayerProgress.HeroService.HeroStates)
+            {
+                if (state.IsOpened == false)
+                    return _upgradeConfig.GetHeroDataById(state.Id);
+            }
+
+            return null;
+        }
+
+        public int GetLevel()
+        {
+            return _persistentDataService.PlayerProgress.CurrentLevel;
+        }
+
         public int GetMoney()
         {
             return _persistentDataService.PlayerProgress.Money;
@@ -76,6 +108,22 @@ namespace Assets.Source.Scripts.Models
             return _moneyEarned;
         }
 
+        public void OpenHeroByData(HeroData heroData)
+        {
+            var state = _persistentDataService.PlayerProgress.HeroService.GetState(heroData);
+            state.SetOpenedState();
+        }
+
+        public void RecoverDroneCount()
+        {
+            _currentDroneCount = _maxDroneCount;
+        }
+
+        public void UpdateEarnedMoneyByReward(int earnedMoney)
+        {
+            _moneyEarned = earnedMoney;
+        }
+
         public void SetEarnedMoney(int earnedMoney)
         {
             _moneyEarned += earnedMoney;
@@ -86,6 +134,13 @@ namespace Assets.Source.Scripts.Models
         {
             _moneyEarned = 0;
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        public void FinishGame()
+        {
+            _persistentDataService.PlayerProgress.CurrentLevel++;
+            _persistentDataService.PlayerProgress.CurrentLevelId++;
+            SceneManager.LoadScene(_upgradeSceneName);
         }
     }
 }

@@ -15,6 +15,9 @@ MonoBehaviour:
   _health: 100
   _moveSpeed: 3
   _rotateSpeed: 5
+  _moneyReward: 650
   _explosionEffect: {fileID: 1816117870564257024, guid: 947567ca49a53624a90c40f27c9f29c0, type: 3}
   _movingAudioClip: {fileID: 8300000, guid: bb4547b12a2dc5544bc90a0d6cfed265, type: 3}
+  _standingAudioClip: {fileID: 0}
+  _reloadingAudioClip: {fileID: 0}
   _explosionSound: {fileID: 8300000, guid: 8dfcae34791b3a447b81d6653208f596, type: 3}

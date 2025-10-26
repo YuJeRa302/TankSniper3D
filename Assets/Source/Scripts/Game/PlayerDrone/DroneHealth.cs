@@ -25,7 +25,7 @@ namespace Assets.Source.Scripts.Game
 
             if (_currentHealth <= 0)
             {
-                Message.Publish(new M_DeathDrone());
+                //Message.Publish(new M_DeathDrone());
                 _currentHealth = 0;
             }
         }

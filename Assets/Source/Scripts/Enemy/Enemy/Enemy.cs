@@ -72,11 +72,16 @@ namespace Assets.Source.Game.Scripts.Enemy
 
             TankHealth.Message
                 .Receive<M_DeathTank>()
-                .Subscribe(m => OnTankDeath())
+                .Subscribe(m => OnPlayerDeath())
+                .AddTo(_disposables);
+
+            GamePanelView.Message
+                .Receive<M_DefeatByDrone>()
+                .Subscribe(m => OnPlayerDeath())
                 .AddTo(_disposables);
 
             DefeatTab.Message
-                .Receive<M_RecoveryTankHealth>()
+                .Receive<M_RecoverPlayer>()
                 .Subscribe(m => OnRecoveryTankHealth())
                 .AddTo(_disposables);
 
@@ -144,7 +149,7 @@ namespace Assets.Source.Game.Scripts.Enemy
             _isPlayerShot = true;
         }
 
-        private void OnTankDeath()
+        private void OnPlayerDeath()
         {
             _isPlayerShot = false;
         }

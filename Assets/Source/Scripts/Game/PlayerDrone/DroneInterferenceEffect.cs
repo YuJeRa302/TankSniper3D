@@ -5,6 +5,9 @@ namespace Assets.Source.Scripts.Game
 {
     public class DroneInterferenceEffect : MonoBehaviour
     {
+        private readonly float _controlValue = 1f;
+        private readonly float _multiplier = 2f;
+
         [SerializeField] private Image _interferenceImage;
         [SerializeField] private float _maxAlpha = 0.6f;
         [SerializeField] private float _shakeMagnitude = 0.1f;
@@ -25,8 +28,8 @@ namespace Assets.Source.Scripts.Game
             UpdateInterferenceImage(_currentAlpha);
 
             float shakeAmount = _shakeMagnitude * intensity;
-            float shakeX = Mathf.PerlinNoise(Time.time * _shakeSpeed, 0f) * 2f - 1f;
-            float shakeY = Mathf.PerlinNoise(0f, Time.time * _shakeSpeed) * 2f - 1f;
+            float shakeX = Mathf.PerlinNoise(Time.time * _shakeSpeed, 0f) * _multiplier - _controlValue;
+            float shakeY = Mathf.PerlinNoise(0f, Time.time * _shakeSpeed) * _multiplier - _controlValue;
 
             Vector3 shakeOffset = new Vector3(shakeX, shakeY, 0f) * shakeAmount;
             transform.localPosition = _originalCamPos + shakeOffset;

@@ -1,36 +1,52 @@
+using Assets.Source.Game.Scripts.Enums;
+using Assets.Source.Scripts.Models;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Source.Scripts.Game
 {
-    public class CompleteLevelTab : MonoBehaviour
+    public class CompleteLevelTab : EndGameTabView
     {
         [SerializeField] private TMP_Text _moneyText;
         [SerializeField] private TMP_Text _levelText;
         [SerializeField] private TMP_Text _moneyEarnedText;
-        [SerializeField] private Button _loadLevelButton;
+        [Space(20)]
+        [SerializeField] private Button _continueButton;
 
-        private void Awake()
+        public override TypeLevel TypeLevel => TypeLevel.Default;
+
+        public override void Open()
         {
-            _loadLevelButton.onClick.AddListener(OnLoadLevelButtonClicked);
+            if (TryOpen(LevelData))
+                return;
+
+            base.Open();
+            Fill();
         }
 
-        private void OnDestroy()
+        protected override void AddListeners()
         {
-            _loadLevelButton.onClick.RemoveListener(OnLoadLevelButtonClicked);
+            base.AddListeners();
+            _continueButton.onClick.AddListener(OnContinuePressed);
         }
 
-        public void Open(int currentMoney, int currentLevel, int moneyEarned)
+        protected override void RemoveListeners()
         {
-            _levelText.text = "Уровень " + currentLevel.ToString();
-            _moneyText.text = currentMoney.ToString();
-            _moneyEarnedText.text = "Награда: " + moneyEarned.ToString();
+            base.RemoveListeners();
+            _continueButton.onClick.RemoveListener(OnContinuePressed);
         }
 
-        private void OnLoadLevelButtonClicked()
+        private void Fill()
         {
+            _levelText.text = "Уровень " + GameModel.GetLevel().ToString();
+            _moneyText.text = GameModel.GetMoney().ToString();
+            _moneyEarnedText.text = "Награда: " + GameModel.GetEarnedMoney().ToString();
+        }
 
+        private void OnContinuePressed()
+        {
+            GameModel.FinishGame();
         }
     }
 }

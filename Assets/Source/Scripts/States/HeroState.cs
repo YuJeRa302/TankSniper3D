@@ -20,6 +20,11 @@ namespace Assets.Source.Game.Scripts.States
         public bool IsBuyed => _isBuyed;
         public bool IsOpened => _isOpened;
 
+        public void SetOpenedState()
+        {
+            _isOpened = true;
+        }
+
         public void ChangeBuyState(bool isBuyed)
         {
             _isBuyed = isBuyed;

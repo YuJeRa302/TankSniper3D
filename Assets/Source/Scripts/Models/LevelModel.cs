@@ -13,6 +13,7 @@ namespace Assets.Source.Scripts.Models
         {
             _persistentDataService = persistentDataService;
             _biomsConfig = biomsConfig;
+            UpdateIndexes();
         }
 
         public int GetCurrentBiomIndex()
@@ -54,6 +55,17 @@ namespace Assets.Source.Scripts.Models
         public LevelState GetLevelState(LevelData levelData)
         {
             return _persistentDataService.PlayerProgress.LevelService.GetState(levelData, GetCurrentBiomIndex());
+        }
+
+        private void UpdateIndexes()
+        {
+            var currentLevelIndex = GetCurrentLevelId();
+
+            if (currentLevelIndex > _biomsConfig.BiomDatas[GetCurrentBiomIndex()].LevelDatas.Count)
+            {
+                _persistentDataService.PlayerProgress.CurrentLevelId = 0;
+                _persistentDataService.PlayerProgress.CurrentBiomId++;
+            }
         }
     }
 }

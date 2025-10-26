@@ -88,6 +88,11 @@ namespace Assets.Source.Scripts.Game
                 .Receive<M_DeathTank>()
                 .Subscribe(m => OnCloseButtonClicked())
                 .AddTo(_disposables);
+
+            MessageBroker.Default
+                .Receive<M_FinishGame>()
+                .Subscribe(m => OnCloseButtonClicked())
+                .AddTo(_disposables);
         }
 
         private void Fill()

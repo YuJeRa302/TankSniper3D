@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections;
+using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,36 +10,52 @@ namespace Assets.Source.Scripts.Game
         private readonly float _speedControlValue = 0.01f;
         private readonly float _angleControlValue = 64f;
 
-        [Header("UI Elements")]
         [SerializeField] private RectTransform _arrowTransform;
-        [SerializeField] private TextMeshProUGUI rewardText;
-        [Header("Settings")]
+        [Space(20)]
         [SerializeField] private float _rotationSpeed = 200f;
         [SerializeField] private float _maxAngle = 90f;
         [SerializeField] private float _deceleration = 2.5f;
+        [Space(20)]
+        [SerializeField] private int[] _multipliers;
 
+        private Coroutine _rotationCoroutine;
+        private bool _isActiveCoroutine;
         private bool _isRotating = true;
-        private bool _isSlowingDown = false;
         private float _currentAngle;
         private float _currentSpeed;
         private bool _rotatingRight = true;
-        private int _moneyReward = 0;
 
-        private void Update()
+        public ReactiveProperty<float> Multiplier { get; } = new ReactiveProperty<float>(0f);
+
+        public void Initialize()
         {
-            if (_isRotating)
-                AnimateArrow();
-            else if (_isSlowingDown)
-                SlowDownArrow();
+            _isActiveCoroutine = true;
+
+            if (_rotationCoroutine != null)
+                StopCoroutine(_rotationCoroutine);
+
+            _rotationCoroutine = StartCoroutine(RotateArrowRoutine());
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            if (!_isRotating || _isSlowingDown)
+            if (!_isRotating)
                 return;
 
             _isRotating = false;
-            _isSlowingDown = true;
+        }
+
+        private IEnumerator RotateArrowRoutine()
+        {
+            while (_isActiveCoroutine)
+            {
+                if (_isRotating)
+                    AnimateArrow();
+                else
+                    SlowDownArrow();
+
+                yield return null;
+            }
         }
 
         private void AnimateArrow()
@@ -77,31 +94,27 @@ namespace Assets.Source.Scripts.Game
             _arrowTransform.localRotation = Quaternion.Euler(0, 0, -_currentAngle);
 
             if (_currentSpeed <= _speedControlValue)
-                FinalizeReward();
+                GetRewardMultiplier();
         }
 
-        private void FinalizeReward()
+        private void GetRewardMultiplier()
         {
-            _isSlowingDown = false;
-            float multiplier = GetMultiplier(_currentAngle);
-            int finalReward = Mathf.RoundToInt(_moneyReward * multiplier);
+            _isActiveCoroutine = false;
+            Multiplier.Value = SetMultiplier(_currentAngle);
         }
 
-        private float GetMultiplier(float angle)
+        private float SetMultiplier(float angle)
         {
             if (angle < -_angleControlValue)
-                return 2f;
-
+                return _multipliers[0];
             if (angle < 0 && angle > -_angleControlValue)
-                return 3f;
-
+                return _multipliers[1];
             if (angle > 0 && angle < _angleControlValue)
-                return 4f;
-
+                return _multipliers[2];
             if (angle > _angleControlValue)
-                return 5f;
+                return _multipliers[3];
 
-            return 3f;
+            return _multipliers[1];
         }
     }
 }

@@ -15,6 +15,7 @@ MonoBehaviour:
   _health: 100
   _moveSpeed: 2
   _rotateSpeed: 5
+  _moneyReward: 350
   _explosionEffect: {fileID: 0}
   _movingAudioClip: {fileID: 0}
   _standingAudioClip: {fileID: 0}

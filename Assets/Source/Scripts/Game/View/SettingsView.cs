@@ -23,27 +23,31 @@ namespace Assets.Source.Scripts.Game
         private SettingsModel _settingsModel;
         private AudioPlayer _audioPlayer;
 
+        private void OnDestroy()
+        {
+            RemoveListeners();
+        }
+
         public void Initialize(SettingsModel settingsModel, AudioPlayer audioPlayer)
         {
-            gameObject.SetActive(false);
             _settingsModel = settingsModel;
             _audioPlayer = audioPlayer;
             ChangeImageSprite(_soundImage, _soundUnmuteSprite, _soundMuteSprite, _settingsModel.IsMuted);
             ChangeImageSprite(_vibroImage, _vibroEnableSprite, _vibroDisableSprite, _settingsModel.GetVibroState());
+            AddListeners();
+            gameObject.SetActive(false);
         }
 
-        protected override void AddListeners()
+        private void AddListeners()
         {
-            base.AddListeners();
             _soundButton.onClick.AddListener(OnSoundButtonClicked);
             _vibroButton.onClick.AddListener(OnVibroButtonClicked);
             _backButton.onClick.AddListener(Close);
             _openButton.onClick.AddListener(Open);
         }
 
-        protected override void RemoveListeners()
+        private void RemoveListeners()
         {
-            base.RemoveListeners();
             _soundButton.onClick.RemoveListener(OnSoundButtonClicked);
             _vibroButton.onClick.RemoveListener(OnVibroButtonClicked);
             _backButton.onClick.RemoveListener(Close);

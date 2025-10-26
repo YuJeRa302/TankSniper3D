@@ -356,7 +356,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 897476172922824775}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!1 &1202805018034747433
 GameObject:
   m_ObjectHideFlags: 0
@@ -3190,6 +3190,7 @@ MonoBehaviour:
   _exploudLifeTime: 1
   _droneCamera: {fileID: 6486943997666097445}
   _droneSpeed: 10
+  _droneLifeTime: 5
   _rotationSpeed: 5
   _damage: 100
   _health: 250

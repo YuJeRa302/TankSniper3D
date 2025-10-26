@@ -14,24 +14,28 @@ namespace Assets.Source.Scripts.Game
 
         private GameModel _gameModel;
 
+        private void OnDestroy()
+        {
+            RemoveListeners();
+        }
+
         public void Initialize(GameModel gameModel)
         {
             _gameModel = gameModel;
             gameObject.SetActive(false);
+            AddListeners();
         }
 
-        protected override void AddListeners()
+        private void AddListeners()
         {
-            base.AddListeners();
             _cancelButton.onClick.AddListener(Close);
             _backButton.onClick.AddListener(Close);
             _reloadLevelButton.onClick.AddListener(OnSceneReloaded);
             _openReloadPanelButton.onClick.AddListener(Open);
         }
 
-        protected override void RemoveListeners()
+        private void RemoveListeners()
         {
-            base.RemoveListeners();
             _cancelButton.onClick.RemoveListener(Close);
             _backButton.onClick.RemoveListener(Close);
             _reloadLevelButton.onClick.RemoveListener(OnSceneReloaded);

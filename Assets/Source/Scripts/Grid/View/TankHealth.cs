@@ -23,7 +23,7 @@ namespace Assets.Source.Scripts.Upgrades
             _currentHealth = _maxHealth;
 
             DefeatTab.Message
-                .Receive<M_RecoveryTankHealth>()
+                .Receive<M_RecoverPlayer>()
                 .Subscribe(m => OnRecoveryTankHealth())
                 .AddTo(_disposables);
         }
