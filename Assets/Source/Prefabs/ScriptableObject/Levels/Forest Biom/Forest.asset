@@ -21,4 +21,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c39691aa092b9e9498bc5ebd59aff472, type: 2}
   - {fileID: 11400000, guid: 987e961ae085041478a7377ad796c0a6, type: 2}
   _heroLevel: {fileID: 11400000, guid: 9e7b43e94938f1d40b2cc4e7251b93ec, type: 2}
-  _icon: {fileID: 21300000, guid: 663223fd88710ac43ac9f10d822fea70, type: 3}
+  _icon: {fileID: 21300000, guid: 735927548150c154db2e3a02a0944531, type: 3}

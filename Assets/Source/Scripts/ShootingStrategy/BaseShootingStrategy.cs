@@ -1,6 +1,7 @@
 using Assets.Source.Game.Scripts.Enemy;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
+using Assets.Source.Scripts.Sound;
 using UnityEngine;
 
 namespace Assets.Source.Scripts.ShootingStrategy
@@ -9,7 +10,7 @@ namespace Assets.Source.Scripts.ShootingStrategy
     {
         public float FindTargetradius { get; private set; } = 300f;
 
-        public virtual void Construct(ProjectileData projectileData, Transform shotPoint)
+        public virtual void Construct(ProjectileData projectileData, AudioPlayer audioPlayer, Transform shotPoint)
         {
         }
 
@@ -21,7 +22,7 @@ namespace Assets.Source.Scripts.ShootingStrategy
         {
         }
 
-        public void CreateVibration(bool isVibroEnabled) 
+        public void CreateVibration(bool isVibroEnabled)
         {
             if (!isVibroEnabled)
                 return;
@@ -31,12 +32,12 @@ namespace Assets.Source.Scripts.ShootingStrategy
 #endif
         }
 
-        public void CreateFireSound(ProjectileData projectileData, Transform firePoint)
+        public void CreateFireSound(ProjectileData projectileData, AudioPlayer audioPlayer)
         {
             if (projectileData.FireSound == null)
                 return;
 
-            AudioSource.PlayClipAtPoint(projectileData.FireSound, firePoint.position);
+            audioPlayer.PlayCharacterAudio(projectileData.FireSound);
         }
 
         public void CreateMuzzleFlash(ProjectileData projectileData, Transform firePoint)

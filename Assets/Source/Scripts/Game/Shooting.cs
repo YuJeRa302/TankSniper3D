@@ -1,6 +1,7 @@
 using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
+using Assets.Source.Scripts.Sound;
 using UniRx;
 using UnityEngine;
 
@@ -35,13 +36,13 @@ namespace Assets.Source.Scripts.Game
             _disposables?.Dispose();
         }
 
-        public void Initialize(GameModel gameModel)
+        public void Initialize(GameModel gameModel, AudioPlayer audioPlayer)
         {
             _gameModel = gameModel;
             _tankData = _gameModel.GetTankData();
             _currentProjectileCount = _maxProjectileCount;
             _shootingStrategy = _tankData.ShootingStrategy;
-            _shootingStrategy.Construct(_tankData.ProjectileData, _shotPoint);
+            _shootingStrategy.Construct(_tankData.ProjectileData, audioPlayer, _shotPoint);
         }
 
         private void OnShooting(bool isAiming)

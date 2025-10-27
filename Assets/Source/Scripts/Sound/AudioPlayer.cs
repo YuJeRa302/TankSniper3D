@@ -11,6 +11,13 @@ namespace Assets.Source.Scripts.Sound
         [SerializeField] private AudioClip _mergeTankAudioClip;
         [SerializeField] private AudioClip _ambientAudioClip;
 
+        public AudioSource SfxAudioSource => _sfxAudioSource;
+
+        public void PlayCharacterAudio(AudioClip audioClip)
+        {
+            _sfxAudioSource.PlayOneShot(audioClip);
+        }
+
         public void PlayCreateTankAudio()
         {
             _sfxAudioSource.PlayOneShot(_createTankAudioClip);
@@ -21,7 +28,7 @@ namespace Assets.Source.Scripts.Sound
             _sfxAudioSource.PlayOneShot(_mergeTankAudioClip);
         }
 
-        public void PlayerAmbient()
+        public void PlayAmbient()
         {
             _ambientAudioSource.Stop();
         }

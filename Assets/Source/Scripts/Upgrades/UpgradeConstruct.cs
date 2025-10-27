@@ -1,4 +1,5 @@
 using Assets.Source.Game.Scripts.Utility;
+using Assets.Source.Scripts.Game;
 using Assets.Source.Scripts.Grid;
 using Assets.Source.Scripts.Levels;
 using Assets.Source.Scripts.Models;
@@ -23,6 +24,7 @@ namespace Assets.Source.Scripts.Upgrades
         [SerializeField] private GridView _gridView;
         [SerializeField] private UpgradeView _upgradeView;
         [SerializeField] private LevelsView _levelsView;
+        [SerializeField] private SettingsView _settingsView;
         [Space(20)]
         [SerializeField] private CoroutineRunner _coroutineRunner;
         [Space(20)]
@@ -33,6 +35,7 @@ namespace Assets.Source.Scripts.Upgrades
         private GridModel _gridModel;
         private UpgradeModel _upgradeModel;
         private LevelModel _levelModel;
+        private SettingsModel _settingsModel;
 
         private void Awake()
         {
@@ -64,10 +67,12 @@ namespace Assets.Source.Scripts.Upgrades
             _upgradeModel = new UpgradeModel(_persistentDataService);
             _gridModel = new GridModel(_persistentDataService, _coroutineRunner, _saveAndLoader, _biomsConfig);
             _levelModel = new LevelModel(_persistentDataService, _biomsConfig);
+            _settingsModel = new SettingsModel(_persistentDataService, _audioPlayer);
             _gridPlacer.Initialize(_audioPlayer);
             _gridView.Initialize(_gridModel, _gridItemConfig, _upgradeConfig, _gridPlacer, _audioPlayer);
-            _upgradeView.Initialize(_upgradeModel, _upgradeConfig);
+            _upgradeView.Initialize(_upgradeModel, _upgradeConfig, _audioPlayer);
             _levelsView.Initialize(_levelModel, _biomsConfig);
+            _settingsView.Initialize(_settingsModel, _audioPlayer);
         }
 
         private void LoadData()

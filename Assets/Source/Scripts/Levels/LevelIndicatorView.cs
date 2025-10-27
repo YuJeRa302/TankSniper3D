@@ -9,13 +9,13 @@ namespace Assets.Source.Scripts.Levels
     {
         [SerializeField] private Image _mainImage;
         [SerializeField] private Image _specialImage;
-        [SerializeField] private Color _selectColor;
-        [SerializeField] private Color _defaultColor;
-        [SerializeField] private Color _completeColor;
+        [SerializeField] private Sprite _selectSprite;
+        [SerializeField] private Sprite _defaultSprite;
+        [SerializeField] private Sprite _completeSprite;
 
         public void Initialize(LevelData levelData, LevelState levelState, int currentLevelId)
         {
-            SetColor(_defaultColor);
+            SetSprite(_defaultSprite);
             SetState(levelState, currentLevelId);
             SetSpecialIcon(levelData);
         }
@@ -23,15 +23,15 @@ namespace Assets.Source.Scripts.Levels
         private void SetState(LevelState levelState, int currentLevelId)
         {
             if (levelState.Id == currentLevelId)
-                SetColor(_selectColor);
+                SetSprite(_selectSprite);
 
             if (levelState.IsComplete)
-                SetColor(_completeColor);
+                SetSprite(_completeSprite);
         }
 
-        private void SetColor(Color color)
+        private void SetSprite(Sprite sprite)
         {
-            _mainImage.color = color;
+            _mainImage.sprite = sprite;
         }
 
         private void SetSpecialIcon(LevelData levelData)

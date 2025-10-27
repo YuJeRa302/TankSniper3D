@@ -1,6 +1,7 @@
 using Assets.Source.Game.Scripts.Enums;
 using Assets.Source.Game.Scripts.States;
 using Assets.Source.Scripts.ScriptableObjects;
+using Assets.Source.Scripts.Sound;
 using Assets.Source.Scripts.Views;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,7 +23,6 @@ namespace Assets.Source.Scripts.Upgrades
         [Space(20)]
         [SerializeField] private TankRecoil _tankRecoil;
 
-        private TypeHeroSpawn _typeHeroSpawn;
         private DecorationData _decalData;
         private DecorationData _patternData;
         private HeroData _heroData;
@@ -40,13 +40,14 @@ namespace Assets.Source.Scripts.Upgrades
             DecorationData decal,
             DecorationData pattern,
             HeroData heroData,
+            AudioPlayer audioPlayer,
             TypeHeroSpawn typeHeroSpawn)
         {
             Level = tankData.Level;
             Name = tankData.Name;
             _tankState = tankState;
             _tankHealth.Initialize(tankData.Health);
-            _tankRecoil.Initialize(tankData, _firePoint, typeHeroSpawn);
+            _tankRecoil.Initialize(tankData, audioPlayer, _firePoint, typeHeroSpawn);
             UpdateDecal(decal);
             UpdatePattern(pattern);
             CreateHero(heroData, typeHeroSpawn);
@@ -73,6 +74,11 @@ namespace Assets.Source.Scripts.Upgrades
             {
                 CreateHero(heroData, typeHeroSpawn);
             }
+        }
+
+        public void ShootingByMerge()
+        {
+            _tankRecoil.SetFire();
         }
 
         private void UpdateDecal(DecorationData decorationData)
@@ -117,7 +123,6 @@ namespace Assets.Source.Scripts.Upgrades
         {
             DestroyHero();
             _heroData = newHeroData;
-            _typeHeroSpawn = typeHeroSpawn;
 
             if (typeHeroSpawn == TypeHeroSpawn.Upgrade)
                 return;

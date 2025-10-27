@@ -38,6 +38,8 @@ namespace Assets.Source.Scripts.Models
             _currentDroneCount = _maxDroneCount;
         }
 
+        public bool IsGameEnded { get; private set; } = false;
+
         public bool TryCreateDrone()
         {
             if (_currentDroneCount > 0)
@@ -138,6 +140,7 @@ namespace Assets.Source.Scripts.Models
 
         public void FinishGame()
         {
+            IsGameEnded = true;
             _persistentDataService.PlayerProgress.CurrentLevel++;
             _persistentDataService.PlayerProgress.CurrentLevelId++;
             SceneManager.LoadScene(_upgradeSceneName);

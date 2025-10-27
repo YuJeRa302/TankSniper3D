@@ -12,16 +12,20 @@ namespace Assets.Source.Scripts.Projectile
         [SerializeField] private ProjectileData _smallProjectileData;
 
         private ProjectileData _projectileData;
+        private AudioSource _audioSource;
         private int _damage;
 
         public override ProjectileData ProjectileData => _projectileData;
+        public override AudioSource AudioSource => _audioSource;
         public override int Damage => _damage;
 
-        public override void Initialize(ProjectileData projectileData)
+
+        public override void Initialize(ProjectileData projectileData, AudioSource audioSource)
         {
-            base.Initialize(projectileData);
+            base.Initialize(projectileData, audioSource);
             _projectileData = projectileData;
             _damage = projectileData.Damage;
+            _audioSource = audioSource;
         }
 
         protected override void Hit(Collider collider)
@@ -53,8 +57,12 @@ namespace Assets.Source.Scripts.Projectile
                 float angle = i * _degrees / _smallProjectileData.ProjectileCount;
                 Vector3 dir = Quaternion.Euler(0, angle, 0) * Vector3.forward;
 
-                var projectile = Instantiate(_smallProjectileData.BaseProjectile, spawnPoint, Quaternion.LookRotation(dir));
-                projectile.Initialize(_smallProjectileData);
+                var projectile = Instantiate(
+                    _smallProjectileData.BaseProjectile,
+                    spawnPoint,
+                    Quaternion.LookRotation(dir));
+
+                projectile.Initialize(_smallProjectileData, _audioSource);
                 Destroy(projectile, _smallProjectileData.LifeTime);
             }
         }

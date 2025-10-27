@@ -73,8 +73,8 @@ namespace Assets.Source.Scripts.Game
         private void CreateUI()
         {
             CreateScope(_sniperScopeButton);
-            _gamePanelView.Initialize(_gameModel, _upgradeConfig, _gameData);
-            _shooting.Initialize(_gameModel);
+            _gamePanelView.Initialize(_gameModel, _upgradeConfig, _gameData, _audioPlayer);
+            _shooting.Initialize(_gameModel, _audioPlayer);
             _levelsView.Initialize(_levelModel, _gameData.BiomsConfig);
             _gameParametersView.Initialize(_gameModel.GetTankData().Health, _enemies.Count);
             _settingsView.Initialize(_settingsModel, _audioPlayer);

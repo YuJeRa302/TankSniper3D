@@ -25,7 +25,7 @@ namespace Assets.Source.Game.Scripts.Enemy
                 return;
 
             CreateBullet(_firePoints);
-            CreateFireSound(_projectileData, _firePoints);
+            CreateFireSound(_projectileData, _firePoints, _enemy.AudioSource);
             CreateMuzzleFlash(_projectileData, _firePoints);
         }
 
@@ -50,7 +50,7 @@ namespace Assets.Source.Game.Scripts.Enemy
                     firePoint.position,
                     Quaternion.LookRotation(GetSpreadDirection(firePoint)));
 
-                projectile.Initialize(_projectileData);
+                projectile.Initialize(_projectileData, _enemy.AudioSource);
             }
         }
     }

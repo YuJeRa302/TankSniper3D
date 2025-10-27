@@ -19,7 +19,7 @@ MonoBehaviour:
   _currentLevel: 0
   _ambientVolume: 0
   _sfxVolumeVolume: 0
-  _isMuted: 0
+  _isMuted: 1
   _isVibro: 0
   _currentGridTankCost: 0
   _countBuyedGridTank: 0
@@ -45,8 +45,8 @@ MonoBehaviour:
   _tankStates:
   - _id: 0
     _level: 1
-    _isOpened: 0
-    _isEquipped: 0
+    _isOpened: 1
+    _isEquipped: 1
     _decalId: 0
     _patternId: 0
     _heroId: 0
@@ -132,15 +132,54 @@ MonoBehaviour:
     _isOpened: 0
   _decorationStates:
   - _id: 0
-    _isBuyed: 1
+    _isBuyed: 0
     _typeCard: 0
   - _id: 1
-    _isBuyed: 1
-    _typeCard: 1
-  - _id: 1
-    _isBuyed: 1
+    _isBuyed: 0
+    _typeCard: 0
+  - _id: 2
+    _isBuyed: 0
+    _typeCard: 0
+  - _id: 3
+    _isBuyed: 0
+    _typeCard: 0
+  - _id: 4
+    _isBuyed: 0
+    _typeCard: 0
+  - _id: 5
+    _isBuyed: 0
+    _typeCard: 0
+  - _id: 6
+    _isBuyed: 0
+    _typeCard: 0
+  - _id: 7
+    _isBuyed: 0
+    _typeCard: 0
+  - _id: 8
+    _isBuyed: 0
+    _typeCard: 0
+  - _id: 9
+    _isBuyed: 0
+    _typeCard: 0
+  - _id: 10
+    _isBuyed: 0
+    _typeCard: 0
+  - _id: 11
+    _isBuyed: 0
+    _typeCard: 0
+  - _id: 12
+    _isBuyed: 0
+    _typeCard: 0
+  - _id: 13
+    _isBuyed: 0
+    _typeCard: 0
+  - _id: 14
+    _isBuyed: 0
     _typeCard: 0
   - _id: 0
+    _isBuyed: 0
+    _typeCard: 1
+  - _id: 1
     _isBuyed: 0
     _typeCard: 1
   - _id: 2
@@ -185,43 +224,4 @@ MonoBehaviour:
   - _id: 15
     _isBuyed: 0
     _typeCard: 1
-  - _id: 2
-    _isBuyed: 0
-    _typeCard: 0
-  - _id: 3
-    _isBuyed: 0
-    _typeCard: 0
-  - _id: 4
-    _isBuyed: 0
-    _typeCard: 0
-  - _id: 5
-    _isBuyed: 0
-    _typeCard: 0
-  - _id: 6
-    _isBuyed: 0
-    _typeCard: 0
-  - _id: 7
-    _isBuyed: 0
-    _typeCard: 0
-  - _id: 8
-    _isBuyed: 0
-    _typeCard: 0
-  - _id: 9
-    _isBuyed: 0
-    _typeCard: 0
-  - _id: 10
-    _isBuyed: 0
-    _typeCard: 0
-  - _id: 11
-    _isBuyed: 0
-    _typeCard: 0
-  - _id: 12
-    _isBuyed: 0
-    _typeCard: 0
-  - _id: 13
-    _isBuyed: 0
-    _typeCard: 0
-  - _id: 14
-    _isBuyed: 0
-    _typeCard: 0
   _gridTankStates: []

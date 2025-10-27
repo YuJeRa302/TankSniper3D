@@ -69,8 +69,11 @@ namespace Assets.Source.Scripts.Game
             Disposable?.Dispose();
         }
 
-        protected override void OnCloseFullscreenAdCallback() // заглушка на закрытие уровня
+        protected override void OnCloseFullscreenAdCallback()
         {
+            if (GameModel.IsGameEnded)
+                return;
+
             base.OnCloseFullscreenAdCallback();
             Message.Publish(new M_RecoverPlayer());
             Close();

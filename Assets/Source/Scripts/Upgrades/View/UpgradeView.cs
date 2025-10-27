@@ -3,6 +3,7 @@ using Assets.Source.Game.Scripts.States;
 using Assets.Source.Scripts.Grid;
 using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.ScriptableObjects;
+using Assets.Source.Scripts.Sound;
 using Assets.Source.Scripts.Views;
 using DG.Tweening;
 using System.Collections;
@@ -67,6 +68,7 @@ namespace Assets.Source.Scripts.Upgrades
         private TypeCard _currentTypeCard;
         private UpgradeModel _upgradeModel;
         private UpgradeConfig _upgradeConfig;
+        private AudioPlayer _audioPlayer;
 
         private void OnDestroy()
         {
@@ -74,10 +76,11 @@ namespace Assets.Source.Scripts.Upgrades
             ClearSelectionButtons();
         }
 
-        public void Initialize(UpgradeModel upgradeModel, UpgradeConfig upgradeConfig)
+        public void Initialize(UpgradeModel upgradeModel, UpgradeConfig upgradeConfig, AudioPlayer audioPlayer)
         {
             _upgradeModel = upgradeModel;
             _upgradeConfig = upgradeConfig;
+            _audioPlayer = audioPlayer;
             AddListeners();
         }
 
@@ -239,6 +242,7 @@ namespace Assets.Source.Scripts.Upgrades
                 _upgradeConfig.GetDecalDataById(tankState.DecalId),
                 _upgradeConfig.GetPatternDataById(tankState.PatternId),
                 _upgradeConfig.GetHeroDataById(tankState.HeroId),
+                _audioPlayer,
                 typeHeroSpawn);
 
             CreateHero(tankState.HeroId, _typeHeroSpawn);

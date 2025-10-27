@@ -17,6 +17,7 @@ namespace Assets.Source.Scripts.Projectile
         private float _lifeTime;
 
         public abstract ProjectileData ProjectileData { get; }
+        public abstract AudioSource AudioSource { get; }
         public abstract int Damage { get; }
 
         private void Start()
@@ -32,7 +33,7 @@ namespace Assets.Source.Scripts.Projectile
             Hit(collider);
         }
 
-        public virtual void Initialize(ProjectileData projectileData)
+        public virtual void Initialize(ProjectileData projectileData, AudioSource audioSource)
         {
             _speed = projectileData.Speed;
             _lifeTime = projectileData.LifeTime;
@@ -87,6 +88,14 @@ namespace Assets.Source.Scripts.Projectile
             Destroy(gameObject);
         }
 
+        protected virtual void CreateSoundEffect(ProjectileData projectileData, Vector3 hitPoint)
+        {
+            if (projectileData.HitSound == null)
+                return;
+
+            AudioSource.PlayOneShot(projectileData.HitSound);
+        }
+
         protected void CreateHitEffect(ProjectileData projectileData, Vector3 hitPoint)
         {
             if (projectileData.HitEffect == null)
@@ -94,14 +103,6 @@ namespace Assets.Source.Scripts.Projectile
 
             var effect = Instantiate(projectileData.HitEffect, hitPoint, Quaternion.identity);
             Destroy(effect.gameObject, _lifeTimeHitEffect);
-        }
-
-        protected void CreateSoundEffect(ProjectileData projectileData, Vector3 hitPoint)
-        {
-            if (projectileData.FireSound == null)
-                return;
-
-            AudioSource.PlayClipAtPoint(projectileData.HitSound, hitPoint);
         }
     }
 }

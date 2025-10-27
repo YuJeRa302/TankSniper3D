@@ -32,7 +32,7 @@ namespace Assets.Source.Scripts.Game
         {
             _settingsModel = settingsModel;
             _audioPlayer = audioPlayer;
-            ChangeImageSprite(_soundImage, _soundUnmuteSprite, _soundMuteSprite, _settingsModel.IsMuted);
+            ChangeImageSprite(_soundImage, _soundUnmuteSprite, _soundMuteSprite, !_settingsModel.IsMuted);
             ChangeImageSprite(_vibroImage, _vibroEnableSprite, _vibroDisableSprite, _settingsModel.GetVibroState());
             AddListeners();
             gameObject.SetActive(false);
@@ -74,7 +74,7 @@ namespace Assets.Source.Scripts.Game
             var mute = !_settingsModel.IsMuted;
             _settingsModel.SetMute(mute);
             _audioPlayer.MuteSound(mute);
-            ChangeImageSprite(_soundImage, _soundUnmuteSprite, _soundMuteSprite, mute);
+            ChangeImageSprite(_soundImage, _soundUnmuteSprite, _soundMuteSprite, !mute);
         }
     }
 }

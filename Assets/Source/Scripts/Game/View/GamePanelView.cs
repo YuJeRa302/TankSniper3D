@@ -3,6 +3,7 @@ using Assets.Source.Game.Scripts.States;
 using Assets.Source.Scripts.Levels;
 using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.ScriptableObjects;
+using Assets.Source.Scripts.Sound;
 using Assets.Source.Scripts.Upgrades;
 using DG.Tweening;
 using TMPro;
@@ -46,6 +47,7 @@ namespace Assets.Source.Scripts.Game
         private UpgradeConfig _upgradeConfig;
         private GameModel _gameModel;
         private CompositeDisposable _disposables = new();
+        private AudioPlayer _audioPlayer;
         private Quaternion _initialRotation;
 
         public Transform TransformPlayerTank => _mainTank.transform;
@@ -56,11 +58,16 @@ namespace Assets.Source.Scripts.Game
             RemoveListeners();
         }
 
-        public void Initialize(GameModel gameModel, UpgradeConfig upgradeConfig, GameData gameData)
+        public void Initialize(
+            GameModel gameModel,
+            UpgradeConfig upgradeConfig,
+            GameData gameData,
+            AudioPlayer audioPlayer)
         {
             _gameModel = gameModel;
             _upgradeConfig = upgradeConfig;
             _gameData = gameData;
+            _audioPlayer = audioPlayer;
             _moneyText.text = _gameModel.GetMoney().ToString();
 
             if (_gameModel.GetLevelData().TypeLevel == TypeLevel.Drone)
@@ -228,6 +235,7 @@ namespace Assets.Source.Scripts.Game
                 _upgradeConfig.GetDecalDataById(tankState.DecalId),
                 _upgradeConfig.GetPatternDataById(tankState.PatternId),
                 _upgradeConfig.GetHeroDataById(tankState.HeroId),
+                _audioPlayer,
                 _tankHero);
         }
 

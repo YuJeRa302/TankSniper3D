@@ -2,6 +2,7 @@ using Assets.Source.Game.Scripts.Enemy;
 using Assets.Source.Scripts.Projectile;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
+using Assets.Source.Scripts.Sound;
 using Reflex.Extensions;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,11 +20,13 @@ namespace Assets.Source.Scripts.ShootingStrategy
         private ProjectileData _projectileData;
         private Transform _firePoint;
         private Material _material;
+        private AudioPlayer _audioPlayer;
 
-        public override void Construct(ProjectileData projectileData, Transform firePoint)
+        public override void Construct(ProjectileData projectileData, AudioPlayer audioPlayer, Transform firePoint)
         {
             _projectileData = projectileData;
             _firePoint = firePoint;
+            _audioPlayer = audioPlayer;
             _material = (_projectileData.BaseProjectile as LaserBeam).Material;
             _material.color = Color.blue;
             var container = SceneManager.GetActiveScene().GetSceneContainer();
@@ -34,21 +37,21 @@ namespace Assets.Source.Scripts.ShootingStrategy
         {
             Transform target = FindTargetInCrosshair(FindTargetradius);
             var projectile = _projectileData.BaseProjectile;
-            projectile.Initialize(_projectileData);
+            projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
             LaserBounceAttack(_firePoint, target);
             CreateVibration(isVibroEnabled);
-            CreateFireSound(_projectileData, _firePoint);
+            CreateFireSound(_projectileData, _audioPlayer);
             CreateMuzzleFlash(_projectileData, _firePoint);
         }
 
         public override void ShootWithoutEnergy(bool isVibroEnabled)
         {
             var projectile = _projectileData.BaseProjectile;
-            projectile.Initialize(_projectileData);
+            projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
             CreateRaycast();
             CreateLaserTrail(_firePoint, _firePoint.forward);
             CreateVibration(isVibroEnabled);
-            CreateFireSound(_projectileData, _firePoint);
+            CreateFireSound(_projectileData, _audioPlayer);
             CreateMuzzleFlash(_projectileData, _firePoint);
         }
 

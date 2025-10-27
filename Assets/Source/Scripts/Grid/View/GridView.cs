@@ -132,6 +132,7 @@ namespace Assets.Source.Scripts.Grid
                 Destroy(_mainTank.gameObject);
                 CreateMainTank(_gridModel.CurrentMainTankLevel);
                 UpdateMainTankUI();
+                _mainTank.ShootingByMerge();
             }
         }
 
@@ -208,7 +209,9 @@ namespace Assets.Source.Scripts.Grid
                         UpdateBuyTankSlider(_gridModel.GetMaxTankCountForBuy(), _gridModel.GetCountBuyedTanks());
                         UpdateMoneyTextValue();
                         UnlockButtons();
+                        _gridModel.UpdateGridTankLevel();
                     }
+
                     break;
                 }
             }
@@ -282,6 +285,7 @@ namespace Assets.Source.Scripts.Grid
                 _upgradeConfig.GetDecalDataById(tankState.DecalId),
                 _upgradeConfig.GetPatternDataById(tankState.PatternId),
                 _upgradeConfig.GetHeroDataById(tankState.HeroId),
+                _audioPlayer,
                 _typeHeroSpawn);
         }
     }

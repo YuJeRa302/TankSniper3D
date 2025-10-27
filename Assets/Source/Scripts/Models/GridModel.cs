@@ -75,7 +75,6 @@ namespace Assets.Source.Scripts.Models
             {
                 _currentCountBuyTank++;
                 _persistentDataService.PlayerProgress.CountBuyedGridTank = _currentCountBuyTank;
-                UpdateGridTankLevel();
                 return true;
             }
 
@@ -121,14 +120,7 @@ namespace Assets.Source.Scripts.Models
             _coroutineRunner.StartCoroutine(LoadLevel(SceneManager.LoadSceneAsync(GetCurrentLevelData().NameScene)));
         }
 
-        private LevelData GetCurrentLevelData()
-        {
-            return _biomsConfig
-                .GetBiomDataById(_persistentDataService.PlayerProgress.CurrentBiomId)
-                .GetLevelDataById(_persistentDataService.PlayerProgress.CurrentLevelId);
-        }
-
-        private void UpdateGridTankLevel()
+        public void UpdateGridTankLevel()
         {
             if (_currentCountBuyTank == _maxCountBuyTank)
             {
@@ -137,6 +129,13 @@ namespace Assets.Source.Scripts.Models
                 _currentCountBuyTank = 0;
                 _persistentDataService.PlayerProgress.CountBuyedGridTank = _currentCountBuyTank;
             }
+        }
+
+        private LevelData GetCurrentLevelData()
+        {
+            return _biomsConfig
+                .GetBiomDataById(_persistentDataService.PlayerProgress.CurrentBiomId)
+                .GetLevelDataById(_persistentDataService.PlayerProgress.CurrentLevelId);
         }
 
         private IEnumerator LoadLevel(AsyncOperation asyncOperation)

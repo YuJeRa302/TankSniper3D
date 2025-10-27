@@ -10,12 +10,22 @@ namespace Assets.Source.Scripts.Models
         private readonly PersistentDataService _persistentDataService;
         private readonly GamePauseService _gamePauseService;
 
+        public SettingsModel(PersistentDataService persistentDataService, AudioPlayer audioPlayer)
+        {
+            _persistentDataService = persistentDataService;
+            _audioPlayer = audioPlayer;
+            IsMuted = _persistentDataService.PlayerProgress.IsMuted;
+            _audioPlayer.MuteSound(IsMuted);
+            AddListeners();
+        }
+
         public SettingsModel(PersistentDataService persistentDataService, AudioPlayer audioPlayer, GamePauseService gamePauseService)
         {
             _persistentDataService = persistentDataService;
             _audioPlayer = audioPlayer;
             _gamePauseService = gamePauseService;
             IsMuted = _persistentDataService.PlayerProgress.IsMuted;
+            _audioPlayer.MuteSound(IsMuted);
             AddListeners();
         }
 
@@ -74,12 +84,18 @@ namespace Assets.Source.Scripts.Models
 
         private void AddListeners()
         {
+            if (_gamePauseService == null)
+                return;
+
             _gamePauseService.GamePaused += OnGamePause;
             _gamePauseService.GameResumed += OnGameResume;
         }
 
         private void RemoveListeners()
         {
+            if (_gamePauseService == null)
+                return;
+
             _gamePauseService.GamePaused -= OnGamePause;
             _gamePauseService.GameResumed -= OnGameResume;
         }

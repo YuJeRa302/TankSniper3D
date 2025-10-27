@@ -1,5 +1,6 @@
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
+using Assets.Source.Scripts.Sound;
 using Reflex.Extensions;
 using System.Collections;
 using UnityEngine;
@@ -13,12 +14,14 @@ namespace Assets.Source.Scripts.ShootingStrategy
         private int _shotCount = 2;
         private ProjectileData _projectileData;
         private Transform _firePoint;
+        private AudioPlayer _audioPlayer;
         private ICoroutineRunner _coroutineRunner;
 
-        public override void Construct(ProjectileData projectileData, Transform shotPoint)
+        public override void Construct(ProjectileData projectileData, AudioPlayer audioPlayer, Transform firePoint)
         {
             _projectileData = projectileData;
-            _firePoint = shotPoint;
+            _firePoint = firePoint;
+            _audioPlayer = audioPlayer;
             var container = SceneManager.GetActiveScene().GetSceneContainer();
             _coroutineRunner = container.Resolve<ICoroutineRunner>();
         }
@@ -32,9 +35,9 @@ namespace Assets.Source.Scripts.ShootingStrategy
         public override void ShootWithoutEnergy(bool isVibroEnabled)
         {
             var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, _firePoint.position, _firePoint.rotation);
-            projectile.Initialize(_projectileData);
+            projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
             CreateVibration(isVibroEnabled);
-            CreateFireSound(_projectileData, _firePoint);
+            CreateFireSound(_projectileData, _audioPlayer);
             CreateMuzzleFlash(_projectileData, _firePoint);
         }
 
@@ -46,12 +49,12 @@ namespace Assets.Source.Scripts.ShootingStrategy
             {
                 Transform target = FindTargetInCrosshair(FindTargetradius);
                 var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, _firePoint.position, _firePoint.rotation);
-                projectile.Initialize(_projectileData);
+                projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
 
                 if (target != null)
                     projectile.SetToTarget(target);
 
-                CreateFireSound(_projectileData, _firePoint);
+                CreateFireSound(_projectileData, _audioPlayer);
                 CreateMuzzleFlash(_projectileData, _firePoint);
 
                 shotsFired++;

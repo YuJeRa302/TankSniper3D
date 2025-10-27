@@ -36,7 +36,7 @@ namespace Assets.Source.Game.Scripts.Enemy
                 return;
 
             CreateLaser(_firePoints);
-            CreateFireSound(_projectileData, _firePoints);
+            CreateFireSound(_projectileData, _firePoints, _enemy.AudioSource);
             CreateMuzzleFlash(_projectileData, _firePoints);
         }
 
@@ -46,7 +46,7 @@ namespace Assets.Source.Game.Scripts.Enemy
             {
                 Vector3 direction = (_enemy.Player.position - firePoint.position).normalized;
                 var projectile = _projectileData.BaseProjectile;
-                projectile.Initialize(_projectileData);
+                projectile.Initialize(_projectileData, _enemy.AudioSource);
                 CreateLaserTrail(firePoint, direction);
                 _enemy.StartCoroutine(DealDamage(_projectileData.LifeTime, firePoint, direction));
             }

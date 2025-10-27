@@ -22,14 +22,14 @@ namespace Assets.Source.Game.Scripts.Enemy
             return ProjectileData;
         }
 
-        public void CreateFireSound(ProjectileData projectileData, List<Transform> firePoints)
+        public void CreateFireSound(ProjectileData projectileData, List<Transform> firePoints, AudioSource audioSource)
         {
             if (projectileData.FireSound == null)
                 return;
 
             foreach (Transform firePoint in firePoints)
             {
-                AudioSource.PlayClipAtPoint(projectileData.FireSound, firePoint.position);
+                audioSource.PlayOneShot(projectileData.FireSound);
             }
         }
 

@@ -1,6 +1,7 @@
 using Assets.Source.Game.Scripts.Enums;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
+using Assets.Source.Scripts.Sound;
 using DG.Tweening;
 using System.Collections;
 using UnityEngine;
@@ -23,11 +24,11 @@ namespace Assets.Source.Scripts.Upgrades
         private bool _isFiring = false;
         private Coroutine _fireCoroutine;
 
-        public void Initialize(TankData tankData, Transform firePoint, TypeHeroSpawn typeHeroSpawn)
+        public void Initialize(TankData tankData, AudioPlayer audioPlayer, Transform firePoint, TypeHeroSpawn typeHeroSpawn)
         {
             _shootingStrategy = tankData.ShootingStrategy;
             _typeHeroSpawn = typeHeroSpawn;
-            _shootingStrategy.Construct(tankData.ProjectileData, firePoint);
+            _shootingStrategy.Construct(tankData.ProjectileData, audioPlayer, firePoint);
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -39,7 +40,7 @@ namespace Assets.Source.Scripts.Upgrades
             }
         }
 
-        private void SetFire()
+        public void SetFire()
         {
             if (_fireCoroutine != null)
                 StopCoroutine(_fireCoroutine);
