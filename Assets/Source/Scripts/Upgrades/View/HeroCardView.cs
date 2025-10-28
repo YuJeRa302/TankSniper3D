@@ -1,5 +1,6 @@
 using Assets.Source.Game.Scripts.Enums;
 using Assets.Source.Game.Scripts.States;
+using Assets.Source.Game.Scripts.Utility;
 using Assets.Source.Scripts.ScriptableObjects;
 using System;
 using System.Collections.Generic;
@@ -24,16 +25,17 @@ namespace Assets.Source.Scripts.Upgrades
         [SerializeField] private List<Image> _starImages;
         [SerializeField] private Sprite _star;
         [Space(20)]
-        [SerializeField] private Button _buyButton;
         [SerializeField] private Button _selectButton;
+        [Space(20)]
+        [SerializeField] private UpgradeButtonAdsWaiter _buttonAdsWaiter;
 
         private HeroState _heroState;
         private HeroData _heroData;
         private CompositeDisposable _disposables = new();
 
         public event Action<HeroCardView> Selected;
-        public event Action<int, TypeCard> BuyButtonClicked;
 
+        public UpgradeButtonAdsWaiter UpgradeButtonAdsWaiter => _buttonAdsWaiter;
         public HeroData HeroData => _heroData;
         public HeroState HeroState => _heroState;
 
@@ -46,6 +48,7 @@ namespace Assets.Source.Scripts.Upgrades
         {
             _heroData = heroData;
             _heroState = heroState;
+            _buttonAdsWaiter.Initialize(_heroData.Id, _heroData.TypeCard);
             AddListeners();
             Fill();
             Lock();
@@ -65,11 +68,6 @@ namespace Assets.Source.Scripts.Upgrades
             Select();
         }
 
-        private void BuyButtonClick()
-        {
-            BuyButtonClicked?.Invoke(_heroData.Id, _heroData.TypeCard);
-        }
-
         private void Lock()
         {
             _selectButton.interactable = false;
@@ -87,7 +85,7 @@ namespace Assets.Source.Scripts.Upgrades
             _selectButtonImage.color = _defaultColor;
             _lockStarImage.gameObject.SetActive(false);
             _mainImage.gameObject.SetActive(true);
-            _buyButton.gameObject.SetActive(true);
+            _buttonAdsWaiter.gameObject.SetActive(true);
         }
 
         private void Purchased()
@@ -103,17 +101,16 @@ namespace Assets.Source.Scripts.Upgrades
             _mainImage.gameObject.SetActive(true);
             _selectButtonImage.color = _defaultColor;
             _lockStarImage.gameObject.SetActive(false);
-            _buyButton.gameObject.SetActive(false);
+            _buttonAdsWaiter.gameObject.SetActive(false);
         }
 
         private void AddListeners()
         {
             _selectButton.onClick.AddListener(SelectButtonClick);
-            _buyButton.onClick.AddListener(BuyButtonClick);
 
             UpgradeView.Message
                 .Receive<M_UpgradeUnlocked>()
-                .Subscribe(m => OnUpgradeUnlocked(m.Id, m.TypeCard))
+                .Subscribe(m => OnPurchasedByAds(m.Id))
                 .AddTo(_disposables);
 
             UpgradeView.Message
@@ -125,7 +122,6 @@ namespace Assets.Source.Scripts.Upgrades
         private void RemoveListeners()
         {
             _selectButton.onClick.RemoveListener(SelectButtonClick);
-            _buyButton.onClick.RemoveListener(BuyButtonClick);
             _disposables?.Dispose();
         }
 
@@ -152,10 +148,10 @@ namespace Assets.Source.Scripts.Upgrades
             _chooseMark.gameObject.SetActive(true);
         }
 
-        private void OnUpgradeUnlocked(int id, TypeCard typeCard)
+        private void OnPurchasedByAds(int id)
         {
             if (_heroData.Id == id)
-                Unlock();
+                Purchased();
         }
 
         private void OnDeselect(int id)

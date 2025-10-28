@@ -18,20 +18,12 @@ namespace Assets.Source.Scripts.Services
             _heroStates = heroStates;
         }
 
-        public void SetStateByReward(HeroState newHeroState)
+        public HeroState GetState(int id)
         {
-            if (_heroStates != null)
-            {
-                HeroState heroState = FindState(newHeroState.Id);
-
-                if (heroState == null)
-                    _heroStates.Add(new(newHeroState.Id, newHeroState.IsBuyed, newHeroState.IsOpened));
-                else
-                    heroState.ChangeBuyState(newHeroState.IsBuyed);
-            }
+            return FindState(id);
         }
 
-        public HeroState GetState(HeroData heroData)
+        public HeroState GetStateByData(HeroData heroData)
         {
             HeroState heroState = FindState(heroData.Id);
 

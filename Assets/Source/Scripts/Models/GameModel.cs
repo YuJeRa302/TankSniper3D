@@ -112,7 +112,7 @@ namespace Assets.Source.Scripts.Models
 
         public void OpenHeroByData(HeroData heroData)
         {
-            var state = _persistentDataService.PlayerProgress.HeroService.GetState(heroData);
+            var state = _persistentDataService.PlayerProgress.HeroService.GetStateByData(heroData);
             state.SetOpenedState();
         }
 

@@ -12,6 +12,7 @@ using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
+using YG;
 
 namespace Assets.Source.Scripts.Upgrades
 {
@@ -87,6 +88,7 @@ namespace Assets.Source.Scripts.Upgrades
         private void AddListeners()
         {
             _backButton.onClick.AddListener(Close);
+            YG2.onCloseInterAdv += OnCloseFullscreenAdCallback;
 
             GridView.Message
                 .Receive<M_CloseGrid>()
@@ -96,6 +98,7 @@ namespace Assets.Source.Scripts.Upgrades
 
         private void RemoveListeners()
         {
+            YG2.onCloseInterAdv -= OnCloseFullscreenAdCallback;
             _backButton.onClick.RemoveListener(Close);
             _disposables?.Dispose();
         }
@@ -117,11 +120,6 @@ namespace Assets.Source.Scripts.Upgrades
             CreateTankEntities(tankState, _typeHeroSpawn);
             SelectTankButton();
             UpdateTankDescription();
-        }
-
-        private void OnRewardTaked() // возможно нужно будет убрать TypeCard
-        {
-            Message.Publish(new M_UpgradeUnlocked(_currentCardIndex, _currentTypeCard));
         }
 
         private void OnDecorationCardSelected(DecorationCardView decorationCardView)
@@ -147,12 +145,6 @@ namespace Assets.Source.Scripts.Upgrades
             CreateTankEntities(tankCardView.TankState, _typeHeroSpawn);
             UpdateTankDescription();
             AnimateSelectionObject(_tankView.gameObject);
-        }
-
-        private void OnBuyButtonClicked(int id, TypeCard typeCard)
-        {
-            _currentCardIndex = id;
-            _currentTypeCard = typeCard;
         }
 
         private void OnDecalButtonClicked(SelectionButtonView selectionButtonView)
@@ -181,6 +173,19 @@ namespace Assets.Source.Scripts.Upgrades
             CreateTankButtons();
             _placePreviewView.ResetRotation();
             SelectButton(selectionButtonView);
+        }
+
+        private void OnBuyButtonClicked(int id, TypeCard typeCard)
+        {
+            _currentCardIndex = id;
+            _currentTypeCard = typeCard;
+            YG2.InterstitialAdvShow();
+        }
+
+        private void OnCloseFullscreenAdCallback()
+        {
+            _upgradeModel.UnlockByReward(_currentCardIndex, _currentTypeCard);
+            Message.Publish(new M_UpgradeUnlocked(_currentCardIndex, _currentTypeCard));
         }
 
         private void UpdateTankDescription()
@@ -271,7 +276,7 @@ namespace Assets.Source.Scripts.Upgrades
                 DecorationState decorationState = _upgradeModel.GetDecorationState(decorationData);
                 view.Initialize(decorationData, decorationState, _upgradeModel.TankState);
                 view.DecorationSelected += OnDecorationCardSelected;
-                view.BuyButtonClicked += OnBuyButtonClicked;
+                view.UpgradeButtonAdsWaiter.AdsOpened += OnBuyButtonClicked;
             }
         }
 
@@ -286,7 +291,7 @@ namespace Assets.Source.Scripts.Upgrades
                 HeroState heroState = _upgradeModel.GetHeroState(heroData);
                 view.Initialize(heroData, heroState, _upgradeModel.TankState);
                 view.Selected += OnHeroCardSelected;
-                view.BuyButtonClicked += OnBuyButtonClicked;
+                view.UpgradeButtonAdsWaiter.AdsOpened += OnBuyButtonClicked;
             }
         }
 
@@ -338,7 +343,7 @@ namespace Assets.Source.Scripts.Upgrades
             foreach (DecorationCardView view in _decorationCardViews)
             {
                 view.DecorationSelected -= OnDecorationCardSelected;
-                view.BuyButtonClicked -= OnBuyButtonClicked;
+                view.UpgradeButtonAdsWaiter.AdsOpened -= OnBuyButtonClicked;
                 Destroy(view.gameObject);
             }
 
@@ -353,7 +358,7 @@ namespace Assets.Source.Scripts.Upgrades
             foreach (HeroCardView view in _heroCardViews)
             {
                 view.Selected -= OnHeroCardSelected;
-                view.BuyButtonClicked -= OnBuyButtonClicked;
+                view.UpgradeButtonAdsWaiter.AdsOpened -= OnBuyButtonClicked;
                 Destroy(view.gameObject);
             }
 

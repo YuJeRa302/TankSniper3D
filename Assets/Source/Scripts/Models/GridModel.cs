@@ -72,11 +72,7 @@ namespace Assets.Source.Scripts.Models
         public bool TryBuyGridTank(int coast)
         {
             if (_persistentDataService.TrySpendMoney(coast))
-            {
-                _currentCountBuyTank++;
-                _persistentDataService.PlayerProgress.CountBuyedGridTank = _currentCountBuyTank;
                 return true;
-            }
 
             return false;
         }
@@ -104,6 +100,12 @@ namespace Assets.Source.Scripts.Models
         public GridTankState CreateGridTankState(GridTankData gridTankData)
         {
             return _persistentDataService.PlayerProgress.GridService.CreateState(gridTankData);
+        }
+
+        public void UpdateCurrentCountBuyTank()
+        {
+            _currentCountBuyTank++;
+            _persistentDataService.PlayerProgress.CountBuyedGridTank = _currentCountBuyTank;
         }
 
         public void ChangeEquippedTank(TankState tankState)

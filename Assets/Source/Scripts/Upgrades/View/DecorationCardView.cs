@@ -1,5 +1,5 @@
-using Assets.Source.Game.Scripts.Enums;
 using Assets.Source.Game.Scripts.States;
+using Assets.Source.Game.Scripts.Utility;
 using Assets.Source.Scripts.ScriptableObjects;
 using System;
 using UniRx;
@@ -15,16 +15,17 @@ namespace Assets.Source.Scripts.Upgrades
         [SerializeField] private Image _icon;
         [SerializeField] private GameObject _chooseMark;
         [SerializeField] private GameObject _lockPanel;
-        [SerializeField] private Button _buyButton;
         [SerializeField] private Button _selectButton;
+        [Space(20)]
+        [SerializeField] private UpgradeButtonAdsWaiter _buttonAdsWaiter;
 
         private CompositeDisposable _disposables = new();
         private DecorationData _decorationData;
         private DecorationState _decorationState;
 
         public event Action<DecorationCardView> DecorationSelected;
-        public event Action<int, TypeCard> BuyButtonClicked;
 
+        public UpgradeButtonAdsWaiter UpgradeButtonAdsWaiter => _buttonAdsWaiter;
         public DecorationData DecorationData => _decorationData;
         public DecorationState DecorationState => _decorationState;
 
@@ -38,6 +39,7 @@ namespace Assets.Source.Scripts.Upgrades
             _decorationData = decorationData;
             _decorationState = decorationState;
             _icon.sprite = decorationData.Sprite;
+            _buttonAdsWaiter.Initialize(_decorationData.Id, _decorationData.TypeCard);
             AddListeners();
             Lock();
 
@@ -52,36 +54,30 @@ namespace Assets.Source.Scripts.Upgrades
             Select();
         }
 
-        private void BuyButtonClick()
-        {
-            BuyButtonClicked?.Invoke(_decorationData.Id, _decorationData.TypeCard);
-        }
-
         private void Lock()
         {
             if (_decorationData.Id == _firstIndex)
                 return;
 
             _lockPanel.gameObject.SetActive(true);
-            _buyButton.gameObject.SetActive(true);
+            _buttonAdsWaiter.gameObject.SetActive(true);
             _selectButton.interactable = false;
         }
 
         private void Unlock()
         {
             _lockPanel.gameObject.SetActive(false);
-            _buyButton.gameObject.SetActive(false);
+            _buttonAdsWaiter.gameObject.SetActive(false);
             _selectButton.interactable = true;
         }
 
         private void AddListeners()
         {
             _selectButton.onClick.AddListener(SelectButtonClick);
-            _buyButton.onClick.AddListener(BuyButtonClick);
 
             UpgradeView.Message
                 .Receive<M_UpgradeUnlocked>()
-                .Subscribe(m => OnUpgradeUnlocked(m.Id, m.TypeCard))
+                .Subscribe(m => OnUnlockByAds(m.Id))
                 .AddTo(_disposables);
 
             UpgradeView.Message
@@ -93,7 +89,6 @@ namespace Assets.Source.Scripts.Upgrades
         private void RemoveListeners()
         {
             _selectButton.onClick.RemoveListener(SelectButtonClick);
-            _buyButton.onClick.RemoveListener(BuyButtonClick);
             _disposables?.Dispose();
         }
 
@@ -118,7 +113,7 @@ namespace Assets.Source.Scripts.Upgrades
                 Select();
         }
 
-        private void OnUpgradeUnlocked(int id, TypeCard typeCard)
+        private void OnUnlockByAds(int id)
         {
             if (_decorationData.Id == id)
                 Unlock();

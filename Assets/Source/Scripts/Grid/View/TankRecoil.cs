@@ -51,8 +51,8 @@ namespace Assets.Source.Scripts.Upgrades
         private IEnumerator Firing()
         {
             _isFiring = true;
-            DoRecoil();
             _shootingStrategy.ShootWithEnergy(false);
+            DoRecoil();
 
             yield return new WaitForSeconds(_shotInterval);
             _isFiring = false;

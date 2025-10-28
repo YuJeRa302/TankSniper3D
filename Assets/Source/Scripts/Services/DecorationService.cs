@@ -19,7 +19,12 @@ namespace Assets.Source.Scripts.Services
             _decorationStates = decorationStates;
         }
 
-        public DecorationState GetState(DecorationData decorationData)
+        public DecorationState GetState(int id, TypeCard typeCard)
+        {
+            return FindState(id, typeCard);
+        }
+
+        public DecorationState GetStateByData(DecorationData decorationData)
         {
             DecorationState decorationState = FindState(decorationData.Id, decorationData.TypeCard);
 

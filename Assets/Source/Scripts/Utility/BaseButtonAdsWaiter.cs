@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,7 +5,7 @@ using YG;
 
 namespace Assets.Source.Game.Scripts.Utility
 {
-    public class ButtonAdsWaiter : MonoBehaviour
+    public abstract class BaseButtonAdsWaiter : MonoBehaviour
     {
         [SerializeField] private Button _adButton;
         [SerializeField] private Image _adsImage;
@@ -14,24 +13,16 @@ namespace Assets.Source.Game.Scripts.Utility
 
         private Coroutine _waitRoutine;
 
-        public event Action AdsGetted;
-
-        private void Awake()
+        private void OnEnable()
         {
-            YG2.onOpenInterAdv += OnOpenFullscreenAdCallback;
             YG2.onCloseInterAdv += OnCloseFullscreenAdCallback;
             YG2.onErrorInterAdv += OnErrorFullAdCallback;
             _adButton.onClick.AddListener(OnButtonClicked);
-        }
-
-        private void OnEnable()
-        {
             WaitAds();
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
-            YG2.onOpenInterAdv -= OnOpenFullscreenAdCallback;
             YG2.onCloseInterAdv -= OnCloseFullscreenAdCallback;
             YG2.onErrorInterAdv -= OnErrorFullAdCallback;
             _adButton.onClick.RemoveListener(OnButtonClicked);
@@ -40,17 +31,45 @@ namespace Assets.Source.Game.Scripts.Utility
                 StopCoroutine(_waitRoutine);
         }
 
-        private void OnButtonClicked()
+        private void OnDestroy()
+        {
+            YG2.onCloseInterAdv -= OnCloseFullscreenAdCallback;
+            YG2.onErrorInterAdv -= OnErrorFullAdCallback;
+            _adButton.onClick.RemoveListener(OnButtonClicked);
+
+            if (_waitRoutine != null)
+                StopCoroutine(_waitRoutine);
+        }
+
+        protected virtual void LockButton()
+        {
+            _adButton.interactable = false;
+            _adsImage.gameObject.SetActive(false);
+            _waitImage.gameObject.SetActive(true);
+        }
+
+        protected virtual void UnlockButton()
+        {
+            _waitImage.gameObject.SetActive(false);
+            _adButton.interactable = true;
+            _adsImage.gameObject.SetActive(true);
+        }
+
+        protected virtual void OnCloseFullscreenAdCallback()
+        {
+            if (gameObject.activeSelf)
+                WaitAds();
+        }
+
+        protected virtual void OnButtonClicked()
         {
             WaitAds();
             YG2.InterstitialAdvShow();
         }
 
-        private void WaitAds()
+        protected void WaitAds()
         {
-            _adButton.interactable = false;
-            _adsImage.gameObject.SetActive(false);
-            _waitImage.gameObject.SetActive(true);
+            LockButton();
 
             if (_waitRoutine != null)
                 StopCoroutine(_waitRoutine);
@@ -65,24 +84,13 @@ namespace Assets.Source.Game.Scripts.Utility
                 yield return null;
             }
 
-            _waitImage.gameObject.SetActive(false);
-            _adButton.interactable = true;
-            _adsImage.gameObject.SetActive(true);
-        }
-
-        private void OnOpenFullscreenAdCallback()
-        {
-            AdsGetted?.Invoke();
-        }
-
-        private void OnCloseFullscreenAdCallback()
-        {
-            WaitAds();
+            UnlockButton();
         }
 
         private void OnErrorFullAdCallback()
         {
-            WaitAds();
+            if (gameObject.activeSelf)
+                WaitAds();
         }
     }
 }

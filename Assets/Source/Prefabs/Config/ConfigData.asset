@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d03069513112634392b15f8049f8b6d, type: 3}
   m_Name: ConfigData
   m_EditorClassIdentifier: 
-  _money: 10000
+  _money: 500
   _currentPlayerTankId: 0
   _currentBiomId: 0
   _currentLevelId: 0
   _currentLevel: 0
   _ambientVolume: 0
   _sfxVolumeVolume: 0
-  _isMuted: 1
+  _isMuted: 0
   _isVibro: 0
   _currentGridTankCost: 0
   _countBuyedGridTank: 0
@@ -45,8 +45,8 @@ MonoBehaviour:
   _tankStates:
   - _id: 0
     _level: 1
-    _isOpened: 1
-    _isEquipped: 1
+    _isOpened: 0
+    _isEquipped: 0
     _decalId: 0
     _patternId: 0
     _heroId: 0
@@ -101,10 +101,10 @@ MonoBehaviour:
     _heroId: 0
   _heroStates:
   - _id: 1
-    _isBuyed: 1
+    _isBuyed: 0
     _isOpened: 1
   - _id: 2
-    _isBuyed: 1
+    _isBuyed: 0
     _isOpened: 1
   - _id: 3
     _isBuyed: 0
@@ -132,10 +132,10 @@ MonoBehaviour:
     _isOpened: 0
   _decorationStates:
   - _id: 0
-    _isBuyed: 0
+    _isBuyed: 1
     _typeCard: 0
   - _id: 1
-    _isBuyed: 0
+    _isBuyed: 1
     _typeCard: 0
   - _id: 2
     _isBuyed: 0
@@ -180,10 +180,10 @@ MonoBehaviour:
     _isBuyed: 0
     _typeCard: 1
   - _id: 1
-    _isBuyed: 0
+    _isBuyed: 1
     _typeCard: 1
   - _id: 2
-    _isBuyed: 0
+    _isBuyed: 1
     _typeCard: 1
   - _id: 3
     _isBuyed: 0

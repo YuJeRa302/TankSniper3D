@@ -1,5 +1,6 @@
 using Assets.Source.Game.Scripts.Enums;
 using Assets.Source.Game.Scripts.States;
+using Assets.Source.Game.Scripts.Utility;
 using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Sound;
@@ -23,6 +24,9 @@ namespace Assets.Source.Scripts.Grid
         [SerializeField] private TMP_Text _tankCostText;
         [SerializeField] private Vector3 _gridTankSpawnRotation;
         [Space(20)]
+        [SerializeField] private GridButtonAdsWaiter _buttonAdsWaiter;
+        [SerializeField] private AttentionButton _attentionButton;
+        [Space(20)]
         [SerializeField] private Button _createGridTankButton;
         [SerializeField] private Button _openUpgrade;
         [SerializeField] private Button _loadGameSceneButton;
@@ -42,6 +46,11 @@ namespace Assets.Source.Scripts.Grid
         private GridPlacer _gridPlacer;
         private TankView _mainTank;
         private CompositeDisposable _disposables = new();
+
+        private void Awake()
+        {
+            _attentionButton.gameObject.SetActive(true);
+        }
 
         private void OnDestroy()
         {
@@ -67,11 +76,13 @@ namespace Assets.Source.Scripts.Grid
             UpdateBuyTankSlider(_gridModel.GetMaxTankCountForBuy(), _gridModel.GetCountBuyedTanks());
             UpdateMoneyTextValue();
             UnlockButtons();
+            UpdateGetTankButtons();
         }
 
         private void AddListeners()
         {
             _createGridTankButton.onClick.AddListener(SpawnObjectInFirstAvailableCell);
+            _buttonAdsWaiter.AdsGetted += OnAdsGetted;
             _openUpgrade.onClick.AddListener(Close);
             _loadGameSceneButton.onClick.AddListener(OnLoadGameSceneButtonClicked);
 
@@ -93,6 +104,7 @@ namespace Assets.Source.Scripts.Grid
         private void RemoveListeners()
         {
             _createGridTankButton.onClick.RemoveListener(SpawnObjectInFirstAvailableCell);
+            _buttonAdsWaiter.AdsGetted -= OnAdsGetted;
             _openUpgrade.onClick.RemoveListener(Close);
             _loadGameSceneButton.onClick.RemoveListener(OnLoadGameSceneButtonClicked);
             _disposables?.Dispose();
@@ -100,6 +112,7 @@ namespace Assets.Source.Scripts.Grid
 
         private void Close()
         {
+            _attentionButton.gameObject.SetActive(false);
             ChangeSetActiveObjects(gameObject, _sceneGameObjects, false);
             Message.Publish(new M_CloseGrid());
         }
@@ -136,6 +149,25 @@ namespace Assets.Source.Scripts.Grid
             }
         }
 
+        private void OnAdsGetted()
+        {
+            foreach (GridCellView cell in _gridPlacer.GridCellViews)
+            {
+                if (!cell.IsOccupied)
+                {
+                    _gridModel.UpdateCurrentCountBuyTank();
+                    CreateGridTank(cell, _gridModel.CurrentGridTankLevel, false);
+                    UpdateMainTank();
+                    UpdateBuyTankSlider(_gridModel.GetMaxTankCountForBuy(), _gridModel.GetCountBuyedTanks());
+                    UpdateMoneyTextValue();
+                    UnlockButtons();
+                    UpdateGetTankButtons();
+                    _gridModel.UpdateGridTankLevel();
+                    break;
+                }
+            }
+        }
+
         private void UpdateMainTankUI()
         {
             if (_levelMainTankImage.gameObject.activeSelf == false)
@@ -157,20 +189,22 @@ namespace Assets.Source.Scripts.Grid
 
         private void UpdateTankEntities()
         {
-            if (_gridModel.GetTankStateByEquip().Id != _mainTank.TankState.Id)
-            {
-                Destroy(_mainTank.gameObject);
-                CreateMainTank(_gridModel.GetTankStateByEquip().Level);
-            }
-            else
-            {
-                _mainTank.UpdateTankEntities(
-                    _upgradeConfig.GetDecalDataById(_mainTank.TankState.DecalId),
-                    _upgradeConfig.GetPatternDataById(_mainTank.TankState.PatternId),
-                    _upgradeConfig.GetHeroDataById(_mainTank.TankState.HeroId),
-                    _typeHeroSpawn);
-            }
+            //if (_gridModel.GetTankStateByEquip().Id != _mainTank.TankState.Id)
+            //{
+            //    Destroy(_mainTank.gameObject);
+            //    CreateMainTank(_gridModel.GetTankStateByEquip().Level);
+            //}
+            //else
+            //{
+            //    _mainTank.UpdateTankEntities(
+            //        _upgradeConfig.GetDecalDataById(_mainTank.TankState.DecalId),
+            //        _upgradeConfig.GetPatternDataById(_mainTank.TankState.PatternId),
+            //        _upgradeConfig.GetHeroDataById(_mainTank.TankState.HeroId),
+            //        _typeHeroSpawn);
+            //}
 
+            Destroy(_mainTank.gameObject);
+            CreateMainTank(_gridModel.GetTankStateByEquip().Level);
             UpdateMainTankUI();
         }
 
@@ -185,6 +219,20 @@ namespace Assets.Source.Scripts.Grid
         {
             _buyTankSlider.maxValue = maxValue;
             _buyTankSlider.value = currentValue;
+        }
+
+        private void UpdateGetTankButtons()
+        {
+            if (_gridModel.GetCurrentTankCost() <= _gridModel.GetCurrentCountMoney())
+            {
+                _createGridTankButton.gameObject.SetActive(true);
+                _buttonAdsWaiter.gameObject.SetActive(false);
+            }
+            else
+            {
+                _createGridTankButton.gameObject.SetActive(false);
+                _buttonAdsWaiter.gameObject.SetActive(true);
+            }
         }
 
         private void UnlockButtons()
@@ -204,11 +252,13 @@ namespace Assets.Source.Scripts.Grid
                 {
                     if (_gridModel.TryBuyGridTank(_gridModel.GetCurrentTankCost()))
                     {
+                        _gridModel.UpdateCurrentCountBuyTank();
                         CreateGridTank(cell, _gridModel.CurrentGridTankLevel, false);
                         UpdateMainTank();
                         UpdateBuyTankSlider(_gridModel.GetMaxTankCountForBuy(), _gridModel.GetCountBuyedTanks());
                         UpdateMoneyTextValue();
                         UnlockButtons();
+                        UpdateGetTankButtons();
                         _gridModel.UpdateGridTankLevel();
                     }
 
