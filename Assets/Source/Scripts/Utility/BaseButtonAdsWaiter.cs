@@ -11,7 +11,7 @@ namespace Assets.Source.Game.Scripts.Utility
         [SerializeField] private Image _adsImage;
         [SerializeField] private Image _waitImage;
 
-        private Coroutine _waitRoutine;
+        protected Coroutine _waitRoutine;
 
         private void OnEnable()
         {
@@ -22,16 +22,6 @@ namespace Assets.Source.Game.Scripts.Utility
         }
 
         private void OnDisable()
-        {
-            YG2.onCloseInterAdv -= OnCloseFullscreenAdCallback;
-            YG2.onErrorInterAdv -= OnErrorFullAdCallback;
-            _adButton.onClick.RemoveListener(OnButtonClicked);
-
-            if (_waitRoutine != null)
-                StopCoroutine(_waitRoutine);
-        }
-
-        private void OnDestroy()
         {
             YG2.onCloseInterAdv -= OnCloseFullscreenAdCallback;
             YG2.onErrorInterAdv -= OnErrorFullAdCallback;
@@ -58,16 +48,22 @@ namespace Assets.Source.Game.Scripts.Utility
         protected virtual void OnCloseFullscreenAdCallback()
         {
             if (gameObject.activeSelf)
-                WaitAds();
+                StartCoroutine(WaitingCloseAds());
         }
 
         protected virtual void OnButtonClicked()
         {
-            WaitAds();
+            StartCoroutine(WaitingCloseAds());
             YG2.InterstitialAdvShow();
         }
 
-        protected void WaitAds()
+        protected IEnumerator WaitingCloseAds()
+        {
+            yield return new WaitUntil(() => !YG2.nowInterAdv);
+            WaitAds();
+        }
+
+        private void WaitAds()
         {
             LockButton();
 
@@ -90,7 +86,7 @@ namespace Assets.Source.Game.Scripts.Utility
         private void OnErrorFullAdCallback()
         {
             if (gameObject.activeSelf)
-                WaitAds();
+                StartCoroutine(WaitingCloseAds());
         }
     }
 }

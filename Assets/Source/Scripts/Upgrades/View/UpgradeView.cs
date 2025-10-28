@@ -88,7 +88,7 @@ namespace Assets.Source.Scripts.Upgrades
         private void AddListeners()
         {
             _backButton.onClick.AddListener(Close);
-            YG2.onCloseInterAdv += OnCloseFullscreenAdCallback;
+            YG2.onCloseInterAdvWasShow += OnCloseFullscreenAdCallback;
 
             GridView.Message
                 .Receive<M_CloseGrid>()
@@ -98,7 +98,7 @@ namespace Assets.Source.Scripts.Upgrades
 
         private void RemoveListeners()
         {
-            YG2.onCloseInterAdv -= OnCloseFullscreenAdCallback;
+            YG2.onCloseInterAdvWasShow += OnCloseFullscreenAdCallback;
             _backButton.onClick.RemoveListener(Close);
             _disposables?.Dispose();
         }
@@ -182,8 +182,11 @@ namespace Assets.Source.Scripts.Upgrades
             YG2.InterstitialAdvShow();
         }
 
-        private void OnCloseFullscreenAdCallback()
+        private void OnCloseFullscreenAdCallback(bool state)
         {
+            if (!state)
+                return;
+
             _upgradeModel.UnlockByReward(_currentCardIndex, _currentTypeCard);
             Message.Publish(new M_UpgradeUnlocked(_currentCardIndex, _currentTypeCard));
         }

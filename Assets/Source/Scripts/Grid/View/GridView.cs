@@ -189,20 +189,6 @@ namespace Assets.Source.Scripts.Grid
 
         private void UpdateTankEntities()
         {
-            //if (_gridModel.GetTankStateByEquip().Id != _mainTank.TankState.Id)
-            //{
-            //    Destroy(_mainTank.gameObject);
-            //    CreateMainTank(_gridModel.GetTankStateByEquip().Level);
-            //}
-            //else
-            //{
-            //    _mainTank.UpdateTankEntities(
-            //        _upgradeConfig.GetDecalDataById(_mainTank.TankState.DecalId),
-            //        _upgradeConfig.GetPatternDataById(_mainTank.TankState.PatternId),
-            //        _upgradeConfig.GetHeroDataById(_mainTank.TankState.HeroId),
-            //        _typeHeroSpawn);
-            //}
-
             Destroy(_mainTank.gameObject);
             CreateMainTank(_gridModel.GetTankStateByEquip().Level);
             UpdateMainTankUI();

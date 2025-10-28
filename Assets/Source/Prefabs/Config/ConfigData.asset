@@ -49,7 +49,7 @@ MonoBehaviour:
     _isEquipped: 0
     _decalId: 0
     _patternId: 0
-    _heroId: 0
+    _heroId: 1
   - _id: 1
     _level: 2
     _isOpened: 0
@@ -183,7 +183,7 @@ MonoBehaviour:
     _isBuyed: 1
     _typeCard: 1
   - _id: 2
-    _isBuyed: 1
+    _isBuyed: 0
     _typeCard: 1
   - _id: 3
     _isBuyed: 0

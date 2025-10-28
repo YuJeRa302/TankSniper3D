@@ -29,7 +29,7 @@ namespace Assets.Source.Game.Scripts.Utility
         protected override void OnCloseFullscreenAdCallback()
         {
             AdsGetted?.Invoke();
-            WaitAds();
+            StartCoroutine(WaitingCloseAds());
         }
     }
 }
