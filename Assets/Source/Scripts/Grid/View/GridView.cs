@@ -30,6 +30,7 @@ namespace Assets.Source.Scripts.Grid
         [SerializeField] private Button _createGridTankButton;
         [SerializeField] private Button _openUpgrade;
         [SerializeField] private Button _loadGameSceneButton;
+        [SerializeField] private Button _addMoneyButton;
         [Space(20)]
         [SerializeField] private Transform _mainTankSpawnPoint;
         [SerializeField] private Transform _gridTankTransformParent;
@@ -38,6 +39,8 @@ namespace Assets.Source.Scripts.Grid
         [Space(20)]
         [SerializeField] private Slider _buyTankSlider;
         [SerializeField] private TMP_Text _currentGridTankLevelText;
+        [Space(20)]
+        [SerializeField] private GameObject _tankShadow;
 
         private AudioPlayer _audioPlayer;
         private GridModel _gridModel;
@@ -84,6 +87,7 @@ namespace Assets.Source.Scripts.Grid
             _createGridTankButton.onClick.AddListener(SpawnObjectInFirstAvailableCell);
             _buttonAdsWaiter.AdsGetted += OnAdsGetted;
             _openUpgrade.onClick.AddListener(Close);
+            _addMoneyButton.onClick.AddListener(OnAddMoneyButtonClicked);
             _loadGameSceneButton.onClick.AddListener(OnLoadGameSceneButtonClicked);
 
             GridCellView.Message
@@ -103,6 +107,7 @@ namespace Assets.Source.Scripts.Grid
 
         private void RemoveListeners()
         {
+            _addMoneyButton.onClick.RemoveListener(OnAddMoneyButtonClicked);
             _createGridTankButton.onClick.RemoveListener(SpawnObjectInFirstAvailableCell);
             _buttonAdsWaiter.AdsGetted -= OnAdsGetted;
             _openUpgrade.onClick.RemoveListener(Close);
@@ -145,6 +150,7 @@ namespace Assets.Source.Scripts.Grid
                 Destroy(_mainTank.gameObject);
                 CreateMainTank(_gridModel.CurrentMainTankLevel);
                 UpdateMainTankUI();
+                UpdateTankShadow();
                 _mainTank.ShootingByMerge();
             }
         }
@@ -168,6 +174,13 @@ namespace Assets.Source.Scripts.Grid
             }
         }
 
+        private void OnAddMoneyButtonClicked()
+        {
+            _gridModel.AddMoney();
+            UpdateGetTankButtons();
+            UpdateMoneyTextValue();
+        }
+
         private void UpdateMainTankUI()
         {
             if (_levelMainTankImage.gameObject.activeSelf == false)
@@ -185,6 +198,7 @@ namespace Assets.Source.Scripts.Grid
                 CreateMainTank(_gridModel.CurrentMainTankLevel);
 
             UpdateMainTankUI();
+            UpdateTankShadow();
         }
 
         private void UpdateTankEntities()
@@ -192,6 +206,7 @@ namespace Assets.Source.Scripts.Grid
             Destroy(_mainTank.gameObject);
             CreateMainTank(_gridModel.GetTankStateByEquip().Level);
             UpdateMainTankUI();
+            UpdateTankShadow();
         }
 
         private void UpdateMoneyTextValue()
@@ -230,6 +245,12 @@ namespace Assets.Source.Scripts.Grid
             _loadGameSceneButton.gameObject.SetActive(true);
         }
 
+        private void UpdateTankShadow()
+        {
+            if (_mainTank != null)
+                _tankShadow.gameObject.SetActive(true);
+        }
+
         private void SpawnObjectInFirstAvailableCell()
         {
             foreach (GridCellView cell in _gridPlacer.GridCellViews)
@@ -260,6 +281,7 @@ namespace Assets.Source.Scripts.Grid
 
             CreateMainTank(_gridModel.GetTankStateByEquip().Level);
             UpdateMainTankUI();
+            UpdateTankShadow();
         }
 
         private void CreateGridTanksBySaves()

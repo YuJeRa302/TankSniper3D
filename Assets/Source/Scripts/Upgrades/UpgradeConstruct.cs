@@ -19,6 +19,7 @@ namespace Assets.Source.Scripts.Upgrades
         [SerializeField] private ConfigData _configData;
         [SerializeField] private GridConfig _gridItemConfig;
         [SerializeField] private UpgradeConfig _upgradeConfig;
+        [SerializeField] private BiomChangerConfig _biomChangerConfig;
         [Space(20)]
         [SerializeField] private GridPlacer _gridPlacer;
         [SerializeField] private GridView _gridView;
@@ -29,6 +30,8 @@ namespace Assets.Source.Scripts.Upgrades
         [SerializeField] private CoroutineRunner _coroutineRunner;
         [Space(20)]
         [SerializeField] private AudioPlayer _audioPlayer;
+        [Space(20)]
+        [SerializeField] private BiomChanger _biomChanger;
 
         private SaveAndLoader _saveAndLoader;
         private PersistentDataService _persistentDataService;
@@ -68,6 +71,7 @@ namespace Assets.Source.Scripts.Upgrades
             _gridModel = new GridModel(_persistentDataService, _coroutineRunner, _saveAndLoader, _biomsConfig);
             _levelModel = new LevelModel(_persistentDataService, _biomsConfig);
             _settingsModel = new SettingsModel(_persistentDataService, _audioPlayer);
+            _biomChanger.Initialize(_levelModel, _biomChangerConfig);
             _gridPlacer.Initialize(_audioPlayer);
             _gridView.Initialize(_gridModel, _gridItemConfig, _upgradeConfig, _gridPlacer, _audioPlayer);
             _upgradeView.Initialize(_upgradeModel, _upgradeConfig, _audioPlayer);

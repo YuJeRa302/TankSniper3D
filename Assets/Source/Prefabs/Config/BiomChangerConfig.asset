@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58b98eabb1620fc41b0fae2b15d76b1e, type: 3}
+  m_Name: BiomChangerConfig
+  m_EditorClassIdentifier: 
+  _gridPlaceColors:
+  - {r: 0.6784314, g: 0.7529412, b: 0.972549, a: 1}
+  - {r: 0.8666667, g: 0.54509807, b: 0.5137255, a: 1}
+  - {r: 0.68235296, g: 0.6862745, b: 0.7372549, a: 1}
+  _gridCellColors:
+  - {r: 0.8627451, g: 0.99607843, b: 1, a: 1}
+  - {r: 0.91764706, g: 0.7607843, b: 0.6431373, a: 1}
+  - {r: 0.91764706, g: 0.91764706, b: 0.91764706, a: 1}
+  _antiTankColors:
+  - {r: 0.7411765, g: 0.36862746, b: 0.4627451, a: 1}
+  - {r: 0.77254903, g: 0.4117647, b: 0.45882353, a: 1}
+  - {r: 0.38039216, g: 0.32156864, b: 0.37254903, a: 1}
+  _groundColor:
+  - {r: 0.8352941, g: 0.98039216, b: 1, a: 1}
+  - {r: 0.9098039, g: 0.6745098, b: 0.5058824, a: 1}
+  - {r: 0.26666668, g: 0.5882353, b: 0.29803923, a: 1}
+  _rockColors:
+  - {r: 0.5568628, g: 0.5882353, b: 0.6784314, a: 1}
+  - {r: 1, g: 0.5137255, b: 0.4509804, a: 1}
+  - {r: 0.65882355, g: 0.65882355, b: 0.65882355, a: 1}
+  _treeGameObjects:
+  - {fileID: 4531994626805116544, guid: b3a1f2cc9cf53a74182fdda7345829c3, type: 3}
+  - {fileID: 5931896106365094384, guid: 1abc9291d704fd24bb7a59f801d1f517, type: 3}
+  - {fileID: 4531994626805116544, guid: b3a1f2cc9cf53a74182fdda7345829c3, type: 3}
+  _desertRockGameObject: {fileID: 5664625293872880493, guid: be30288f033d6cd4c81a48e08f9193bf, type: 3}
+  _smallRocksGameObject: {fileID: 6152345692379901830, guid: 684d8c169ac32c34ea8e0bc1dca65a24, type: 3}

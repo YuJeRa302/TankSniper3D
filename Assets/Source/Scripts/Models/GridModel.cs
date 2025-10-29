@@ -16,6 +16,7 @@ namespace Assets.Source.Scripts.Models
         private readonly CoroutineRunner _coroutineRunner;
         private readonly SaveAndLoader _saveAndLoader;
         private readonly PersistentDataService _persistentDataService;
+        private readonly int _addMoneyButtonValue = 5000;
         private readonly int _maxCountBuyTank = 8;
         private readonly float _loadControlValue = 0.9f;
         private readonly int _defaultGridTankCost = 500;
@@ -100,6 +101,11 @@ namespace Assets.Source.Scripts.Models
         public GridTankState CreateGridTankState(GridTankData gridTankData)
         {
             return _persistentDataService.PlayerProgress.GridService.CreateState(gridTankData);
+        }
+
+        public void AddMoney()
+        {
+            _persistentDataService.PlayerProgress.Money += _addMoneyButtonValue;
         }
 
         public void UpdateCurrentCountBuyTank()

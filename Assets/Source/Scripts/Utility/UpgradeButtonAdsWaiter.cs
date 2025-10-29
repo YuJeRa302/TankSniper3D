@@ -16,6 +16,12 @@ namespace Assets.Source.Game.Scripts.Utility
             _typeCard = typeCard;
         }
 
+        public void SetWaitAds()
+        {
+            if (gameObject.activeSelf)
+                WaitAds();
+        }
+
         protected override void OnButtonClicked()
         {
             AdsOpened?.Invoke(_cardId, _typeCard);

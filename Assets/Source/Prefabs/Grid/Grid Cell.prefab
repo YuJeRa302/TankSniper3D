@@ -203,4 +203,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cellRenderer: {fileID: 2074809053321502244}
+  _meshRenderer: {fileID: 6604694083921858315}
   _mergeEffect: {fileID: 5621337006859321494, guid: 9ae135c629f45d74e923e28f5703cba4, type: 3}

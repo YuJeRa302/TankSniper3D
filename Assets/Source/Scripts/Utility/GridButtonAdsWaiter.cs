@@ -26,10 +26,10 @@ namespace Assets.Source.Game.Scripts.Utility
                 _attentionButton.gameObject.SetActive(true);
         }
 
-        protected override void OnCloseFullscreenAdCallback()
+        protected override void OnButtonClicked()
         {
+            base.OnButtonClicked();
             AdsGetted?.Invoke();
-            StartCoroutine(WaitingCloseAds());
         }
     }
 }

@@ -15,10 +15,12 @@ namespace Assets.Source.Scripts.Grid
         private readonly Color _blockedColor = Color.red;
 
         [SerializeField] private Renderer _cellRenderer;
+        [SerializeField] private MeshRenderer _meshRenderer;
         [SerializeField] private ParticleSystem _mergeEffect;
 
         private AudioPlayer _audioPlayer;
         private GridTankView _currentTank;
+        private MaterialPropertyBlock _propertyBlock;
 
         public int Id { get; private set; }
         public bool IsOccupied { get; private set; } = false;
@@ -27,6 +29,14 @@ namespace Assets.Source.Scripts.Grid
         {
             Id = id;
             _audioPlayer = audioPlayer;
+        }
+
+        public void SetMaterialColor(Color color)
+        {
+            _propertyBlock = new MaterialPropertyBlock();
+            _meshRenderer.GetPropertyBlock(_propertyBlock);
+            _propertyBlock.SetColor("_Color", color);
+            _meshRenderer.SetPropertyBlock(_propertyBlock);
         }
 
         public void SetOccupied(GridTankView gridTankView)
@@ -111,7 +121,7 @@ namespace Assets.Source.Scripts.Grid
         private void CreateMergeEffect()
         {
             var effect = Instantiate(_mergeEffect, transform.position, _mergeEffect.transform.rotation);
-            GameObject.Destroy(effect.gameObject, _effectLifeTime);
+            Destroy(effect.gameObject, _effectLifeTime);
         }
     }
 }

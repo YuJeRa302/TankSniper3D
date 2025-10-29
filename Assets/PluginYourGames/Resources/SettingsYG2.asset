@@ -21,8 +21,8 @@ MonoBehaviour:
     payingStatus: 0
   InterstitialAdv:
     showFirstAdv: 0
-    interAdvInterval: 15
-    postponeCallByFail: 0
+    interAdvInterval: 20
+    postponeCallByFail: 1
     postponeCallTimer: 10
     labelAdvSimLabel: 0
   Storage:
@@ -82,8 +82,8 @@ MonoBehaviour:
     ownHost: 0
   platformToggles:
     showFirstAdv: 0
-    interAdvInterval: 0
-    postponeCallByFail: 0
+    interAdvInterval: 1
+    postponeCallByFail: 1
     saveLocal: 0
     saveCloud: 1
     autoPauseGame: 0

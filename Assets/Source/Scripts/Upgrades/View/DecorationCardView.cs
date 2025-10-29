@@ -117,6 +117,8 @@ namespace Assets.Source.Scripts.Upgrades
         {
             if (_decorationData.Id == id)
                 Unlock();
+
+            _buttonAdsWaiter.SetWaitAds();
         }
 
         private void OnDeselect(int id)
