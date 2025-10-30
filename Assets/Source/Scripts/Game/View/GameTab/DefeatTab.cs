@@ -13,7 +13,6 @@ namespace Assets.Source.Scripts.Game
     public class DefeatTab : EndGameTabView
     {
         private readonly float _fillValue = 1.0f;
-        private readonly float _controlTimerValue = 1.5f;
 
         [Header("UI Elements")]
         [SerializeField] private Image _timerCircle;
@@ -24,8 +23,6 @@ namespace Assets.Source.Scripts.Game
 
         [Header("Timer Settings")]
         [SerializeField] private float _totalTime = 5f;
-        [SerializeField] private Color normalColor = Color.white;
-        [SerializeField] private Color warningColor = Color.red;
 
         private float _currentTime;
         private Coroutine _timerCoroutine;
@@ -97,14 +94,8 @@ namespace Assets.Source.Scripts.Game
             {
                 _currentTime -= Time.deltaTime;
                 float normalized = Mathf.Clamp01(_currentTime / _totalTime);
-
                 _timerCircle.fillAmount = normalized;
                 _timerText.text = Mathf.CeilToInt(_currentTime).ToString();
-
-                if (_currentTime < _controlTimerValue)
-                    _timerCircle.color = warningColor;
-                else
-                    _timerCircle.color = normalColor;
 
                 yield return null;
             }
