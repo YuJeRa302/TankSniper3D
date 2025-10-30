@@ -1,4 +1,5 @@
 using Assets.Source.Game.Scripts.Enums;
+using Assets.Source.Game.Scripts.Utility;
 using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.Upgrades;
 using System.Collections;
@@ -6,7 +7,6 @@ using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
-using YG;
 
 namespace Assets.Source.Scripts.Game
 {
@@ -20,9 +20,11 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private TMP_Text _moneyEarnedText;
         [SerializeField] private Button _continueButton;
         [SerializeField] private Button _reloadButton;
-
+        [SerializeField] private Button _radialButton;
         [Header("Timer Settings")]
         [SerializeField] private float _totalTime = 5f;
+        [Space(20)]
+        [SerializeField] private GameButtonAdsWaiter _gameButtonAdsWaiter;
 
         private float _currentTime;
         private Coroutine _timerCoroutine;
@@ -32,6 +34,7 @@ namespace Assets.Source.Scripts.Game
         public override void Open()
         {
             gameObject.SetActive(true);
+            _gameButtonAdsWaiter.Initialize(TypeReward);
             _moneyEarnedText.text = "Награда: " + GameModel.GetEarnedMoney().ToString();
             Message.Publish(new M_OpenPanel());
             StartTimer();
@@ -39,12 +42,9 @@ namespace Assets.Source.Scripts.Game
 
         protected override void AddListeners()
         {
-            YG2.onOpenInterAdv += OnOpenFullscreenAdCallback;
-            YG2.onCloseInterAdv += OnCloseFullscreenAdCallback;
-            YG2.onErrorInterAdv += OnErrorFullAdCallback;
             _reloadButton.onClick.AddListener(OnSceneReloaded);
-            _continueButton.onClick.AddListener(OnContinuePressed);
-
+            _gameButtonAdsWaiter.AdsOpened += OnAdsGetted;
+            _radialButton.onClick.AddListener(OnRadialButtonClicked);
             TankHealth.Message
                 .Receive<M_DeathTank>()
                 .Subscribe(m => Open())
@@ -58,11 +58,9 @@ namespace Assets.Source.Scripts.Game
 
         protected override void RemoveListeners()
         {
-            YG2.onOpenInterAdv -= OnOpenFullscreenAdCallback;
-            YG2.onCloseInterAdv -= OnCloseFullscreenAdCallback;
-            YG2.onErrorInterAdv -= OnErrorFullAdCallback;
+            _gameButtonAdsWaiter.AdsOpened -= OnAdsGetted;
             _reloadButton.onClick.RemoveListener(OnSceneReloaded);
-            _continueButton.onClick.RemoveListener(OnContinuePressed);
+            _radialButton.onClick.RemoveListener(OnRadialButtonClicked);
             Disposable?.Dispose();
         }
 
@@ -71,6 +69,26 @@ namespace Assets.Source.Scripts.Game
             if (GameModel.IsGameEnded)
                 return;
 
+            base.OnCloseFullscreenAdCallback();
+            Message.Publish(new M_RecoverPlayer());
+            Close();
+        }
+
+        private void OnAdsGetted(TypeReward typeReward)
+        {
+            if (GameModel.IsGameEnded)
+                return;
+
+            if (typeReward != TypeReward)
+                return;
+
+            base.OnCloseFullscreenAdCallback();
+            Message.Publish(new M_RecoverPlayer());
+            Close();
+        }
+
+        private void OnRadialButtonClicked()
+        {
             base.OnCloseFullscreenAdCallback();
             Message.Publish(new M_RecoverPlayer());
             Close();
@@ -113,11 +131,6 @@ namespace Assets.Source.Scripts.Game
         {
             GameModel.ReloadScene();
             MessageBroker.Default.Publish(new M_ReloadLevel());
-        }
-
-        private void OnContinuePressed()
-        {
-            OpenFullscreenAds();
         }
     }
 }
