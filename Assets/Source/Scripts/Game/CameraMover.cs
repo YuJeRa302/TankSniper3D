@@ -1,4 +1,5 @@
 using Assets.Source.Scripts.Services;
+using DG.Tweening;
 using System.Collections;
 using UniRx;
 using UnityEngine;
@@ -7,43 +8,51 @@ namespace Assets.Source.Scripts.Game
 {
     public class CameraMover : MonoBehaviour
     {
+        private readonly float _cameraZoomMultiplier = 1f;
+
         [SerializeField] private Camera _mainCamera;
+        [SerializeField] private Transform _target;
         [Space(20)]
         [SerializeField] private float _normalFOV = 60f;
         [SerializeField] private float _sniperFOV = 20f;
-        [SerializeField] private float _angleRotationY = 60f;
-        [SerializeField] private float _angleRotationX = 45f;
+        [SerializeField] private float _angleRotationMinY = 60f;
+        [SerializeField] private float _angleRotationMaxY = 45f;
+        [SerializeField] private float _angleRotationMinX = 45f;
+        [SerializeField] private float _angleRotationMaxX = 45f;
         [SerializeField] private float _zoomSpeed = 8f;
         [SerializeField] private Vector3 _sniperPositionOffset = new(0, 0.5f, 0.5f);
         [Space(20)]
         [SerializeField] private float _normalSensitivity = 0.42f;
         [SerializeField] private float _sniperSensitivity = 0.05f;
+        [Space(10)]
+        [SerializeField] private float _distanceFromTarget = 7f;
 
         private GamePauseService _gamePauseService;
-        private Coroutine _zoomCoroutine;
         private CompositeDisposable _disposables = new();
-        private bool _isSniperMode = false;
-        private bool _isCanRotation = true;
-        private Vector3 _normalPosition;
-        private float _rotationX = 0f;
-        private float _rotationY = 0f;
+        private Coroutine _rotationCoroutine;
+        private bool _isSniperMode;
+        private bool _isCanRotate = true;
+        private float _rotationX;
+        private float _rotationY;
 
         private void OnDestroy()
         {
             RemoveListeners();
         }
 
-        private void Update()
-        {
-            if (_isCanRotation)
-                RotationCamera();
-        }
-
         public void Initialize(GamePauseService gamePauseService)
         {
             _gamePauseService = gamePauseService;
-            SetCameraParameters();
+            Vector3 angles = _mainCamera.transform.eulerAngles;
+            _rotationY = angles.y;
+            _rotationX = angles.x;
+
             AddListeners();
+
+            if (_rotationCoroutine != null)
+                StopCoroutine(_rotationCoroutine);
+
+            _rotationCoroutine = StartCoroutine(RotateCameraLoop());
         }
 
         private void AddListeners()
@@ -61,15 +70,15 @@ namespace Assets.Source.Scripts.Game
                 .Subscribe(m => SetCameraZoom(false))
                 .AddTo(_disposables);
 
-            DefeatTab.Message
-                .Receive<M_OpenPanel>()
-                .Subscribe(m => OnGamePause(false))
-                .AddTo(_disposables);
+            DefeatTab.Message.
+                Receive<M_OpenPanel>().
+                Subscribe(m => OnGamePause(false)).
+                AddTo(_disposables);
 
-            EndGameTabView.Message
-                .Receive<M_OpenPanel>()
-                .Subscribe(m => OnGamePause(false))
-                .AddTo(_disposables);
+            EndGameTabView.Message.
+                Receive<M_OpenPanel>().
+                Subscribe(m => OnGamePause(false)).
+                AddTo(_disposables);
         }
 
         private void RemoveListeners()
@@ -81,81 +90,131 @@ namespace Assets.Source.Scripts.Game
 
         private void OnGamePause(bool state)
         {
-            _isCanRotation = false;
+            if (_rotationCoroutine != null)
+                StopCoroutine(_rotationCoroutine);
         }
 
         private void OnGameResume(bool state)
         {
-            _isCanRotation = true;
+            if (_rotationCoroutine != null)
+                StopCoroutine(_rotationCoroutine);
+
+            _rotationCoroutine = StartCoroutine(RotateCameraLoop());
         }
 
-        private void SetCameraParameters()
+        private IEnumerator RotateCameraLoop()
         {
-            _normalPosition = _mainCamera.transform.localPosition;
-            _mainCamera.fieldOfView = _normalFOV;
-
-            Vector3 angles = _mainCamera.transform.localEulerAngles;
-            _rotationY = angles.y;
-            _rotationX = angles.x;
-        }
-
-        private void RotationCamera()
-        {
-#if UNITY_IOS || UNITY_ANDROID || UNITY_WP_8_1
+            while (_isCanRotate)
+            {
+#if UNITY_IOS || UNITY_ANDROID
             if (Input.touchCount == 1)
             {
                 Touch touch = Input.GetTouch(0);
                 if (touch.phase == TouchPhase.Moved)
                 {
-                    float sensitivity = isSniperMode ? sniperSensitivity : normalSensitivity;
+                    float mouseX = touch.deltaPosition.x;
+                    float mouseY = touch.deltaPosition.y;
 
-                    rotationY += touch.deltaPosition.x * sensitivity;
-                    rotationX -= touch.deltaPosition.y * sensitivity;
-                    rotationX = Mathf.Clamp(rotationX, -45f, 45f);
-
-                    cameraPivot.localRotation = Quaternion.Euler(rotationX, rotationY, 0);
+                    if (_isSniperMode)
+                        HandleSniperRotation(mouseX, mouseY);
+                    else
+                        HandleFreeLookRotation(mouseX, mouseY);
                 }
             }
-#endif
-            if (Input.GetMouseButton(0))
-            {
-                float sensitivity = _isSniperMode ? _sniperSensitivity : _normalSensitivity;
-                _rotationY += Input.GetAxis("Mouse X") * sensitivity;
-                _rotationX -= Input.GetAxis("Mouse Y") * sensitivity;
+#else
+                if (Input.GetMouseButton(0))
+                {
+                    float mouseX = Input.GetAxis("Mouse X");
+                    float mouseY = Input.GetAxis("Mouse Y");
 
-                _rotationX = Mathf.Clamp(_rotationX, -_angleRotationX, _angleRotationX);
-                _rotationY = Mathf.Clamp(_rotationY, -_angleRotationY, _angleRotationY);
-                _mainCamera.transform.localRotation = Quaternion.Euler(_rotationX, _rotationY, 0);
+                    if (_isSniperMode)
+                        HandleSniperRotation(mouseX, mouseY);
+                    else
+                        HandleFreeLookRotation(mouseX, mouseY);
+                }
+#endif
+                yield return null;
             }
+        }
+
+        private void HandleFreeLookRotation(float mouseX, float mouseY)
+        {
+            float sensitivity = _normalSensitivity;
+
+            _rotationY += mouseX * sensitivity;
+            _rotationX -= mouseY * sensitivity;
+
+            _rotationX = Mathf.Clamp(_rotationX, _angleRotationMinX, _angleRotationMaxX);
+            _rotationY = Mathf.Clamp(_rotationY, _angleRotationMinY, _angleRotationMaxY);
+
+            Quaternion rotation = Quaternion.Euler(_rotationX, _rotationY, 0);
+            Vector3 position = _target.position - rotation * Vector3.forward * _distanceFromTarget;
+
+            _mainCamera.transform.SetPositionAndRotation(position, rotation);
+        }
+
+        private void HandleSniperRotation(float mouseX, float mouseY)
+        {
+            float sensitivity = _sniperSensitivity;
+
+            _rotationY += mouseX * sensitivity;
+            _rotationX -= mouseY * sensitivity;
+
+            _rotationX = Mathf.Clamp(_rotationX, _angleRotationMinX, _angleRotationMaxX);
+            _rotationY = Mathf.Clamp(_rotationY, _angleRotationMinY, _angleRotationMaxY);
+
+            _mainCamera.transform.rotation = Quaternion.Euler(_rotationX, _rotationY, 0);
         }
 
         private void SetCameraZoom(bool isSniper)
         {
+            _isSniperMode = isSniper;
             float targetFOV = isSniper ? _sniperFOV : _normalFOV;
-            Vector3 targetPosition = isSniper ? _normalPosition + _sniperPositionOffset : _normalPosition;
 
-            if (_zoomCoroutine != null)
-                StopCoroutine(_zoomCoroutine);
+            Vector3 targetPosition;
+            Quaternion targetRotation;
 
-            _zoomCoroutine = StartCoroutine(ChangeCameraZoom(targetFOV, targetPosition));
-        }
-
-        private IEnumerator ChangeCameraZoom(float targetFOV, Vector3 targetPosition)
-        {
-            while (_mainCamera.fieldOfView != targetFOV)
+            if (isSniper)
             {
-                _mainCamera.fieldOfView = Mathf.Lerp(_mainCamera.fieldOfView, targetFOV, Time.deltaTime * _zoomSpeed);
+                targetPosition = _target.TransformPoint(_sniperPositionOffset);
+                targetRotation = _mainCamera.transform.rotation;
+            }
+            else
+            {
+                targetRotation = _mainCamera.transform.rotation;
 
-                _mainCamera.transform.localPosition = Vector3.Lerp(
-                    _mainCamera.transform.localPosition,
-                    targetPosition,
-                    Time.deltaTime * _zoomSpeed);
+                Vector3 direction = targetRotation * Vector3.forward;
+                targetPosition = _target.position - direction * _distanceFromTarget;
 
-                yield return null;
+                Vector3 angles = targetRotation.eulerAngles;
+                _rotationX = NormalizeAngle(angles.x);
+                _rotationY = NormalizeAngle(angles.y);
             }
 
-            _mainCamera.fieldOfView = targetFOV;
-            _mainCamera.transform.localPosition = targetPosition;
+            DOTween.Kill(_mainCamera);
+
+            _mainCamera
+                .DOFieldOfView(targetFOV, _cameraZoomMultiplier / _zoomSpeed)
+                .SetEase(Ease.InOutSine)
+                .SetLink(_mainCamera.gameObject);
+
+            _mainCamera.transform
+                .DOMove(targetPosition, _cameraZoomMultiplier / _zoomSpeed)
+                .SetEase(Ease.InOutSine)
+                .SetLink(_mainCamera.gameObject);
+
+            _mainCamera.transform
+                .DORotateQuaternion(targetRotation, _cameraZoomMultiplier / _zoomSpeed)
+                .SetEase(Ease.InOutSine)
+                .SetLink(_mainCamera.gameObject);
+        }
+
+        private float NormalizeAngle(float angle)
+        {
+            if (angle > 180f)
+                angle -= 360f;
+
+            return angle;
         }
     }
 }

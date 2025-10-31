@@ -6,7 +6,7 @@ namespace Assets.Source.Game.Scripts.Utility
 {
     public abstract class BaseButtonAdsWaiter : MonoBehaviour
     {
-        private readonly float _cooldownTime = 10f;
+        private readonly float _cooldownTime = 0f;
 
         [SerializeField] private Button _adButton;
         [SerializeField] private Image _adsImage;

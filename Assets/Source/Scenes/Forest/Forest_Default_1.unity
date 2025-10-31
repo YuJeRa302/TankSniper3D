@@ -3852,8 +3852,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 396330333}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.2588191, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 1.33, y: 8.11, z: -24.84}
+  m_LocalRotation: {x: -0, y: 0.2588191, z: -0, w: 0.9659258}
+  m_LocalPosition: {x: -2.52, y: 6.97, z: -27.43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6240,14 +6240,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mainCamera: {fileID: 396330335}
+  _target: {fileID: 1765609689}
   _normalFOV: 60
   _sniperFOV: 20
-  _angleRotationY: 60
-  _angleRotationX: 32
+  _angleRotationMinY: -23
+  _angleRotationMaxY: 50
+  _angleRotationMinX: -12
+  _angleRotationMaxX: 45
   _zoomSpeed: 5
   _sniperPositionOffset: {x: 0, y: 0.5, z: 0.5}
   _normalSensitivity: 0.42
-  _sniperSensitivity: 0.05
+  _sniperSensitivity: 0.13
+  _distanceFromTarget: 7
 --- !u!114 &601809576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18094,6 +18098,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1914861156}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1765609688
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1765609689}
+  m_Layer: 0
+  m_Name: Camera Pivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1765609689
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1765609688}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.476, y: 5.964, z: -20.791}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1766920783
 GameObject:
@@ -51807,8 +51842,8 @@ BoxCollider:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 396330336}
   - {fileID: 1002225641}
+  - {fileID: 396330336}
   - {fileID: 432450091}
   - {fileID: 1413801201}
   - {fileID: 1924784836}
@@ -51817,3 +51852,4 @@ SceneRoots:
   - {fileID: 1741394545}
   - {fileID: 412585713}
   - {fileID: 1097751826}
+  - {fileID: 1765609689}

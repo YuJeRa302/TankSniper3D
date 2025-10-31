@@ -1,5 +1,6 @@
 using Assets.Source.Game.Scripts.Enemy;
 using Assets.Source.Scripts.Upgrades;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
@@ -12,6 +13,8 @@ namespace Assets.Source.Scripts.Game
     public class SniperScopeView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         public static readonly IMessageBroker Message = new MessageBroker();
+
+        private readonly float _endAimingDelay = 0.6f;
 
         [SerializeField] private List<Image> _bulletImages;
         [SerializeField] private List<Image> _energyImages;
@@ -56,7 +59,7 @@ namespace Assets.Source.Scripts.Game
             if (!_isAiming)
                 return;
 
-            EndAiming();
+            StartCoroutine(WaitEndingAiming());
         }
 
         private void AddListeners()
@@ -97,8 +100,8 @@ namespace Assets.Source.Scripts.Game
 
         private void Fill()
         {
-            RefillImages(_bulletImages, _ammoSprite, _noneAmmoSprite);
             RefillImages(_energyImages, _noneEnergySprite, _energySprite);
+            RefillAmmo();
         }
 
         private void RemoveListeners()
@@ -129,24 +132,43 @@ namespace Assets.Source.Scripts.Game
             }
         }
 
+        private void RefillAmmo()
+        {
+            foreach (var image in _bulletImages)
+            {
+                if (image.gameObject.activeSelf == false)
+                    image.gameObject.SetActive(true);
+            }
+        }
+
         private void DecreaseAmmoCount()
         {
             for (int index = _bulletImages.Count - 1; index >= 0; index--)
             {
-                if (_bulletImages[index].sprite == _ammoSprite)
+                if (_bulletImages[index].gameObject.activeSelf == true)
                 {
-                    _bulletImages[index].sprite = _noneAmmoSprite;
+                    _bulletImages[index].gameObject.SetActive(false);
                     break;
                 }
             }
         }
 
-        private void SetSuperShotImage()
+        private void SetSuperShotView()
         {
             var energyImage = _energyImages.LastOrDefault();
 
             if (energyImage.sprite != _noneEnergySprite)
+            {
                 _superShotImage.gameObject.SetActive(true);
+                _sniperCrosshairView.SetActiveShooterZones(true);
+            }
+        }
+
+        private IEnumerator WaitEndingAiming()
+        {
+            Message.Publish(new M_EndAiming());
+            yield return new WaitForSeconds(_endAimingDelay);
+            EndAiming();
         }
 
         private void EndAiming()
@@ -170,7 +192,7 @@ namespace Assets.Source.Scripts.Game
             _sniperScopeButton.gameObject.SetActive(false);
             gameObject.SetActive(true);
             Message.Publish(new M_Aiming(true));
-            SetSuperShotImage();
+            SetSuperShotView();
         }
 
         private void OnReloading()
@@ -182,7 +204,7 @@ namespace Assets.Source.Scripts.Game
         private void OnReloaded()
         {
             _sniperScopeButton.gameObject.SetActive(true);
-            RefillImages(_bulletImages, _ammoSprite, _noneAmmoSprite);
+            RefillAmmo();
         }
 
         private void OnSuperShooting()
@@ -190,6 +212,7 @@ namespace Assets.Source.Scripts.Game
             RefillImages(_energyImages, _noneEnergySprite, _energySprite);
             DecreaseAmmoCount();
             _superShotImage.gameObject.SetActive(false);
+            _sniperCrosshairView.SetActiveShooterZones(false);
         }
 
         private void OnShooting()

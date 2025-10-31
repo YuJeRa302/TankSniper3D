@@ -27,16 +27,12 @@ namespace Assets.Source.Scripts.Grid
         public GridCellView OriginalCell { get; private set; }
         public GridTankState GridTankState => _gridTankState;
 
-        private void OnEnable()
-        {
-            AnimateGridTank();
-        }
-
         public void Initialize(GridTankData gridTankData, GridTankState gridTankState)
         {
             _gridTankState = gridTankState;
             Level = gridTankData.Level;
             _itemLevelView.SetLevelValue(Level);
+            AnimateGridTank();
         }
 
         public void OnPointerDown(PointerEventData eventData)

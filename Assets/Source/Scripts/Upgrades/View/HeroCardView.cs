@@ -1,4 +1,3 @@
-using Assets.Source.Game.Scripts.Enums;
 using Assets.Source.Game.Scripts.States;
 using Assets.Source.Game.Scripts.Utility;
 using Assets.Source.Scripts.ScriptableObjects;
@@ -54,7 +53,7 @@ namespace Assets.Source.Scripts.Upgrades
             Lock();
             Unlock();
             Purchased();
-            EquippByPlayerProgress(tankState);
+            UnlockByPlayerProgress(tankState);
         }
 
         private void Fill()
@@ -136,7 +135,7 @@ namespace Assets.Source.Scripts.Upgrades
             }
         }
 
-        private void EquippByPlayerProgress(TankState state)
+        private void UnlockByPlayerProgress(TankState state)
         {
             if (_heroState.Id == state.HeroId)
                 Select();

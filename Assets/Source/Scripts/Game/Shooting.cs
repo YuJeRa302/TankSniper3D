@@ -26,8 +26,8 @@ namespace Assets.Source.Scripts.Game
         private void Awake()
         {
             SniperScopeView.Message
-                .Receive<M_Aiming>()
-                .Subscribe(m => OnShooting(m.IsAiming))
+                .Receive<M_EndAiming>()
+                .Subscribe(m => OnShooting(false))
                 .AddTo(_disposables);
         }
 

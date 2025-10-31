@@ -12,7 +12,6 @@ using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
-using YG;
 
 namespace Assets.Source.Scripts.Upgrades
 {
@@ -21,9 +20,9 @@ namespace Assets.Source.Scripts.Upgrades
         public static readonly IMessageBroker Message = new MessageBroker();
 
         private readonly TypeHeroSpawn _typeHeroSpawn = TypeHeroSpawn.Upgrade;
-        private readonly float _tweenAnimationDuration = 1f;
-        private readonly float _tweenAnimationScaler = 1.2f;
-        private readonly float _delay = 0.25f;
+        private readonly float _tweenAnimationDuration = 0.2f;
+        private readonly float _tweenAnimationScaler = 0.8f;
+        private readonly float _tweenMultiplier = 2f;
 
         [SerializeField] private TMP_Text _moneyText;
         [SerializeField] private TMP_Text _nameTankText;
@@ -70,6 +69,8 @@ namespace Assets.Source.Scripts.Upgrades
         private UpgradeModel _upgradeModel;
         private UpgradeConfig _upgradeConfig;
         private AudioPlayer _audioPlayer;
+        private Vector3 _defaultTankScale;
+        private Vector3 _defaultHeroScale;
 
         private void OnDestroy()
         {
@@ -125,7 +126,8 @@ namespace Assets.Source.Scripts.Upgrades
             Message.Publish(new M_DeselectCards(decorationCardView.DecorationData.Id));
             _upgradeModel.SelectDecoration(decorationCardView.DecorationState);
             UpdateTankEntities();
-            AnimateSelectionObject(_tankView.gameObject);
+            _defaultTankScale = _tankView.gameObject.transform.localScale;
+            AnimateSelectionObject(_tankView.gameObject, _defaultTankScale);
         }
 
         private void OnHeroCardSelected(HeroCardView heroCardView)
@@ -133,7 +135,8 @@ namespace Assets.Source.Scripts.Upgrades
             Message.Publish(new M_DeselectCards(heroCardView.HeroData.Id));
             CreateHero(heroCardView.HeroState.Id, _typeHeroSpawn);
             _upgradeModel.SelectHero(heroCardView.HeroState);
-            AnimateSelectionObject(_currentHeroView.gameObject);
+            _defaultHeroScale = _currentHeroView.gameObject.transform.localScale;
+            AnimateSelectionObject(_currentHeroView.gameObject, _defaultHeroScale);
         }
 
         private void OnTankCardSelected(TankCardView tankCardView)
@@ -142,7 +145,8 @@ namespace Assets.Source.Scripts.Upgrades
             _upgradeModel.SelectTank(tankCardView.TankState);
             CreateTankEntities(tankCardView.TankState, _typeHeroSpawn);
             UpdateTankDescription();
-            AnimateSelectionObject(_tankView.gameObject);
+            _defaultTankScale = _tankView.gameObject.transform.localScale;
+            AnimateSelectionObject(_tankView.gameObject, _defaultTankScale);
         }
 
         private void OnDecalButtonClicked(SelectionButtonView selectionButtonView)
@@ -243,6 +247,7 @@ namespace Assets.Source.Scripts.Upgrades
                 _audioPlayer,
                 typeHeroSpawn);
 
+            _defaultTankScale = _tankView.transform.localScale;
             CreateHero(tankState.HeroId, _typeHeroSpawn);
         }
 
@@ -396,24 +401,39 @@ namespace Assets.Source.Scripts.Upgrades
             ClearTankButtons();
         }
 
-        private void AnimateSelectionObject(GameObject gameObject)
+        private void AnimateSelectionObject(GameObject gameObject, Vector3 defaultScale)
         {
             if (_coroutineTankAnimation != null)
                 StopCoroutine(_coroutineTankAnimation);
 
-            _coroutineTankAnimation = StartCoroutine(SetAnimation(gameObject));
+            _coroutineTankAnimation = StartCoroutine(SetAnimation(gameObject, defaultScale));
         }
 
-        private IEnumerator SetAnimation(GameObject gameObject)
+        private IEnumerator SetAnimation(GameObject gameObject, Vector3 defaultScale)
         {
-            float endValue = gameObject.transform.localScale.x;
-            gameObject.transform.localScale *= _tweenAnimationScaler;
+            Transform transform = gameObject.transform;
+            Vector3 startScale = defaultScale;
+            Vector3 targetScale = new(startScale.x, startScale.y * _tweenAnimationScaler, startScale.z);
 
-            gameObject.transform.DOScale(endValue, _tweenAnimationDuration)
-                .SetEase(Ease.OutBounce)
-                .SetLink(gameObject.gameObject);
+            transform.DOKill();
 
-            yield return new WaitForSeconds(_delay);
+            Sequence seq = DOTween.Sequence();
+
+            seq.Append(
+                transform.
+                DOScale(targetScale, _tweenAnimationDuration / _tweenMultiplier).
+                SetEase(Ease.OutQuad));
+
+            seq.Append(
+                transform.
+                DOScale(startScale, _tweenAnimationDuration / _tweenMultiplier).
+                SetEase(Ease.OutBounce));
+
+            seq.SetLink(gameObject);
+            seq.Play();
+
+            yield return new WaitForSeconds(_tweenAnimationDuration);
+            _coroutineTankAnimation = null;
         }
     }
 }

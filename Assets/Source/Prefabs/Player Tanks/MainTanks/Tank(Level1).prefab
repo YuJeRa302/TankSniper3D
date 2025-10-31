@@ -139,11 +139,6 @@ MonoBehaviour:
   recoilDistance: 0.3
   recoilDuration: 0.08
   returnDuration: 0.12
-  recoilEase: 6
-  returnEase: 6
-  shotsPerTap: 1
-  shotInterval: 0.12
-  useLocalSpace: 1
 --- !u!1 &5136723817289633511
 GameObject:
   m_ObjectHideFlags: 0

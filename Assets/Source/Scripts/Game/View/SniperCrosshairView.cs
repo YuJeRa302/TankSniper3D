@@ -9,15 +9,14 @@ namespace Assets.Source.Scripts.Game
 {
     public class SniperCrosshairView : MonoBehaviour
     {
-        private readonly Color _selectZone = new(1f, 0f, 0f, 20f / 255f);
+        private readonly Color _selectZone = new(1f, 0f, 0f, 130f / 255f);
         private readonly Color _deselectZone = new(1f, 0f, 0f, 0f);
 
         [Header("References")]
         [SerializeField] private RectTransform _crosshairBorder;
         [SerializeField] private EnemyDirectionIndicator _indicatorPrefab;
         [SerializeField] private Image[] _dangerZones;
-        [Header("Settings")]
-        [SerializeField] private float _edgeOffset = 30f;
+        [SerializeField] private Image[] _superShootZones;
 
         private Camera _mainCamera;
         private List<Enemy> _enemies = new();
@@ -43,6 +42,12 @@ namespace Assets.Source.Scripts.Game
         {
             _enemies = enemies;
             _mainCamera = Camera.main;
+        }
+
+        public void SetActiveShooterZones(bool state)
+        {
+            foreach (var zone in _superShootZones)
+                zone.gameObject.SetActive(state);
         }
 
         private IEnumerator UpdateCrosshairRoutine()
