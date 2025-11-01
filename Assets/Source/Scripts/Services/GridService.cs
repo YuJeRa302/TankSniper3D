@@ -18,8 +18,15 @@ namespace Assets.Source.Scripts.Services
             _gridTankStates = gridTankStates;
         }
 
+        public GridTankState GetGridTankStateByIndex(int index)
+        {
+            return _gridTankStates[index];
+        }
+
         public void RemoveGridTankStateByMerge(GridTankState gridTankState)
         {
+            Debug.Log("gridTankState -" + gridTankState);
+
             if (gridTankState != null)
                 _gridTankStates.Remove(gridTankState);
         }

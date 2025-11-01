@@ -78,6 +78,11 @@ namespace Assets.Source.Scripts.Models
             return false;
         }
 
+        public GridTankState GetGridTankStateByIndex(int index)
+        {
+            return _persistentDataService.PlayerProgress.GridService.GetGridTankStateByIndex(index);
+        }
+
         public List<GridTankState> GetGridTankStates()
         {
             return _persistentDataService.PlayerProgress.GridService.GridTankStates;
@@ -93,14 +98,14 @@ namespace Assets.Source.Scripts.Models
             return _persistentDataService.PlayerProgress.TankService.GetState(tankData);
         }
 
-        public void RemoveGridTankStateByMerge(GridTankState gridTankState)
-        {
-            _persistentDataService.PlayerProgress.GridService.RemoveGridTankStateByMerge(gridTankState);
-        }
-
         public GridTankState CreateGridTankState(GridTankData gridTankData)
         {
             return _persistentDataService.PlayerProgress.GridService.CreateState(gridTankData);
+        }
+
+        public void RemoveGridTankStateByMerge(GridTankState gridTankState)
+        {
+            _persistentDataService.PlayerProgress.GridService.RemoveGridTankStateByMerge(gridTankState);
         }
 
         public void AddMoney()

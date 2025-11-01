@@ -5,6 +5,7 @@ using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Sound;
 using Assets.Source.Scripts.Upgrades;
+using System;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -17,6 +18,7 @@ namespace Assets.Source.Scripts.Grid
         public static readonly IMessageBroker Message = new MessageBroker();
 
         private readonly TypeHeroSpawn _typeHeroSpawn = TypeHeroSpawn.Tank;
+        private readonly float _focalLengthValue = 55.3983f;
 
         [SerializeField] private Image _levelMainTankImage;
         [SerializeField] private TMP_Text _levelMainTankText;
@@ -131,6 +133,7 @@ namespace Assets.Source.Scripts.Grid
         {
             ChangeSetActiveObjects(gameObject, _sceneGameObjects, true);
             UpdateTankEntities();
+            Camera.main.focalLength = _focalLengthValue;
         }
 
         private void OnItemMerged(
@@ -291,12 +294,25 @@ namespace Assets.Source.Scripts.Grid
 
             for (int index = 0; index < _gridModel.GetGridTankStates().Count; index++)
             {
-                CreateGridTank(_gridPlacer
-                    .GetGridCellById(
-                    _gridModel.GetGridTankStates()[index].GridCellId),
-                    _gridModel.GetGridTankStates()[index].Level,
-                    true);
+                LoadGridTank(
+                    _gridPlacer.GetGridCellById(_gridModel.GetGridTankStateByIndex(index).GridCellId),
+                    _gridModel.GetGridTankStateByIndex(index));
             }
+        }
+
+        private void LoadGridTank(GridCellView gridCellView, GridTankState gridTankState)
+        {
+            GridTankData gridTankData = _gridConfig.GetGridTankDataByLevel(gridTankState.Level);
+
+            GridTankView tank = Instantiate(gridTankData.TankView, new Vector3(
+                gridCellView.transform.position.x,
+                gridTankData.TankView.transform.position.y,
+                gridCellView.transform.position.z), Quaternion.identity);
+
+            tank.transform.SetParent(_gridTankTransformParent.transform, worldPositionStays: true);
+            tank.Initialize(gridTankData, gridTankState, true);
+            tank.ChangeOriginalCell(gridCellView);
+            gridCellView.SetOccupied(tank);
         }
 
         private void CreateGridTank(GridCellView gridCellView, int currentTankLevel, bool isCreateSoundMute)
@@ -310,7 +326,7 @@ namespace Assets.Source.Scripts.Grid
                 gridCellView.transform.position.z), Quaternion.identity);
 
             tank.transform.SetParent(_gridTankTransformParent.transform, worldPositionStays: true);
-            tank.Initialize(gridTankData, gridTankState);
+            tank.Initialize(gridTankData, gridTankState, false);
             tank.ChangeOriginalCell(gridCellView);
             gridCellView.SetOccupied(tank);
 

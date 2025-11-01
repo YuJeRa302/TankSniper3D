@@ -23,16 +23,12 @@ namespace Assets.Source.Scripts.Upgrades
         private readonly float _tweenAnimationDuration = 0.2f;
         private readonly float _tweenAnimationScaler = 0.8f;
         private readonly float _tweenMultiplier = 2f;
+        private readonly float _focalLengthValue = 67.17691f;
 
         [SerializeField] private TMP_Text _moneyText;
         [SerializeField] private TMP_Text _nameTankText;
         [SerializeField] private TMP_Text _levelTankText;
         [SerializeField] private TMP_Text _nameButtonText;
-        [Space(20)]
-        [SerializeField] private Button _createTankCardButton;
-        [SerializeField] private Button _createPatternCardButton;
-        [SerializeField] private Button _createDecalCardButton;
-        [SerializeField] private Button _createHeroCardButton;
         [Space(20)]
         [SerializeField] private Button _backButton;
         [Space(20)]
@@ -119,6 +115,7 @@ namespace Assets.Source.Scripts.Upgrades
             CreateTankEntities(tankState, _typeHeroSpawn);
             SelectTankButton();
             UpdateTankDescription();
+            Camera.main.focalLength = _focalLengthValue;
         }
 
         private void OnDecorationCardSelected(DecorationCardView decorationCardView)
@@ -126,7 +123,6 @@ namespace Assets.Source.Scripts.Upgrades
             Message.Publish(new M_DeselectCards(decorationCardView.DecorationData.Id));
             _upgradeModel.SelectDecoration(decorationCardView.DecorationState);
             UpdateTankEntities();
-            _defaultTankScale = _tankView.gameObject.transform.localScale;
             AnimateSelectionObject(_tankView.gameObject, _defaultTankScale);
         }
 
@@ -145,7 +141,6 @@ namespace Assets.Source.Scripts.Upgrades
             _upgradeModel.SelectTank(tankCardView.TankState);
             CreateTankEntities(tankCardView.TankState, _typeHeroSpawn);
             UpdateTankDescription();
-            _defaultTankScale = _tankView.gameObject.transform.localScale;
             AnimateSelectionObject(_tankView.gameObject, _defaultTankScale);
         }
 

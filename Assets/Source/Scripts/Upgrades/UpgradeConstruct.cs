@@ -71,8 +71,8 @@ namespace Assets.Source.Scripts.Upgrades
             _gridModel = new GridModel(_persistentDataService, _coroutineRunner, _saveAndLoader, _biomsConfig);
             _levelModel = new LevelModel(_persistentDataService, _biomsConfig);
             _settingsModel = new SettingsModel(_persistentDataService, _audioPlayer);
-            _biomChanger.Initialize(_levelModel, _biomChangerConfig);
             _gridPlacer.Initialize(_audioPlayer);
+            _biomChanger.Initialize(_levelModel, _biomChangerConfig);
             _gridView.Initialize(_gridModel, _gridItemConfig, _upgradeConfig, _gridPlacer, _audioPlayer);
             _upgradeView.Initialize(_upgradeModel, _upgradeConfig, _audioPlayer);
             _levelsView.Initialize(_levelModel, _biomsConfig);

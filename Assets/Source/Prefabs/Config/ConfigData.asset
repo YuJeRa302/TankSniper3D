@@ -45,15 +45,15 @@ MonoBehaviour:
   _tankStates:
   - _id: 0
     _level: 1
-    _isOpened: 0
+    _isOpened: 1
     _isEquipped: 0
-    _decalId: 0
-    _patternId: 0
+    _decalId: 1
+    _patternId: 1
     _heroId: 1
   - _id: 1
     _level: 2
-    _isOpened: 0
-    _isEquipped: 0
+    _isOpened: 1
+    _isEquipped: 1
     _decalId: 0
     _patternId: 0
     _heroId: 1
@@ -141,7 +141,7 @@ MonoBehaviour:
     _isBuyed: 0
     _typeCard: 0
   - _id: 3
-    _isBuyed: 0
+    _isBuyed: 1
     _typeCard: 0
   - _id: 4
     _isBuyed: 0
@@ -219,9 +219,13 @@ MonoBehaviour:
     _isBuyed: 0
     _typeCard: 1
   - _id: 14
-    _isBuyed: 0
+    _isBuyed: 1
     _typeCard: 1
   - _id: 15
     _isBuyed: 0
     _typeCard: 1
-  _gridTankStates: []
+  _gridTankStates:
+  - _level: 2
+    _gridCellId: 3
+  - _level: 2
+    _gridCellId: 1
