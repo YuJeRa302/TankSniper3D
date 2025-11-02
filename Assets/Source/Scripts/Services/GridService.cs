@@ -25,8 +25,6 @@ namespace Assets.Source.Scripts.Services
 
         public void RemoveGridTankStateByMerge(GridTankState gridTankState)
         {
-            Debug.Log("gridTankState -" + gridTankState);
-
             if (gridTankState != null)
                 _gridTankStates.Remove(gridTankState);
         }

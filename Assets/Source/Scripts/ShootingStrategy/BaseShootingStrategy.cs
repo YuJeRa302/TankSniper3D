@@ -2,15 +2,23 @@ using Assets.Source.Game.Scripts.Enemy;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
 using Assets.Source.Scripts.Sound;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Source.Scripts.ShootingStrategy
 {
     public class BaseShootingStrategy : IShootingStrategy
     {
+        private readonly float _radius = 200f;
+        private readonly float _multiplier = 100f;
+        private readonly int _sizeDivider = 2;
+
         public float FindTargetradius { get; private set; } = 300f;
 
-        public virtual void Construct(ProjectileData projectileData, AudioPlayer audioPlayer, Transform shotPoint)
+        public virtual void Construct(
+            ProjectileData projectileData,
+            AudioPlayer audioPlayer,
+            List<Transform> shotPoints)
         {
         }
 
@@ -32,27 +40,40 @@ namespace Assets.Source.Scripts.ShootingStrategy
 #endif
         }
 
-        public void CreateFireSound(ProjectileData projectileData, AudioPlayer audioPlayer)
+        public void CreateFireSound(ProjectileData projectileData, AudioPlayer audioPlayer, List<Transform> firePoints)
         {
             if (projectileData.FireSound == null)
                 return;
 
-            audioPlayer.PlayCharacterAudio(projectileData.FireSound);
+            foreach (Transform firePoint in firePoints)
+            {
+                audioPlayer.PlayCharacterAudio(projectileData.FireSound);
+            }
         }
 
-        public void CreateMuzzleFlash(ProjectileData projectileData, Transform firePoint)
+        public void CreateMuzzleFlash(ProjectileData projectileData, List<Transform> firePoints)
         {
             if (projectileData.MuzzleFlash == null)
                 return;
 
-            var effect = GameObject.Instantiate(projectileData.MuzzleFlash, firePoint.position, firePoint.rotation);
-            GameObject.Destroy(effect.gameObject, projectileData.LifeTime);
+            foreach (Transform firePoint in firePoints)
+            {
+                var effect = GameObject.Instantiate(
+                    projectileData.MuzzleFlash,
+                    firePoint.position,
+                    firePoint.rotation);
+
+                GameObject.Destroy(effect.gameObject, projectileData.LifeTime);
+            }
         }
 
         public Transform FindTargetInCrosshair(float radius)
         {
-            Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0);
-            Collider[] allTargets = Physics.OverlapSphere(Camera.main.transform.position + Camera.main.transform.forward * 100f, 200f);
+            Vector3 screenCenter = new(Screen.width / _sizeDivider, Screen.height / _sizeDivider, 0);
+
+            Collider[] allTargets = Physics.OverlapSphere(
+                Camera.main.transform.position + Camera.main.transform.forward * _multiplier,
+                _radius);
 
             Transform closestTarget = null;
             float minDistance = float.MaxValue;

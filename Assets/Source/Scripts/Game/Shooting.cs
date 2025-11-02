@@ -2,6 +2,7 @@ using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
 using Assets.Source.Scripts.Sound;
+using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
@@ -13,7 +14,8 @@ namespace Assets.Source.Scripts.Game
 
         private readonly int _maxProjectileCount = 4;
 
-        [SerializeField] private Transform _shotPoint;
+        [SerializeField] private List<Transform> _oneGunShotPoint;
+        [SerializeField] private List<Transform> _twoGunsShotPoints;
 
         private IShootingStrategy _shootingStrategy;
         private CompositeDisposable _disposables = new();
@@ -42,7 +44,11 @@ namespace Assets.Source.Scripts.Game
             _tankData = _gameModel.GetTankData();
             _currentProjectileCount = _maxProjectileCount;
             _shootingStrategy = _tankData.ShootingStrategy;
-            _shootingStrategy.Construct(_tankData.ProjectileData, audioPlayer, _shotPoint);
+
+            if (_tankData.GunsNumber > 1)
+                _shootingStrategy.Construct(_tankData.ProjectileData, audioPlayer, _twoGunsShotPoints);
+            else
+                _shootingStrategy.Construct(_tankData.ProjectileData, audioPlayer, _oneGunShotPoint);
         }
 
         private void OnShooting(bool isAiming)

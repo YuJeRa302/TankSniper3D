@@ -105,6 +105,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02d534e0d40664b45a0d82795aa24059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gunPoints:
+  - {fileID: 6266876824100551111}
   recoilDistance: 0.3
   recoilDuration: 0.08
   returnDuration: 0.12

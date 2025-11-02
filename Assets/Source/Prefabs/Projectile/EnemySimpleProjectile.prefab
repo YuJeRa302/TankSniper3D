@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 4476536346808707810}
   - component: {fileID: 5799506538125884140}
   - component: {fileID: 7278902361052434969}
-  - component: {fileID: 6836442744894961241}
+  - component: {fileID: 1720349551572443580}
   m_Layer: 0
-  m_Name: SimpleProjectile
+  m_Name: EnemySimpleProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54,7 +54,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.2
+  m_Radius: 0.3
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &7278902361052434969
 Rigidbody:
@@ -83,7 +83,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &6836442744894961241
+--- !u!114 &1720349551572443580
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 59923466940495365}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7fb8c7be6d831d49b8a21be1472c84a, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a8ae54b3a59df1468ae8532731c9630, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 7278902361052434969}

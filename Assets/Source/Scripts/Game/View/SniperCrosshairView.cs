@@ -1,7 +1,9 @@
 using Assets.Source.Game.Scripts.Enemy;
 using Assets.Source.Game.Scripts.Enums;
+using Assets.Source.Scripts.Upgrades;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,10 +11,10 @@ namespace Assets.Source.Scripts.Game
 {
     public class SniperCrosshairView : MonoBehaviour
     {
+        private readonly float _resetHighlightDelay = 0.3f;
         private readonly Color _selectZone = new(1f, 0f, 0f, 130f / 255f);
         private readonly Color _deselectZone = new(1f, 0f, 0f, 0f);
 
-        [Header("References")]
         [SerializeField] private RectTransform _crosshairBorder;
         [SerializeField] private EnemyDirectionIndicator _indicatorPrefab;
         [SerializeField] private Image[] _dangerZones;
@@ -21,11 +23,17 @@ namespace Assets.Source.Scripts.Game
         private Camera _mainCamera;
         private List<Enemy> _enemies = new();
         private List<EnemyDirectionIndicator> _activeIndicators = new();
-        private int[] _zoneEnemyCounts = new int[4];
         private Coroutine _updateRoutine;
+        private Coroutine _highlightCoroutine;
+        private CompositeDisposable _disposables = new();
+        private int[] _zoneEnemyCounts = new int[4];
+        private bool _isPlayerShoot = false;
 
         private void OnEnable()
         {
+            if (_isPlayerShoot != true)
+                return;
+
             if (_updateRoutine != null)
                 StopCoroutine(_updateRoutine);
 
@@ -36,18 +44,51 @@ namespace Assets.Source.Scripts.Game
         {
             if (_updateRoutine != null)
                 StopCoroutine(_updateRoutine);
+
+            if (_highlightCoroutine != null)
+                StopCoroutine(_highlightCoroutine);
+
+            ResetZoneColors();
+        }
+
+        private void OnDestroy()
+        {
+            _disposables?.Dispose();
         }
 
         public void Initialize(List<Enemy> enemies)
         {
             _enemies = enemies;
             _mainCamera = Camera.main;
+
+            TankHealth.Message
+                .Receive<M_PlayerHitFromDirection>()
+                .Subscribe(m => OnPlayerHit(m.HitDirection))
+                .AddTo(_disposables);
+        }
+
+        public void SetPlayerShoot()
+        {
+            _isPlayerShoot = true;
         }
 
         public void SetActiveShooterZones(bool state)
         {
             foreach (var zone in _superShootZones)
                 zone.gameObject.SetActive(state);
+        }
+
+        private void OnPlayerHit(Vector3 direction)
+        {
+            if (!gameObject.activeSelf)
+                return;
+
+            UpdateZoneHighlight(direction);
+
+            if (_highlightCoroutine != null)
+                StopCoroutine(_highlightCoroutine);
+
+            _highlightCoroutine = StartCoroutine(ResetHighlightAfterDelay());
         }
 
         private IEnumerator UpdateCrosshairRoutine()
@@ -68,16 +109,49 @@ namespace Assets.Source.Scripts.Game
                     bool isOutside = viewportPos.x < 0 || viewportPos.x > 1 || viewportPos.y < 0 || viewportPos.y > 1;
 
                     if (isBehind || isOutside)
-                    {
-                        ShowDirectionIndicator(enemy.transform.position, enemy.transform);
-                        UpdateZoneHighlight(enemy.transform.position);
-                    }
+                        ShowDirectionIndicator(enemy.transform);
                 }
-
-                UpdateZoneColors();
 
                 yield return null;
             }
+        }
+
+        private IEnumerator ResetHighlightAfterDelay()
+        {
+            yield return new WaitForSeconds(_resetHighlightDelay);
+            ResetZoneColors();
+        }
+
+        private void UpdateZoneHighlight(Vector3 firePoint)
+        {
+            var dirToHit = (_mainCamera.transform.position - firePoint).normalized;
+            Vector3 localDir = _mainCamera.transform.InverseTransformDirection(dirToHit);
+
+            float x = localDir.x;
+            float y = localDir.y;
+
+            ResetZoneColors();
+
+            if (Mathf.Abs(x) > Mathf.Abs(y))
+            {
+                if (x > 0)
+                    _dangerZones[(int)IndexDangerZone.BottomRight].color = _selectZone;
+                else
+                    _dangerZones[(int)IndexDangerZone.BottomLeft].color = _selectZone;
+            }
+            else
+            {
+                if (y > 0)
+                    _dangerZones[(int)IndexDangerZone.TopLeft].color = _selectZone;
+                else
+                    _dangerZones[(int)IndexDangerZone.TopRight].color = _selectZone;
+            }
+        }
+
+        private void ResetZoneColors()
+        {
+            foreach (var zone in _dangerZones)
+                zone.color = _deselectZone;
         }
 
         private void ResetEnemyCounts()
@@ -94,46 +168,11 @@ namespace Assets.Source.Scripts.Game
             _activeIndicators.Clear();
         }
 
-        private void ShowDirectionIndicator(Vector3 enemyWorldPos, Transform enemyTransform)
+        private void ShowDirectionIndicator(Transform enemyTransform)
         {
             var indicator = Instantiate(_indicatorPrefab, _crosshairBorder);
             indicator.Initialize(enemyTransform, _mainCamera, _crosshairBorder);
             _activeIndicators.Add(indicator);
-        }
-
-        private void UpdateZoneHighlight(Vector3 enemyWorldPos)
-        {
-            Vector3 dirToEnemy = (enemyWorldPos - _mainCamera.transform.position).normalized;
-            Vector3 localDir = _mainCamera.transform.InverseTransformDirection(dirToEnemy);
-
-            float x = localDir.x;
-            float y = localDir.y;
-
-            if (Mathf.Abs(x) > Mathf.Abs(y))
-            {
-                if (x > 0)
-                    _zoneEnemyCounts[(int)IndexDangerZone.BottomRight]++;
-                else
-                    _zoneEnemyCounts[(int)IndexDangerZone.BottomLeft]++;
-            }
-            else
-            {
-                if (y > 0)
-                    _zoneEnemyCounts[(int)IndexDangerZone.TopLeft]++;
-                else
-                    _zoneEnemyCounts[(int)IndexDangerZone.TopRight]++;
-            }
-        }
-
-        private void UpdateZoneColors()
-        {
-            for (int i = 0; i < _dangerZones.Length; i++)
-            {
-                if (_zoneEnemyCounts[i] > 0)
-                    _dangerZones[i].color = _selectZone;
-                else
-                    _dangerZones[i].color = _deselectZone;
-            }
         }
     }
 }

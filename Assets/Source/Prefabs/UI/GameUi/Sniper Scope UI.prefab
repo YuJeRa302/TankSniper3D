@@ -297,10 +297,10 @@ MonoBehaviour:
   _crosshairBorder: {fileID: 7248181154737886203}
   _indicatorPrefab: {fileID: 6418867382784128593, guid: f95e9ce9b68663343bf0508b98e55eee, type: 3}
   _dangerZones:
-  - {fileID: 3960829398052252040}
-  - {fileID: 7999929578146525326}
-  - {fileID: 2521990315970617470}
   - {fileID: 1892313942270245876}
+  - {fileID: 2521990315970617470}
+  - {fileID: 7999929578146525326}
+  - {fileID: 3960829398052252040}
   _superShootZones:
   - {fileID: 295463962466705112}
   - {fileID: 434577672139328703}

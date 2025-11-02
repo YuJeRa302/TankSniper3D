@@ -18,14 +18,14 @@ namespace Assets.Source.Scripts.ShootingStrategy
 
         private ICoroutineRunner _coroutineRunner;
         private ProjectileData _projectileData;
-        private Transform _firePoint;
+        private List<Transform> _firePoints;
         private Material _material;
         private AudioPlayer _audioPlayer;
 
-        public override void Construct(ProjectileData projectileData, AudioPlayer audioPlayer, Transform firePoint)
+        public override void Construct(ProjectileData projectileData, AudioPlayer audioPlayer, List<Transform> firePoints)
         {
             _projectileData = projectileData;
-            _firePoint = firePoint;
+            _firePoints = firePoints;
             _audioPlayer = audioPlayer;
             _material = (_projectileData.BaseProjectile as LaserBeam).Material;
             _material.color = Color.blue;
@@ -35,32 +35,50 @@ namespace Assets.Source.Scripts.ShootingStrategy
 
         public override void ShootWithEnergy(bool isVibroEnabled)
         {
-            Transform target = FindTargetInCrosshair(FindTargetradius);
-            var projectile = _projectileData.BaseProjectile;
-            projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
-            LaserBounceAttack(_firePoint, target);
+            CreateEnergyRaycast(_firePoints);
             CreateVibration(isVibroEnabled);
-            CreateFireSound(_projectileData, _audioPlayer);
-            CreateMuzzleFlash(_projectileData, _firePoint);
+            CreateFireSound(_projectileData, _audioPlayer, _firePoints);
+            CreateMuzzleFlash(_projectileData, _firePoints);
         }
 
         public override void ShootWithoutEnergy(bool isVibroEnabled)
         {
-            var projectile = _projectileData.BaseProjectile;
-            projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
-            CreateRaycast();
-            CreateLaserTrail(_firePoint, _firePoint.forward);
+            CreateRaycast(_firePoints);
             CreateVibration(isVibroEnabled);
-            CreateFireSound(_projectileData, _audioPlayer);
-            CreateMuzzleFlash(_projectileData, _firePoint);
+            CreateFireSound(_projectileData, _audioPlayer, _firePoints);
+            CreateMuzzleFlash(_projectileData, _firePoints);
         }
 
-        private void CreateRaycast()
+        private void CreateRaycast(List<Transform> firePoints)
         {
-            if (Physics.Raycast(_firePoint.position, _firePoint.forward, out RaycastHit hit, _attackRange))
+            foreach (Transform firePoint in firePoints)
             {
-                if (hit.collider.TryGetComponent<DamageableArea>(out var damageableArea))
-                    damageableArea.ApplyDamage(_projectileData.Damage, hit.point);
+                var projectile = _projectileData.BaseProjectile;
+                projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
+
+                if (Physics.Raycast(firePoint.position, firePoint.forward, out RaycastHit hit, _attackRange))
+                {
+                    if (hit.collider.TryGetComponent<DamageableArea>(out var damageableArea))
+                        damageableArea.ApplyDamage(_projectileData.Damage, hit.point);
+                }
+
+                CreateLaserTrail(firePoint, firePoint.forward);
+            }
+        }
+
+        private void CreateEnergyRaycast(List<Transform> firePoints)
+        {
+            foreach (Transform firePoint in firePoints)
+            {
+                if (Physics.Raycast(firePoint.position, firePoint.forward, out RaycastHit hit, _attackRange))
+                {
+                    Transform target = FindTargetInCrosshair(FindTargetradius);
+                    var projectile = _projectileData.BaseProjectile;
+                    projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
+                    LaserBounceAttack(firePoint, target);
+                }
+
+                CreateLaserTrail(firePoint, firePoint.forward);
             }
         }
 

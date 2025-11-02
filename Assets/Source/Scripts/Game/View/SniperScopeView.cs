@@ -33,6 +33,7 @@ namespace Assets.Source.Scripts.Game
 
         private Button _sniperScopeButton;
         private bool _isAiming = false;
+        private bool _isReloading = false;
         private CompositeDisposable _disposables = new();
 
         private void OnDestroy()
@@ -164,23 +165,21 @@ namespace Assets.Source.Scripts.Game
             }
         }
 
-        private IEnumerator WaitEndingAiming()
-        {
-            Message.Publish(new M_EndAiming());
-            yield return new WaitForSeconds(_endAimingDelay);
-            EndAiming();
-        }
-
         private void EndAiming()
         {
             _isAiming = false;
-            _sniperScopeButton.gameObject.SetActive(true);
+
+            if (_isReloading == false)
+                _sniperScopeButton.gameObject.SetActive(true);
+
             gameObject.SetActive(false);
+            _sniperCrosshairView.gameObject.SetActive(false);
             Message.Publish(new M_Aiming(false));
         }
 
         private void OnCloseButtonClicked()
         {
+            _sniperCrosshairView.gameObject.SetActive(false);
             gameObject.SetActive(false);
             _isAiming = false;
             _sniperScopeButton.gameObject.SetActive(true);
@@ -190,6 +189,7 @@ namespace Assets.Source.Scripts.Game
         private void OnSniperScopeButtonClicked()
         {
             _sniperScopeButton.gameObject.SetActive(false);
+            _sniperCrosshairView.gameObject.SetActive(true);
             gameObject.SetActive(true);
             Message.Publish(new M_Aiming(true));
             SetSuperShotView();
@@ -197,12 +197,14 @@ namespace Assets.Source.Scripts.Game
 
         private void OnReloading()
         {
+            _isReloading = true;
             _sniperScopeButton.gameObject.SetActive(false);
             _isAiming = false;
         }
 
         private void OnReloaded()
         {
+            _isReloading = false;
             _sniperScopeButton.gameObject.SetActive(true);
             RefillAmmo();
         }
@@ -219,6 +221,14 @@ namespace Assets.Source.Scripts.Game
         {
             DecreaseAmmoCount();
             IncreaseEnergyCount();
+            _sniperCrosshairView.SetPlayerShoot();
+        }
+
+        private IEnumerator WaitEndingAiming()
+        {
+            Message.Publish(new M_EndAiming());
+            yield return new WaitForSeconds(_endAimingDelay);
+            EndAiming();
         }
     }
 }

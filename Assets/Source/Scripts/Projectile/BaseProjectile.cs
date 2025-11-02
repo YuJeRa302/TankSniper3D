@@ -51,36 +51,41 @@ namespace Assets.Source.Scripts.Projectile
 
         protected void OnCollisionEnter(Collision collision)
         {
+            Vector3 hitPoint = transform.position;
+
             if (collision.collider.TryGetComponent(out IndestructibleObject indestructibleObject))
             {
                 ContactPoint contact = collision.GetContact(0);
-                Vector3 hitPoint = contact.point;
-                CreateHitEffect(ProjectileData, hitPoint);
-                CreateSoundEffect(ProjectileData, hitPoint);
-                Destroy(gameObject);
+                hitPoint = contact.point;
             }
+
+            if (collision.collider.TryGetComponent(out DamageableArea damageableArea))
+            {
+                ContactPoint contact = collision.GetContact(0);
+                hitPoint = contact.point;
+                damageableArea.ApplyDamage(Damage, hitPoint);
+            }
+
+            if (collision.collider.TryGetComponent(out DestructibleObjectView destructibleObjectView))
+            {
+                ContactPoint contact = collision.GetContact(0);
+                hitPoint = contact.point;
+                destructibleObjectView.ApplyDamage(hitPoint);
+            }
+
+            CreateHitEffect(ProjectileData, hitPoint);
+            CreateSoundEffect(ProjectileData, hitPoint);
+            Destroy(gameObject);
         }
 
         protected virtual void Hit(Collider collider)
         {
             Vector3 hitPoint = transform.position;
 
-            if (collider.TryGetComponent(out DestructibleObjectView destructibleObjectView))
-            {
-                hitPoint = collider.ClosestPoint(transform.position);
-                destructibleObjectView.ApplyDamage(hitPoint);
-            }
-
-            if (collider.TryGetComponent(out DamageableArea damageableArea))
-            {
-                hitPoint = collider.ClosestPoint(transform.position);
-                damageableArea.ApplyDamage(Damage, hitPoint);
-            }
-
             if (collider.TryGetComponent(out TankHealth tankHealth))
             {
                 hitPoint = collider.ClosestPoint(transform.position);
-                tankHealth.TakeDamage(Damage);
+                tankHealth.TakeDamage(Damage, hitPoint);
             }
 
             CreateHitEffect(ProjectileData, hitPoint);

@@ -19,6 +19,7 @@ MonoBehaviour:
   _starCount: 5
   _level: 3
   _health: 300
+  _gunsNumber: 1
   _name: "\u041A\u043E\u043C\u0435\u0442\u0430"
   _projectileData: {fileID: 11400000, guid: 2a907e36becd3a141b65156a903cfcf2, type: 2}
   _shootingStrategy:

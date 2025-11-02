@@ -4,6 +4,7 @@ using Assets.Source.Scripts.Services;
 using Assets.Source.Scripts.Sound;
 using DG.Tweening;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -13,6 +14,7 @@ namespace Assets.Source.Scripts.Upgrades
     {
         private readonly Ease _recoilEase = Ease.OutQuad;
 
+        [SerializeField] private List<Transform> _gunPoints;
         [Header("Recoil settings")]
         [SerializeField] private float recoilDistance = 0.3f;
         [SerializeField] private float recoilDuration = 0.08f;
@@ -28,7 +30,7 @@ namespace Assets.Source.Scripts.Upgrades
         {
             _shootingStrategy = tankData.ShootingStrategy;
             _typeHeroSpawn = typeHeroSpawn;
-            _shootingStrategy.Construct(tankData.ProjectileData, audioPlayer, firePoint);
+            _shootingStrategy.Construct(tankData.ProjectileData, audioPlayer, _gunPoints);
         }
 
         public void OnPointerDown(PointerEventData eventData)

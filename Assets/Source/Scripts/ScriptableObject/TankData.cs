@@ -12,6 +12,7 @@ namespace Assets.Source.Scripts.ScriptableObjects
         [SerializeField] private int _starCount;
         [SerializeField] private int _level;
         [SerializeField] private int _health;
+        [SerializeField] private int _gunsNumber;
         [SerializeField] private string _name;
         [SerializeField] private ProjectileData _projectileData;
         [SerializeReference] private IShootingStrategy _shootingStrategy;
@@ -19,6 +20,7 @@ namespace Assets.Source.Scripts.ScriptableObjects
         public int StarCount => _starCount;
         public int Level => _level;
         public int Health => _health;
+        public int GunsNumber => _gunsNumber;
         public string Name => _name;
         public TankView MainTankView => _mainTankView;
         public Sprite Icon => _icon;

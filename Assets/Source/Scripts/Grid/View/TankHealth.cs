@@ -28,13 +28,14 @@ namespace Assets.Source.Scripts.Upgrades
                 .AddTo(_disposables);
         }
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(int damage, Vector3 firePoint)
         {
             if (_currentHealth <= 0)
                 return;
 
             _currentHealth -= damage;
             Message.Publish(new M_TankHealthChanged(_currentHealth));
+            Message.Publish(new M_PlayerHitFromDirection(firePoint));
 
             if (_currentHealth <= 0)
             {

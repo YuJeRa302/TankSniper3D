@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Source.Scripts.Projectile
 {
-    public class Bullet : BaseProjectile
+    public class EnemySimpleProjectile : BaseProjectile
     {
         private Vector3 _firePoint;
         private ProjectileData _projectileData;
