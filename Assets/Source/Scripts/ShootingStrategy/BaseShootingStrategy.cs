@@ -9,6 +9,7 @@ namespace Assets.Source.Scripts.ShootingStrategy
 {
     public class BaseShootingStrategy : IShootingStrategy
     {
+        private readonly float _maxDistance = 100f;
         private readonly float _radius = 200f;
         private readonly float _multiplier = 100f;
         private readonly int _sizeDivider = 2;
@@ -98,6 +99,17 @@ namespace Assets.Source.Scripts.ShootingStrategy
             }
 
             return closestTarget;
+        }
+
+        public Vector3 GetAimPoint()
+        {
+            Camera camera = Camera.main;
+            Ray ray = camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+
+            if (Physics.Raycast(ray, out RaycastHit hit, _maxDistance))
+                return hit.point;
+
+            return ray.origin + ray.direction * _maxDistance;
         }
     }
 }

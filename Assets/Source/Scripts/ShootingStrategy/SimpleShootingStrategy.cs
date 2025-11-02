@@ -1,12 +1,19 @@
 using Assets.Source.Scripts.ScriptableObjects;
+using Assets.Source.Scripts.Services;
 using Assets.Source.Scripts.Sound;
+using Reflex.Extensions;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Source.Scripts.ShootingStrategy
 {
     public class SimpleShootingStrategy : BaseShootingStrategy
     {
+        private readonly float _delayBetweenShots = 0.4f;
+
+        private ICoroutineRunner _coroutineRunner;
         private ProjectileData _projectileData;
         private List<Transform> _firePoints;
         private AudioPlayer _audioPlayer;
@@ -19,25 +26,24 @@ namespace Assets.Source.Scripts.ShootingStrategy
             _projectileData = projectileData;
             _firePoints = firePoints;
             _audioPlayer = audioPlayer;
+            var container = SceneManager.GetActiveScene().GetSceneContainer();
+            _coroutineRunner = container.Resolve<ICoroutineRunner>();
         }
 
         public override void ShootWithEnergy(bool isVibroEnabled)
         {
-            CreateEnergyProjectile(_firePoints);
+            _coroutineRunner.StartCoroutine(CreateEnergyProjectile(_firePoints));
             CreateVibration(isVibroEnabled);
-            CreateFireSound(_projectileData, _audioPlayer, _firePoints);
-            CreateMuzzleFlash(_projectileData, _firePoints);
+
         }
 
         public override void ShootWithoutEnergy(bool isVibroEnabled)
         {
-            CreateProjectile(_firePoints);
+            _coroutineRunner.StartCoroutine(CreateProjectile(_firePoints));
             CreateVibration(isVibroEnabled);
-            CreateFireSound(_projectileData, _audioPlayer, _firePoints);
-            CreateMuzzleFlash(_projectileData, _firePoints);
         }
 
-        private void CreateProjectile(List<Transform> firePoints)
+        private IEnumerator CreateProjectile(List<Transform> firePoints)
         {
             Vector3 aimPoint = GetAimPoint();
 
@@ -46,17 +52,17 @@ namespace Assets.Source.Scripts.ShootingStrategy
                 Vector3 direction = (aimPoint - firePoint.position).normalized;
                 Quaternion rotation = Quaternion.LookRotation(direction);
 
-                var projectile = GameObject.Instantiate(
-                    _projectileData.BaseProjectile,
-                    firePoint.position,
-                    rotation
-                );
-
+                var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, firePoint.position, rotation);
                 projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
+
+                CreateFireSound(_projectileData, _audioPlayer, _firePoints);
+                CreateMuzzleFlash(_projectileData, _firePoints);
+
+                yield return new WaitForSeconds(_delayBetweenShots);
             }
         }
 
-        private void CreateEnergyProjectile(List<Transform> firePoints)
+        private IEnumerator CreateEnergyProjectile(List<Transform> firePoints)
         {
             Vector3 aimPoint = GetAimPoint();
             Transform target = FindTargetInCrosshair(FindTargetradius);
@@ -69,18 +75,12 @@ namespace Assets.Source.Scripts.ShootingStrategy
 
                 var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, firePoint.position, rotation);
                 projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
+
+                CreateFireSound(_projectileData, _audioPlayer, _firePoints);
+                CreateMuzzleFlash(_projectileData, _firePoints);
+
+                yield return new WaitForSeconds(_delayBetweenShots);
             }
-        }
-
-        private Vector3 GetAimPoint(float maxDistance = 1000f)
-        {
-            var camera = Camera.main;
-            Ray ray = camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-
-            if (Physics.Raycast(ray, out RaycastHit hit, maxDistance))
-                return hit.point;
-
-            return ray.origin + ray.direction * maxDistance;
         }
     }
 }

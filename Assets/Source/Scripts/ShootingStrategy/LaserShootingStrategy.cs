@@ -13,7 +13,7 @@ namespace Assets.Source.Scripts.ShootingStrategy
 {
     public class LaserShootingStrategy : BaseShootingStrategy
     {
-        private readonly float _widthMultiplier = 0.1f;
+        private readonly float _widthMultiplier = 0.2f;
         private readonly float _attackRange = 35f;
 
         private ICoroutineRunner _coroutineRunner;
@@ -22,7 +22,10 @@ namespace Assets.Source.Scripts.ShootingStrategy
         private Material _material;
         private AudioPlayer _audioPlayer;
 
-        public override void Construct(ProjectileData projectileData, AudioPlayer audioPlayer, List<Transform> firePoints)
+        public override void Construct(
+            ProjectileData projectileData,
+            AudioPlayer audioPlayer,
+            List<Transform> firePoints)
         {
             _projectileData = projectileData;
             _firePoints = firePoints;
@@ -37,57 +40,72 @@ namespace Assets.Source.Scripts.ShootingStrategy
         {
             CreateEnergyRaycast(_firePoints);
             CreateVibration(isVibroEnabled);
-            CreateFireSound(_projectileData, _audioPlayer, _firePoints);
-            CreateMuzzleFlash(_projectileData, _firePoints);
         }
 
         public override void ShootWithoutEnergy(bool isVibroEnabled)
         {
             CreateRaycast(_firePoints);
             CreateVibration(isVibroEnabled);
-            CreateFireSound(_projectileData, _audioPlayer, _firePoints);
-            CreateMuzzleFlash(_projectileData, _firePoints);
         }
 
         private void CreateRaycast(List<Transform> firePoints)
         {
+            Vector3 aimPoint = GetAimPoint();
+
             foreach (Transform firePoint in firePoints)
             {
+                Vector3 direction = (aimPoint - firePoint.position).normalized;
+
                 var projectile = _projectileData.BaseProjectile;
                 projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
 
-                if (Physics.Raycast(firePoint.position, firePoint.forward, out RaycastHit hit, _attackRange))
+                if (Physics.Raycast(firePoint.position, direction, out RaycastHit hit, _attackRange))
                 {
-                    if (hit.collider.TryGetComponent<DamageableArea>(out var damageableArea))
+                    if (hit.collider.TryGetComponent(out DamageableArea damageableArea))
                         damageableArea.ApplyDamage(_projectileData.Damage, hit.point);
-                }
 
-                CreateLaserTrail(firePoint, firePoint.forward);
+                    CreateLaserTrail(firePoint, hit.point);
+                }
+                else
+                {
+                    CreateLaserTrail(firePoint, firePoint.position + direction * _attackRange);
+                }
             }
+
+            CreateFireSound(_projectileData, _audioPlayer, _firePoints);
+            CreateMuzzleFlash(_projectileData, _firePoints);
         }
 
         private void CreateEnergyRaycast(List<Transform> firePoints)
         {
+            Vector3 aimPoint = GetAimPoint();
+            Transform target = FindTargetInCrosshair(FindTargetradius);
+
             foreach (Transform firePoint in firePoints)
             {
-                if (Physics.Raycast(firePoint.position, firePoint.forward, out RaycastHit hit, _attackRange))
-                {
-                    Transform target = FindTargetInCrosshair(FindTargetradius);
-                    var projectile = _projectileData.BaseProjectile;
-                    projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
-                    LaserBounceAttack(firePoint, target);
-                }
+                Vector3 direction = (target != null
+                    ? (target.position - firePoint.position)
+                    : (aimPoint - firePoint.position)).normalized;
 
-                CreateLaserTrail(firePoint, firePoint.forward);
+                var projectile = _projectileData.BaseProjectile;
+                projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
+
+                if (target != null)
+                    LaserBounceAttack(firePoint, target);
+                else
+                    CreateLaserTrail(firePoint, firePoint.position + direction * _attackRange);
             }
+
+            CreateFireSound(_projectileData, _audioPlayer, _firePoints);
+            CreateMuzzleFlash(_projectileData, _firePoints);
         }
 
-        private void CreateLaserTrail(Transform firePoint, Vector3 direction)
+        private void CreateLaserTrail(Transform firePoint, Vector3 endPoint)
         {
             List<Vector3> points = new()
             {
                 firePoint.position,
-                firePoint.position + direction * _attackRange
+                endPoint
             };
 
             _coroutineRunner.StartCoroutine(DrawLaserCoroutine(points, _projectileData.LifeTime));
