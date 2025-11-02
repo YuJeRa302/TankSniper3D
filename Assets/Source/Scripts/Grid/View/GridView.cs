@@ -5,7 +5,6 @@ using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Sound;
 using Assets.Source.Scripts.Upgrades;
-using System;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -19,6 +18,7 @@ namespace Assets.Source.Scripts.Grid
 
         private readonly TypeHeroSpawn _typeHeroSpawn = TypeHeroSpawn.Tank;
         private readonly float _focalLengthValue = 55.3983f;
+        private readonly Quaternion _cameraRotation = Quaternion.Euler(35, 0, 0);
 
         [SerializeField] private Image _levelMainTankImage;
         [SerializeField] private TMP_Text _levelMainTankText;
@@ -133,7 +133,7 @@ namespace Assets.Source.Scripts.Grid
         {
             ChangeSetActiveObjects(gameObject, _sceneGameObjects, true);
             UpdateTankEntities();
-            Camera.main.focalLength = _focalLengthValue;
+            UpdateCameraValue();
         }
 
         private void OnItemMerged(
@@ -193,6 +193,12 @@ namespace Assets.Source.Scripts.Grid
                 _levelMainTankText.gameObject.SetActive(true);
 
             _levelMainTankText.text = _mainTank.Level.ToString();
+        }
+
+        private void UpdateCameraValue()
+        {
+            Camera.main.focalLength = _focalLengthValue;
+            Camera.main.transform.localRotation = _cameraRotation;
         }
 
         private void UpdateMainTank()

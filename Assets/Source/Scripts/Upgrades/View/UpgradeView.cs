@@ -24,6 +24,7 @@ namespace Assets.Source.Scripts.Upgrades
         private readonly float _tweenAnimationScaler = 0.8f;
         private readonly float _tweenMultiplier = 2f;
         private readonly float _focalLengthValue = 67.17691f;
+        private readonly Quaternion _cameraRotation = Quaternion.Euler(26, 0, 0);
 
         [SerializeField] private TMP_Text _moneyText;
         [SerializeField] private TMP_Text _nameTankText;
@@ -115,7 +116,7 @@ namespace Assets.Source.Scripts.Upgrades
             CreateTankEntities(tankState, _typeHeroSpawn);
             SelectTankButton();
             UpdateTankDescription();
-            Camera.main.focalLength = _focalLengthValue;
+            UpdateCameraValue();
         }
 
         private void OnDecorationCardSelected(DecorationCardView decorationCardView)
@@ -178,6 +179,12 @@ namespace Assets.Source.Scripts.Upgrades
             _currentTypeCard = typeCard;
             _upgradeModel.UnlockByReward(_currentCardIndex, _currentTypeCard);
             Message.Publish(new M_UpgradeUnlocked(_currentCardIndex, _currentTypeCard));
+        }
+
+        private void UpdateCameraValue()
+        {
+            Camera.main.focalLength = _focalLengthValue;
+            Camera.main.transform.localRotation = _cameraRotation;
         }
 
         private void UpdateTankDescription()
