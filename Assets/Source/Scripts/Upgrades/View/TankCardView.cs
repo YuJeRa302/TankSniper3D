@@ -13,6 +13,7 @@ namespace Assets.Source.Scripts.Upgrades
         [SerializeField] private Color _lockedColor = new Color32(66, 72, 132, 255);
         [SerializeField] private Color _defaultColor = new Color32(255, 255, 255, 255);
         [SerializeField] private Image _icon;
+        [SerializeField] private Image _highlightImage;
         [SerializeField] private Image _selectButtonImage;
         [SerializeField] private Image _lockStarImage;
         [SerializeField] private Image _mainImage;
@@ -107,6 +108,7 @@ namespace Assets.Source.Scripts.Upgrades
         {
             Selected?.Invoke(this);
             _chooseMark.gameObject.SetActive(true);
+            _highlightImage.enabled = true;
         }
 
         private void AddListeners()
@@ -132,6 +134,7 @@ namespace Assets.Source.Scripts.Upgrades
 
             _chooseMark.gameObject.SetActive(false);
             _tankState.ChangeEquippedState(false);
+            _highlightImage.enabled = false;
         }
     }
 }

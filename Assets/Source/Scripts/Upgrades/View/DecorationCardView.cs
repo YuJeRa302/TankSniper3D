@@ -13,6 +13,7 @@ namespace Assets.Source.Scripts.Upgrades
         private readonly int _firstIndex = 0;
 
         [SerializeField] private Image _icon;
+        [SerializeField] private Image _highlightImage;
         [SerializeField] private GameObject _chooseMark;
         [SerializeField] private GameObject _lockPanel;
         [SerializeField] private Button _selectButton;
@@ -96,6 +97,7 @@ namespace Assets.Source.Scripts.Upgrades
         {
             DecorationSelected?.Invoke(this);
             _chooseMark.gameObject.SetActive(true);
+            _highlightImage.enabled = true;
         }
 
         private void UnlockByPlayerProgress(TankState tankState)
@@ -127,6 +129,7 @@ namespace Assets.Source.Scripts.Upgrades
                 return;
 
             _chooseMark.gameObject.SetActive(false);
+            _highlightImage.enabled = false;
         }
     }
 }
