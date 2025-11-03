@@ -1,3 +1,3 @@
-Build path: D:/Project(Unity)/GitHub/TestProject/Test Sniper 3D/Test 20
-Build number: 20
+Build path: D:/Project(Unity)/GitHub/TestProject/Test Sniper 3D/Test 21
+Build number: 21
 PluginYG version: 2.005

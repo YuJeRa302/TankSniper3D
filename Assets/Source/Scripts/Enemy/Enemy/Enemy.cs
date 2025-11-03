@@ -91,6 +91,11 @@ namespace Assets.Source.Game.Scripts.Enemy
                 .Subscribe(m => OnPlayerFirstShot())
                 .AddTo(_disposables);
 
+            SettingsModel.Message
+                .Receive<M_SoundStateChanged>()
+                .Subscribe(m => ChangeStateSound(m.IsMuted))
+                .AddTo(_disposables);
+
             _enemyHealth.OnDeath
                 .Subscribe(_ => OnEnemyDeath())
                 .AddTo(this);
@@ -135,6 +140,12 @@ namespace Assets.Source.Game.Scripts.Enemy
         protected virtual void OnEnemyDeath()
         {
             _gameModel.SetEarnedMoney(_enemyData.MoneyReward);
+        }
+
+        private void ChangeStateSound(bool state)
+        {
+            if (_audioSource != null)
+                _audioSource.mute = state;
         }
 
         private void OnPlayerFirstShot()

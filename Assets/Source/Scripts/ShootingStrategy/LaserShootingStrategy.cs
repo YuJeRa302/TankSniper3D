@@ -1,4 +1,5 @@
 using Assets.Source.Game.Scripts.Enemy;
+using Assets.Source.Scripts.Game;
 using Assets.Source.Scripts.Projectile;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
@@ -13,8 +14,12 @@ namespace Assets.Source.Scripts.ShootingStrategy
 {
     public class LaserShootingStrategy : BaseShootingStrategy
     {
+        private readonly float _lifeTimeHitEffect = 0.5f;
+        private readonly float _laserDelay = 0.4f;
         private readonly float _widthMultiplier = 0.2f;
         private readonly float _attackRange = 35f;
+        private readonly float _energyLaserYOffset = -0.08f;
+        private readonly float _laserYOffset = -0.1f;
 
         private ICoroutineRunner _coroutineRunner;
         private ProjectileData _projectileData;
@@ -32,120 +37,191 @@ namespace Assets.Source.Scripts.ShootingStrategy
             _audioPlayer = audioPlayer;
             _material = (_projectileData.BaseProjectile as LaserBeam).Material;
             _material.color = Color.blue;
+
             var container = SceneManager.GetActiveScene().GetSceneContainer();
             _coroutineRunner = container.Resolve<ICoroutineRunner>();
         }
 
         public override void ShootWithEnergy(bool isVibroEnabled)
         {
-            CreateEnergyRaycast(_firePoints);
+            CreateEnergyRaycast();
             CreateVibration(isVibroEnabled);
         }
 
         public override void ShootWithoutEnergy(bool isVibroEnabled)
         {
-            CreateRaycast(_firePoints);
+            if (_firePoints.Count > 1)
+                _coroutineRunner.StartCoroutine(CreateDoubleLaser(_firePoints));
+            else
+                CreateLaser();
+
             CreateVibration(isVibroEnabled);
         }
 
-        private void CreateRaycast(List<Transform> firePoints)
+        private void CreateLaser()
         {
+            Vector3 startPos = new(
+                _firePoints[0].position.x,
+                _firePoints[0].position.y + _laserYOffset,
+                _firePoints[0].position.z);
+
             Vector3 aimPoint = GetAimPoint();
+            Vector3 direction = (aimPoint - startPos).normalized;
+
+            var projectile = _projectileData.BaseProjectile;
+            projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
+
+            if (Physics.Raycast(startPos, direction, out RaycastHit hit, _attackRange))
+                SetHit(hit);
+
+            CreateLaserTrail(startPos, startPos + direction * _attackRange);
+            CreateFireSound(_projectileData, _audioPlayer, _firePoints);
+            CreateMuzzleFlash(_projectileData, _firePoints);
+        }
+
+        private IEnumerator CreateDoubleLaser(List<Transform> firePoints)
+        {
+            Camera camera = Camera.main;
+
+            Vector3 aimPoint = camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 15));
 
             foreach (Transform firePoint in firePoints)
             {
-                Vector3 direction = (aimPoint - firePoint.position).normalized;
-
                 var projectile = _projectileData.BaseProjectile;
                 projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
+
+                Vector3 direction = (aimPoint - firePoint.position).normalized;
 
                 if (Physics.Raycast(firePoint.position, direction, out RaycastHit hit, _attackRange))
                 {
-                    if (hit.collider.TryGetComponent(out DamageableArea damageableArea))
-                        damageableArea.ApplyDamage(_projectileData.Damage, hit.point);
-
-                    CreateLaserTrail(firePoint, hit.point);
+                    SetHit(hit);
+                    CreateLaserTrail(firePoint.position, hit.point);
                 }
                 else
                 {
-                    CreateLaserTrail(firePoint, firePoint.position + direction * _attackRange);
+                    CreateLaserTrail(firePoint.position, firePoint.position + direction * _attackRange);
                 }
+
+                yield return new WaitForSeconds(_laserDelay);
             }
 
             CreateFireSound(_projectileData, _audioPlayer, _firePoints);
             CreateMuzzleFlash(_projectileData, _firePoints);
         }
 
-        private void CreateEnergyRaycast(List<Transform> firePoints)
+        private void CreateEnergyRaycast()
         {
             Vector3 aimPoint = GetAimPoint();
-            Transform target = FindTargetInCrosshair(FindTargetradius);
+            Transform mainTarget = FindTargetInCrosshair(FindTargetradius);
 
-            foreach (Transform firePoint in firePoints)
+            Vector3 startPos = Camera.main.ViewportToWorldPoint(
+                new Vector3(0.5f, 0.5f + _energyLaserYOffset, 1f));
+
+            Vector3 direction = (aimPoint - startPos).normalized;
+
+            var projectile = _projectileData.BaseProjectile;
+            projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
+
+            if (Physics.Raycast(startPos, direction, out RaycastHit firstHit, _attackRange))
             {
-                Vector3 direction = (target != null
-                    ? (target.position - firePoint.position)
-                    : (aimPoint - firePoint.position)).normalized;
-
-                var projectile = _projectileData.BaseProjectile;
-                projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
-
-                if (target != null)
-                    LaserBounceAttack(firePoint, target);
-                else
-                    CreateLaserTrail(firePoint, firePoint.position + direction * _attackRange);
+                SetHit(firstHit);
+                CreateLaserTrail(startPos, firstHit.point);
+                LaserBounceAttack(firstHit.point, mainTarget);
+            }
+            else
+            {
+                CreateLaserTrail(startPos, startPos + direction * _attackRange);
             }
 
             CreateFireSound(_projectileData, _audioPlayer, _firePoints);
             CreateMuzzleFlash(_projectileData, _firePoints);
         }
 
-        private void CreateLaserTrail(Transform firePoint, Vector3 endPoint)
+        private void CreateLaserTrail(Vector3 startPoint, Vector3 endPoint)
         {
             List<Vector3> points = new()
             {
-                firePoint.position,
+                startPoint,
                 endPoint
             };
 
             _coroutineRunner.StartCoroutine(DrawLaserCoroutine(points, _projectileData.LifeTime));
         }
 
-        private void LaserBounceAttack(Transform firePoint, Transform nextTarget)
+        private void CreateHitEffect(ProjectileData projectileData, Vector3 hitPoint)
         {
-            List<Vector3> laserPoints = new();
-            Vector3 currentPosition = firePoint.position;
-            Vector3 currentDirection = firePoint.forward;
+            if (projectileData.HitEffect == null)
+                return;
 
-            laserPoints.Add(currentPosition);
+            var effect = GameObject.Instantiate(projectileData.HitEffect, hitPoint, Quaternion.identity);
+            GameObject.Destroy(effect.gameObject, _lifeTimeHitEffect);
+        }
 
-            int bouncesDone = 0;
-            int maxBounces = 1;
+        private Transform FindNearbyTarget(Vector3 fromPosition, float radius, Transform ignoreTarget)
+        {
+            Collider[] hits = Physics.OverlapSphere(fromPosition, radius);
+            Transform closest = null;
+            float closestDist = float.MaxValue;
 
-            while (bouncesDone <= maxBounces)
+            foreach (var hit in hits)
             {
-                if (Physics.Raycast(currentPosition, currentDirection, out RaycastHit hit, _attackRange))
+                if (hit.TryGetComponent(out DamageableArea area))
                 {
-                    laserPoints.Add(hit.point);
+                    if (ignoreTarget != null && hit.transform == ignoreTarget)
+                        continue;
 
-                    if (hit.collider.TryGetComponent<DamageableArea>(out var damageableArea))
-                        damageableArea.ApplyDamage(_projectileData.Damage, hit.point);
+                    float dist = Vector3.Distance(fromPosition, hit.transform.position);
 
-                    if (bouncesDone == maxBounces || nextTarget == null)
-                        break;
-
-                    currentPosition = hit.point;
-                    currentDirection = (nextTarget.position - currentPosition).normalized;
-                    bouncesDone++;
-                }
-                else
-                {
-                    laserPoints.Add(currentPosition + currentDirection * _attackRange);
-                    break;
+                    if (dist < closestDist)
+                    {
+                        closest = hit.transform;
+                        closestDist = dist;
+                    }
                 }
             }
 
-            _coroutineRunner.StartCoroutine(DrawLaserCoroutine(laserPoints, _projectileData.LifeTime));
+            return closest;
+        }
+
+        private void LaserBounceAttack(Vector3 startPos, Transform previousTarget)
+        {
+            Transform nextTarget = FindNearbyTarget(startPos, 25f, previousTarget);
+
+            Vector3 bounceDirection;
+            Vector3 endPoint;
+
+            if (nextTarget != null)
+            {
+                bounceDirection = (nextTarget.position - startPos).normalized;
+
+                if (Physics.Raycast(startPos, bounceDirection, out RaycastHit hit, _attackRange))
+                {
+                    endPoint = hit.point;
+                    SetHit(hit);
+                }
+                else
+                {
+                    endPoint = nextTarget.position;
+                }
+            }
+            else
+            {
+                bounceDirection = (Quaternion.Euler(-30f, 20f, 0f) * Vector3.forward).normalized;
+                endPoint = startPos + bounceDirection * (_attackRange * 0.75f);
+            }
+
+            CreateLaserTrail(startPos, endPoint);
+        }
+
+        private void SetHit(RaycastHit hit)
+        {
+            if (hit.collider.TryGetComponent(out DamageableArea damageableArea))
+                damageableArea.ApplyDamage(_projectileData.Damage, hit.point);
+
+            if (hit.collider.TryGetComponent(out DestructibleObjectView destructibleObjectView))
+                destructibleObjectView.ApplyDamage(hit.point);
+
+            CreateHitEffect(_projectileData, hit.point);
         }
 
         private IEnumerator DrawLaserCoroutine(List<Vector3> points, float duration)

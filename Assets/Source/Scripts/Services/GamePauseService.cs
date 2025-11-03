@@ -63,22 +63,6 @@ namespace Assets.Source.Scripts.Services
             _persistentDataService.PlayerProgress.IsGamePause = false;
         }
 
-        private void OnResumeByReward()
-        {
-            if (_persistentDataService.PlayerProgress.IsGamePause == true)
-                Time.timeScale = _pauseValue;
-            else
-                Time.timeScale = _resumeValue;
-
-            GameResumed?.Invoke(_persistentDataService.PlayerProgress.IsMuted);
-        }
-
-        private void OnPauseByReward()
-        {
-            Time.timeScale = _pauseValue;
-            GamePaused?.Invoke(true);
-        }
-
         private void PauseGameByVisibilityWindow(bool state)
         {
             Time.timeScale = _pauseValue;

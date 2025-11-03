@@ -16,10 +16,10 @@ MonoBehaviour:
   _damage: 50
   _projectileCount: 1
   _reloadTime: 3
-  _lifeTime: 1
+  _lifeTime: 0.5
   _spread: 0
   _muzzleFlash: {fileID: 526634086781229154, guid: 56bd02ec41c72724b94d79436fafb019, type: 3}
-  _hitEffect: {fileID: 30685999186260522, guid: f0138d95b6d4af24391983891e108c9c, type: 3}
+  _hitEffect: {fileID: 6243008750506336172, guid: e1c3a45cff8670740b2c121447c5c30c, type: 3}
   _fireSound: {fileID: 8300000, guid: 960dbb205eebd514fa6e41187b3caf38, type: 3}
   _hitSound: {fileID: 8300000, guid: 235db7e7f6d982140a4a5ac56629e519, type: 3}
   _baseProjectile: {fileID: 1987559397670400515, guid: 51f23a20c4439414dac49e138b1e6186, type: 3}

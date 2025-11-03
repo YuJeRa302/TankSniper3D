@@ -1,9 +1,11 @@
 using Assets.Source.Game.Scripts.Enums;
 using Assets.Source.Game.Scripts.States;
+using Assets.Source.Scripts.Game;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Sound;
 using Assets.Source.Scripts.Views;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 namespace Assets.Source.Scripts.Upgrades
@@ -22,7 +24,11 @@ namespace Assets.Source.Scripts.Upgrades
         [SerializeField] private TankHealth _tankHealth;
         [Space(20)]
         [SerializeField] private TankRecoil _tankRecoil;
+        [Space(20)]
+        [SerializeField] private GameObject _tankHatchOpened;
+        [SerializeField] private GameObject _tankHatchLocked;
 
+        private CompositeDisposable _disposables = new();
         private DecorationData _decalData;
         private DecorationData _patternData;
         private HeroData _heroData;
@@ -33,6 +39,11 @@ namespace Assets.Source.Scripts.Upgrades
         public string Name { get; private set; }
         public TankState TankState => _tankState;
         public Transform TurretTransform => _turretTransform;
+
+        private void OnDestroy()
+        {
+            _disposables?.Dispose();
+        }
 
         public void Initialize(
             TankState tankState,
@@ -51,6 +62,8 @@ namespace Assets.Source.Scripts.Upgrades
             UpdateDecal(decal);
             UpdatePattern(pattern);
             CreateHero(heroData, typeHeroSpawn);
+            SetHatchState(typeHeroSpawn);
+            AddListeners();
         }
 
         public void UpdateTankEntities(
@@ -79,6 +92,37 @@ namespace Assets.Source.Scripts.Upgrades
         public void ShootingByMerge()
         {
             _tankRecoil.SetFire();
+        }
+
+        private void AddListeners()
+        {
+            SniperScopeView.Message
+                .Receive<M_Aiming>()
+                .Subscribe(m => OnSniperScopeOpened())
+                .AddTo(_disposables);
+        }
+
+        private void OnSniperScopeOpened()
+        {
+            if (_heroView != null)
+                _heroView.gameObject.SetActive(false);
+
+            _tankHatchOpened.SetActive(false);
+            _tankHatchLocked.SetActive(true);
+        }
+
+        private void SetHatchState(TypeHeroSpawn typeHeroSpawn)
+        {
+            if (typeHeroSpawn == TypeHeroSpawn.Tank)
+            {
+                _tankHatchOpened.SetActive(true);
+                _tankHatchLocked.SetActive(false);
+            }
+            else
+            {
+                _tankHatchOpened.SetActive(false);
+                _tankHatchLocked.SetActive(true);
+            }
         }
 
         private void UpdateDecal(DecorationData decorationData)
