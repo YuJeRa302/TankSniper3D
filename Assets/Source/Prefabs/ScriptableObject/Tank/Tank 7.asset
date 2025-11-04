@@ -14,19 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _id: 7
   _typeCard: 3
-  _mainTankView: {fileID: 808559565093266646, guid: bcb10fd204d1b68479a7e4b2847b5c06, type: 3}
-  _icon: {fileID: 21300000, guid: 631af4e6a41ae7546a533bf3abcde2ed, type: 3}
+  _mainTankView: {fileID: 2833051656535974676, guid: bac318187f2cdd94f9504f36c74604c4, type: 3}
+  _icon: {fileID: 21300000, guid: 77de6f7211deecf4b9bc1adc9923233b, type: 3}
   _starCount: 5
   _level: 8
   _health: 450
-  _gunsNumber: 1
-  _name: "\u0411\u043E\u043C\u0431\u0430\u0440\u0434\u0430"
+  _gunsNumber: 2
+  _name: "\u0417\u0435\u043D\u0438\u0442"
   _projectileData: {fileID: 11400000, guid: 2bf47ec373d0d14488ad1703f634c7dc, type: 2}
   _shootingStrategy:
-    rid: 8893800087664197635
+    rid: 8893800123105542146
   references:
     version: 2
     RefIds:
-    - rid: 8893800087664197635
-      type: {class: SimpleShootingStrategy, ns: Assets.Source.Scripts.ShootingStrategy, asm: Assembly-CSharp}
+    - rid: 8893800123105542146
+      type: {class: LaserShootingStrategy, ns: Assets.Source.Scripts.ShootingStrategy, asm: Assembly-CSharp}
       data: 

@@ -71,7 +71,7 @@ namespace Assets.Source.Scripts.Models
 
         public TankState GetTankState(TankData tankData)
         {
-            return _persistentDataService.PlayerProgress.TankService.GetState(tankData);
+            return _persistentDataService.PlayerProgress.TankService.GetStateByData(tankData);
         }
 
         public int GetHeroId()

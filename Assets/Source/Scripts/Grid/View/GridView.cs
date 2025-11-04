@@ -150,11 +150,14 @@ namespace Assets.Source.Scripts.Grid
 
             if (_mainTank.Level < _gridModel.CurrentMainTankLevel)
             {
-                Destroy(_mainTank.gameObject);
-                CreateMainTank(_gridModel.CurrentMainTankLevel);
-                UpdateMainTankUI();
-                UpdateTankShadow();
-                _mainTank.ShootingByMerge();
+                if (_gridModel.TryCreateMainTank())
+                {
+                    Destroy(_mainTank.gameObject);
+                    CreateMainTank(_gridModel.CurrentMainTankLevel);
+                    UpdateMainTankUI();
+                    UpdateTankShadow();
+                    _mainTank.SetMergeAnimation();
+                }
             }
         }
 
@@ -204,7 +207,10 @@ namespace Assets.Source.Scripts.Grid
         private void UpdateMainTank()
         {
             if (_mainTank == null)
+            {
                 CreateMainTank(_gridModel.CurrentMainTankLevel);
+                _mainTank.SetMergeAnimation();
+            }
 
             UpdateMainTankUI();
             UpdateTankShadow();

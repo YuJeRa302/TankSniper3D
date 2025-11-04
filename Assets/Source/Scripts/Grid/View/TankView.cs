@@ -12,9 +12,10 @@ namespace Assets.Source.Scripts.Upgrades
 {
     public class TankView : MonoBehaviour
     {
-        private readonly Color _defaultMaterial = new(0, 0, 204, 255);
         private readonly string _materialName = "Main";
 
+        [SerializeField] private Color[] _defaultMaterials;
+        [Space(20)]
         [SerializeField] private List<MeshRenderer> _decals;
         [SerializeField] private List<MeshRenderer> _tankMaterials;
         [SerializeField] private Transform _heroSpawnPoint;
@@ -23,11 +24,14 @@ namespace Assets.Source.Scripts.Upgrades
         [Space(20)]
         [SerializeField] private TankHealth _tankHealth;
         [Space(20)]
-        [SerializeField] private TankRecoil _tankRecoil;
+        [SerializeField] private TankShootAnimation _tankShootAnimation;
+        [Space(20)]
+        [SerializeField] private TankSpawnAnimation _tankSpawnAnimation;
         [Space(20)]
         [SerializeField] private GameObject _tankHatchOpened;
         [SerializeField] private GameObject _tankHatchLocked;
 
+        private AudioPlayer _audioPlayer;
         private CompositeDisposable _disposables = new();
         private DecorationData _decalData;
         private DecorationData _patternData;
@@ -57,8 +61,9 @@ namespace Assets.Source.Scripts.Upgrades
             Level = tankData.Level;
             Name = tankData.Name;
             _tankState = tankState;
+            _audioPlayer = audioPlayer;
             _tankHealth.Initialize(tankData.Health);
-            _tankRecoil.Initialize(tankData, audioPlayer, _firePoint, typeHeroSpawn);
+            _tankShootAnimation.Initialize(tankData, audioPlayer, _firePoint, typeHeroSpawn);
             UpdateDecal(decal);
             UpdatePattern(pattern);
             CreateHero(heroData, typeHeroSpawn);
@@ -89,9 +94,9 @@ namespace Assets.Source.Scripts.Upgrades
             }
         }
 
-        public void ShootingByMerge()
+        public void SetMergeAnimation()
         {
-            _tankRecoil.SetFire();
+            _tankSpawnAnimation.SetSpawnAnimation(_tankShootAnimation, _audioPlayer);
         }
 
         private void AddListeners()
@@ -158,7 +163,7 @@ namespace Assets.Source.Scripts.Upgrades
             if (patternData.Texture != null)
                 material.color = Color.white;
             else
-                material.color = _defaultMaterial;
+                material.color = _defaultMaterials[_tankState.Id];
 
             material.mainTexture = patternData.Texture;
         }

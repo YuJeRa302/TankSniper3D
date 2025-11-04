@@ -47,15 +47,15 @@ MonoBehaviour:
     _level: 1
     _isOpened: 0
     _isEquipped: 0
-    _decalId: 1
-    _patternId: 1
+    _decalId: 0
+    _patternId: 0
     _heroId: 1
   - _id: 1
     _level: 2
     _isOpened: 0
     _isEquipped: 0
-    _decalId: 1
-    _patternId: 1
+    _decalId: 0
+    _patternId: 0
     _heroId: 1
   - _id: 2
     _level: 3

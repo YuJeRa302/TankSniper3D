@@ -78,6 +78,16 @@ namespace Assets.Source.Scripts.Models
             return false;
         }
 
+        public bool TryCreateMainTank()
+        {
+            var state = _persistentDataService.PlayerProgress.TankService.GetStateByLevel(CurrentMainTankLevel);
+
+            if (state.IsOpened == true)
+                return false;
+            else
+                return true;
+        }
+
         public GridTankState GetGridTankStateByIndex(int index)
         {
             return _persistentDataService.PlayerProgress.GridService.GetGridTankStateByIndex(index);
@@ -95,7 +105,7 @@ namespace Assets.Source.Scripts.Models
 
         public TankState GetTankStateByData(TankData tankData)
         {
-            return _persistentDataService.PlayerProgress.TankService.GetState(tankData);
+            return _persistentDataService.PlayerProgress.TankService.GetStateByData(tankData);
         }
 
         public GridTankState CreateGridTankState(GridTankData gridTankData)

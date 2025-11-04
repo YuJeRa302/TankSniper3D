@@ -493,7 +493,7 @@ Transform:
   m_GameObject: {fileID: 7408158376165898213}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0.55, z: 0}
   m_LocalScale: {x: 0.0045, y: 0.0045, z: 0.0045}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -648,7 +648,8 @@ GameObject:
   - component: {fileID: 6426009825016629781}
   - component: {fileID: 7654416845016585674}
   - component: {fileID: 1894491938355530933}
-  - component: {fileID: 4071550696536352342}
+  - component: {fileID: 3875495017924984245}
+  - component: {fileID: 4964151037989663287}
   m_Layer: 0
   m_Name: Tank(Level4)
   m_TagString: Untagged
@@ -706,6 +707,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f53cb61c4afd144ebf0d900c67f605f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _defaultMaterials:
+  - {r: 0.3529412, g: 0.59607846, b: 0.83137256, a: 1}
+  - {r: 0.60784316, g: 0.5411765, b: 0.3647059, a: 1}
+  - {r: 0.43529412, g: 0.57254905, b: 0.3529412, a: 1}
+  - {r: 0.27450982, g: 0.42352942, b: 0.70980394, a: 1}
+  - {r: 0.6431373, g: 0.6392157, b: 0.69411767, a: 1}
+  - {r: 0.7176471, g: 0.54509807, b: 0.36862746, a: 1}
+  - {r: 0.27450982, g: 0.42352942, b: 0.70980394, a: 1}
+  - {r: 0.5803922, g: 0.49019608, b: 0.8117647, a: 1}
   _decals:
   - {fileID: 4212645757945878352}
   - {fileID: 6655555342411646198}
@@ -716,7 +726,8 @@ MonoBehaviour:
   _turretTransform: {fileID: 6063911453543297803}
   _firePoint: {fileID: 6933390469973823403}
   _tankHealth: {fileID: 1894491938355530933}
-  _tankRecoil: {fileID: 4071550696536352342}
+  _tankShootAnimation: {fileID: 3875495017924984245}
+  _tankSpawnAnimation: {fileID: 4964151037989663287}
   _tankHatchOpened: {fileID: 2044274201773996725}
   _tankHatchLocked: {fileID: 5865920876561168293}
 --- !u!114 &1894491938355530933
@@ -731,7 +742,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8c6543766c8bff46bed0048f7391367, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4071550696536352342
+--- !u!114 &3875495017924984245
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -740,7 +751,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8350834376130707141}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02d534e0d40664b45a0d82795aa24059, type: 3}
+  m_Script: {fileID: 11500000, guid: f835dbedec9ede844aea67556c10bf4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _gunPoints:
@@ -749,6 +760,23 @@ MonoBehaviour:
   recoilDistance: 0.3
   recoilDuration: 0.08
   returnDuration: 0.12
+--- !u!114 &4964151037989663287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8350834376130707141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f51a9eaa5e9ee42478049acccc00b8f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spawnHeight: 2
+  _fallDuration: 0.4
+  _tweenAnimationDuration: 0.3
+  _tweenAnimationScaler: 0.7
+  _smokeEffectPrefab: {fileID: 5409849233223914225, guid: 17cc1625f56e01046b3f9cb62d69b0a7, type: 3}
 --- !u!1 &8883952665122364512
 GameObject:
   m_ObjectHideFlags: 0

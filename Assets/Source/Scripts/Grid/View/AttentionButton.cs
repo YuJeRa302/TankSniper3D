@@ -1,43 +1,42 @@
 using DG.Tweening;
-using System.Collections;
 using UnityEngine;
 
 namespace Assets.Source.Scripts.Grid
 {
     public class AttentionButton : MonoBehaviour
     {
+        private readonly int _valueForLoopTween = -1;
         private readonly float _durationAnimation = 2f;
         private readonly float _endScaleValue = 1f;
         private readonly Vector3 _vectorScale = new(0.7f, 0.7f, 0.7f);
 
-        private Coroutine _animationCoroutine;
+        private Tween _tween;
 
         private void OnEnable()
         {
-            if (_animationCoroutine != null)
-                StopCoroutine(_animationCoroutine);
-
-            _animationCoroutine = StartCoroutine(SetAnimation());
+            StartPulse();
         }
 
         private void OnDisable()
         {
-            if (_animationCoroutine != null)
-                StopCoroutine(_animationCoroutine);
+            StopPulse();
         }
 
-        private IEnumerator SetAnimation()
+        private void StartPulse()
         {
-            while (true)
-            {
-                transform.localScale = _vectorScale;
+            transform.localScale = _vectorScale;
 
-                transform.DOScale(_endScaleValue, _durationAnimation)
-                    .SetEase(Ease.OutBounce)
-                    .SetLink(gameObject);
+            _tween = transform
+                .DOScale(_endScaleValue, _durationAnimation)
+                .SetEase(Ease.InOutSine)
+                .SetLoops(_valueForLoopTween, LoopType.Yoyo)
+                .SetLink(gameObject);
+        }
 
-                yield return new WaitForSeconds(_durationAnimation);
-            }
+        private void StopPulse()
+        {
+            if (_tween != null && _tween.IsActive())
+                _tween.Kill();
         }
     }
 }

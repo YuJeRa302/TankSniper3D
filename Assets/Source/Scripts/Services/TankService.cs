@@ -32,7 +32,21 @@ namespace Assets.Source.Scripts.Services
             return null;
         }
 
-        public TankState GetState(TankData tankData)
+        public TankState GetStateByLevel(int level)
+        {
+            if (_tankStates != null)
+            {
+                foreach (TankState tankState in _tankStates)
+                {
+                    if (tankState.Level == level)
+                        return tankState;
+                }
+            }
+
+            return null;
+        }
+
+        public TankState GetStateByData(TankData tankData)
         {
             TankState tankState = FindState(tankData.Id);
 

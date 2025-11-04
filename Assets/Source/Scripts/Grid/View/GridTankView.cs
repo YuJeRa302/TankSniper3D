@@ -2,6 +2,7 @@ using Assets.Source.Game.Scripts.States;
 using Assets.Source.Scripts.ScriptableObjects;
 using DG.Tweening;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,11 +10,16 @@ namespace Assets.Source.Scripts.Grid
 {
     public class GridTankView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
     {
+        private readonly string _materialName = "Main";
         private readonly float _tweenAnimationDuration = 1f;
         private readonly float _tweenAnimationScaler = 1.2f;
         private readonly float _delay = 0.25f;
         private readonly float _timeToMove = 0.5f;
 
+        [SerializeField] private Color[] _defaultMaterials;
+        [Space(20)]
+        [SerializeField] private List<MeshRenderer> _tankMaterials;
+        [Space(20)]
         [SerializeField] private GridTankLevelView _itemLevelView;
 
         private float _elapsedTime = 0f;
@@ -32,6 +38,7 @@ namespace Assets.Source.Scripts.Grid
             _gridTankState = gridTankState;
             Level = gridTankData.Level;
             _itemLevelView.SetLevelValue(Level);
+            UpdateTankColor(gridTankData);
 
             if (isCreateByLoad == false)
                 AnimateGridTank();
@@ -167,6 +174,21 @@ namespace Assets.Source.Scripts.Grid
             }
 
             return null;
+        }
+
+        private void UpdateTankColor(GridTankData gridTankData)
+        {
+            if (_tankMaterials.Count > 0)
+            {
+                foreach (var meshRenderer in _tankMaterials)
+                {
+                    foreach (var material in meshRenderer.materials)
+                    {
+                        if (material.name.Contains(_materialName))
+                            material.color = _defaultMaterials[gridTankData.Id];
+                    }
+                }
+            }
         }
 
         private Vector3 CalculateWorldPosition(GridTankView gridItem, PointerEventData eventData)

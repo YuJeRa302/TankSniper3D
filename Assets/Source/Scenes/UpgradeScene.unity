@@ -1394,6 +1394,7 @@ MonoBehaviour:
   _sfxAudioSource: {fileID: 1343300555}
   _createTankAudioClip: {fileID: 8300000, guid: a76b32836dc7cc44aa9a52f0694ee199, type: 3}
   _mergeTankAudioClip: {fileID: 8300000, guid: 715780c44280b5a478739a8d5c7221ce, type: 3}
+  _tankSpawnAudioClip: {fileID: 8300000, guid: dbc17452b5c57c74381e22f45a9e5b2e, type: 3}
   _ambientAudioClip: {fileID: 0}
 --- !u!114 &315450531
 MonoBehaviour:
@@ -2674,7 +2675,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &551575216
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4183,8 +4184,8 @@ Transform:
   m_GameObject: {fileID: 869736006}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.059, y: -0.523, z: -0.168}
-  m_LocalScale: {x: 2.3, y: 2.3, z: 2.3}
+  m_LocalPosition: {x: -0.06, y: -0.523, z: -0.1}
+  m_LocalScale: {x: 2.4, y: 2.4, z: 2.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2000599330}

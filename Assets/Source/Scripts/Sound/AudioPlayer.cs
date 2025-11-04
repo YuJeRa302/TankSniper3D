@@ -9,9 +9,15 @@ namespace Assets.Source.Scripts.Sound
         [Space(20)]
         [SerializeField] private AudioClip _createTankAudioClip;
         [SerializeField] private AudioClip _mergeTankAudioClip;
+        [SerializeField] private AudioClip _tankSpawnAudioClip;
         [SerializeField] private AudioClip _ambientAudioClip;
 
         public AudioSource SfxAudioSource => _sfxAudioSource;
+
+        public void PlaySpawnTankAudio()
+        {
+            _sfxAudioSource.PlayOneShot(_tankSpawnAudioClip);
+        }
 
         public void PlayCharacterAudio(AudioClip audioClip)
         {
