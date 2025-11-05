@@ -21,12 +21,17 @@ MonoBehaviour:
   _health: 450
   _gunsNumber: 2
   _name: "\u0417\u0435\u043D\u0438\u0442"
-  _projectileData: {fileID: 11400000, guid: 2bf47ec373d0d14488ad1703f634c7dc, type: 2}
+  _projectileData: {fileID: 11400000, guid: 38ed637a32499394da02d3971f5ca9e3, type: 2}
   _shootingStrategy:
     rid: 8893800123105542146
+  _animationShootingStrategy:
+    rid: 8893800146420367369
   references:
     version: 2
     RefIds:
     - rid: 8893800123105542146
       type: {class: LaserShootingStrategy, ns: Assets.Source.Scripts.ShootingStrategy, asm: Assembly-CSharp}
+      data: 
+    - rid: 8893800146420367369
+      type: {class: BounceLaserAnimationShootingStrategy, ns: Assets.Source.Scripts.AnimationShootingStrategy, asm: Assembly-CSharp}
       data: 

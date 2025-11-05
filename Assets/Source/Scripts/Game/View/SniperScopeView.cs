@@ -34,7 +34,10 @@ namespace Assets.Source.Scripts.Game
         private Button _sniperScopeButton;
         private bool _isAiming = false;
         private bool _isReloading = false;
+        private int _currentAmmo;
+        private int _maxAmmo;
         private CompositeDisposable _disposables = new();
+        private Camera _sniperCamera;
 
         private void OnDestroy()
         {
@@ -44,8 +47,11 @@ namespace Assets.Source.Scripts.Game
         public void Initialize(List<Enemy> enemies, Button sniperScopeButton)
         {
             gameObject.SetActive(false);
+            _sniperCamera = Camera.main;
             _sniperCrosshairView.Initialize(enemies);
             _sniperScopeButton = sniperScopeButton;
+            _maxAmmo = _bulletImages.Count;
+            _currentAmmo = _maxAmmo;
             AddListeners();
             Fill();
         }
@@ -57,10 +63,21 @@ namespace Assets.Source.Scripts.Game
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            if (!_isAiming)
+            if (!_isAiming || _isReloading)
                 return;
 
-            StartCoroutine(WaitEndingAiming());
+            StartCoroutine(CameraShake(_sniperCamera.transform, 0.15f, 0.25f));
+
+            // Вызываем выстрел
+            Message.Publish(new M_EndAiming());
+
+            // Проверяем, остались ли патроны
+            if (_currentAmmo <= 1)
+            {
+                StartCoroutine(HandleOutOfAmmo());
+            }
+
+            _isAiming = false;
         }
 
         private void AddListeners()
@@ -229,6 +246,34 @@ namespace Assets.Source.Scripts.Game
             Message.Publish(new M_EndAiming());
             yield return new WaitForSeconds(_endAimingDelay);
             EndAiming();
+        }
+
+        private IEnumerator HandleOutOfAmmo()
+        {
+            // Небольшая задержка для эффекта выстрела
+            yield return new WaitForSeconds(0.2f);
+
+            // Закрываем прицел и начинаем перезарядку
+            EndAiming();
+        }
+
+        private IEnumerator CameraShake(Transform camTransform, float duration, float magnitude)
+        {
+            Vector3 originalPos = camTransform.localPosition;
+            float elapsed = 0.0f;
+
+            while (elapsed < duration)
+            {
+                float x = Random.Range(-1f, 1f) * magnitude;
+                float y = Random.Range(-1f, 1f) * magnitude;
+
+                camTransform.localPosition = originalPos + new Vector3(x, y, 0);
+
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            camTransform.localPosition = originalPos;
         }
     }
 }

@@ -6150,6 +6150,7 @@ MonoBehaviour:
   _sfxAudioSource: {fileID: 1881934647}
   _createTankAudioClip: {fileID: 0}
   _mergeTankAudioClip: {fileID: 0}
+  _tankSpawnAudioClip: {fileID: 0}
   _ambientAudioClip: {fileID: 0}
 --- !u!1 &604968377
 GameObject:

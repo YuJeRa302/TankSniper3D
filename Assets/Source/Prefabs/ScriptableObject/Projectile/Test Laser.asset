@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c8437857bac9a6845bcdf22d2077950f, type: 3}
-  m_Name: Player Laser
+  m_Name: Test Laser
   m_EditorClassIdentifier: 
   _speed: 70
   _damage: 50
-  _projectileCount: 1
+  _projectileCount: 4
   _reloadTime: 3
-  _lifeTime: 0.5
+  _lifeTime: 10
   _spread: 0
-  _muzzleFlash: {fileID: 526634086781229154, guid: 56bd02ec41c72724b94d79436fafb019, type: 3}
+  _muzzleFlash: {fileID: 6315308680167821059, guid: 6c157b0efa161ea4ab06a61516d84bb5, type: 3}
   _hitEffect: {fileID: 6243008750506336172, guid: e1c3a45cff8670740b2c121447c5c30c, type: 3}
   _fireSound: {fileID: 8300000, guid: 960dbb205eebd514fa6e41187b3caf38, type: 3}
   _hitSound: {fileID: 8300000, guid: 235db7e7f6d982140a4a5ac56629e519, type: 3}
-  _baseProjectile: {fileID: 1987559397670400515, guid: 51f23a20c4439414dac49e138b1e6186, type: 3}
+  _baseProjectile: {fileID: 7281378295371182999, guid: fc2618a8db8efa74fb6c415aeb087574, type: 3}

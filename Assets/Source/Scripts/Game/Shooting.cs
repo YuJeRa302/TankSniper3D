@@ -49,6 +49,8 @@ namespace Assets.Source.Scripts.Game
                 _shootingStrategy.Construct(_tankData.ProjectileData, audioPlayer, _twoGunsShotPoints);
             else
                 _shootingStrategy.Construct(_tankData.ProjectileData, audioPlayer, _oneGunShotPoint);
+
+            _shotsCount = _shotsForSuper;
         }
 
         private void OnShooting(bool isAiming)

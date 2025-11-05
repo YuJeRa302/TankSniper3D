@@ -13,6 +13,7 @@ namespace Assets.Source.Scripts.ShootingStrategy
     {
         private readonly float _delayBetweenShots = 0.4f;
 
+        private int _currentBarrelIndex = 0;
         private ICoroutineRunner _coroutineRunner;
         private ProjectileData _projectileData;
         private List<Transform> _firePoints;
@@ -34,7 +35,6 @@ namespace Assets.Source.Scripts.ShootingStrategy
         {
             _coroutineRunner.StartCoroutine(CreateEnergyProjectile(_firePoints));
             CreateVibration(isVibroEnabled);
-
         }
 
         public override void ShootWithoutEnergy(bool isVibroEnabled)
@@ -45,21 +45,24 @@ namespace Assets.Source.Scripts.ShootingStrategy
 
         private IEnumerator CreateProjectile(List<Transform> firePoints)
         {
+            Transform firePoint = firePoints[_currentBarrelIndex];
+
             Vector3 aimPoint = GetAimPoint();
+            Vector3 direction = (aimPoint - firePoint.position).normalized;
+            Quaternion rotation = Quaternion.LookRotation(direction);
 
-            foreach (Transform firePoint in firePoints)
-            {
-                Vector3 direction = (aimPoint - firePoint.position).normalized;
-                Quaternion rotation = Quaternion.LookRotation(direction);
+            var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, firePoint.position, rotation);
+            projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
 
-                var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, firePoint.position, rotation);
-                projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
+            CreateFireSound(_projectileData, _audioPlayer, _firePoints);
+            CreateMuzzleFlash(_projectileData, _firePoints);
 
-                CreateFireSound(_projectileData, _audioPlayer, _firePoints);
-                CreateMuzzleFlash(_projectileData, _firePoints);
+            _currentBarrelIndex++;
 
-                yield return new WaitForSeconds(_delayBetweenShots);
-            }
+            if (_currentBarrelIndex >= firePoints.Count)
+                _currentBarrelIndex = 0;
+
+            yield return null;
         }
 
         private IEnumerator CreateEnergyProjectile(List<Transform> firePoints)
@@ -67,13 +70,21 @@ namespace Assets.Source.Scripts.ShootingStrategy
             Vector3 aimPoint = GetAimPoint();
             Transform target = FindTargetInCrosshair(FindTargetradius);
 
-            foreach (Transform firePoint in firePoints)
+            int totalProjectiles = _projectileData.ProjectileCount;
+            int shotPointsCount = firePoints.Count;
+            int shotIndex = 0;
+
+            for (int i = 0; i < totalProjectiles; i++)
             {
+                var point = firePoints[shotIndex % shotPointsCount];
+
+                shotIndex++;
+
                 Vector3 finalTargetPoint = target != null ? target.position : aimPoint;
-                Vector3 direction = (finalTargetPoint - firePoint.position).normalized;
+                Vector3 direction = (finalTargetPoint - point.position).normalized;
                 Quaternion rotation = Quaternion.LookRotation(direction);
 
-                var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, firePoint.position, rotation);
+                var projectile = GameObject.Instantiate(_projectileData.EnergyProjectile, point.position, rotation);
                 projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
 
                 CreateFireSound(_projectileData, _audioPlayer, _firePoints);

@@ -17,6 +17,7 @@ namespace Assets.Source.Scripts.ScriptableObjects
         [SerializeField] private AudioClip _fireSound;
         [SerializeField] private AudioClip _hitSound;
         [SerializeField] private BaseProjectile _baseProjectile;
+        [SerializeField] private BaseProjectile _energyProjectile;
 
         public int Speed => _speed;
         public int Damage => _damage;
@@ -25,6 +26,7 @@ namespace Assets.Source.Scripts.ScriptableObjects
         public float LifeTime => _lifeTime;
         public float Spread => _spread;
         public BaseProjectile BaseProjectile => _baseProjectile;
+        public BaseProjectile EnergyProjectile => _energyProjectile;
         public ParticleSystem MuzzleFlash => _muzzleFlash;
         public ParticleSystem HitEffect => _hitEffect;
         public AudioClip FireSound => _fireSound;

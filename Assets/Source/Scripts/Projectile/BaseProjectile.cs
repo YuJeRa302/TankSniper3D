@@ -20,14 +20,6 @@ namespace Assets.Source.Scripts.Projectile
         public abstract AudioSource AudioSource { get; }
         public abstract int Damage { get; }
 
-        private void Start()
-        {
-            if (_rigidbody != null)
-                _rigidbody.velocity = transform.forward * _speed;
-
-            Destroy(gameObject, _lifeTime);
-        }
-
         private void OnTriggerEnter(Collider collider)
         {
             Hit(collider);
@@ -37,6 +29,8 @@ namespace Assets.Source.Scripts.Projectile
         {
             _speed = projectileData.Speed;
             _lifeTime = projectileData.LifeTime;
+            SetVelocityValue();
+            Destroy(gameObject, _lifeTime);
         }
 
         public void SetToTarget(Transform target)
@@ -95,19 +89,29 @@ namespace Assets.Source.Scripts.Projectile
 
         protected virtual void CreateSoundEffect(ProjectileData projectileData, Vector3 hitPoint)
         {
-            if (projectileData.HitSound == null)
+            if (projectileData == null)
                 return;
 
-            AudioSource.PlayOneShot(projectileData.HitSound);
+            if (projectileData.HitSound != null)
+                AudioSource.PlayOneShot(projectileData.HitSound);
         }
 
         protected void CreateHitEffect(ProjectileData projectileData, Vector3 hitPoint)
         {
-            if (projectileData.HitEffect == null)
+            if (projectileData == null)
                 return;
 
-            var effect = Instantiate(projectileData.HitEffect, hitPoint, Quaternion.identity);
-            Destroy(effect.gameObject, _lifeTimeHitEffect);
+            if (projectileData.HitEffect != null)
+            {
+                var effect = Instantiate(projectileData.HitEffect, hitPoint, Quaternion.identity);
+                Destroy(effect.gameObject, _lifeTimeHitEffect);
+            }
+        }
+
+        private void SetVelocityValue()
+        {
+            if (_rigidbody != null)
+                _rigidbody.velocity = transform.forward * _speed;
         }
     }
 }

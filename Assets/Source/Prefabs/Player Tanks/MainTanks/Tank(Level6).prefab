@@ -201,6 +201,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f835dbedec9ede844aea67556c10bf4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _prefabProjectile: {fileID: 59923466940495365, guid: 66d609de565974c4ea280de6773502b0, type: 3}
   _gunPoints:
   - {fileID: 6266876824100551111}
   recoilDistance: 0.3

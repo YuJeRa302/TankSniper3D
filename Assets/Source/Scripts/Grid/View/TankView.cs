@@ -63,7 +63,7 @@ namespace Assets.Source.Scripts.Upgrades
             _tankState = tankState;
             _audioPlayer = audioPlayer;
             _tankHealth.Initialize(tankData.Health);
-            _tankShootAnimation.Initialize(tankData, audioPlayer, _firePoint, typeHeroSpawn);
+            _tankShootAnimation.Initialize(tankData, audioPlayer, typeHeroSpawn);
             UpdateDecal(decal);
             UpdatePattern(pattern);
             CreateHero(heroData, typeHeroSpawn);

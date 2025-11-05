@@ -15,6 +15,7 @@ namespace Assets.Source.Scripts.Upgrades
         private readonly float _shotInterval = 4.0f;
         private readonly Ease _recoilEase = Ease.OutQuad;
 
+        [SerializeField] private GameObject _prefabProjectile;
         [SerializeField] private List<Transform> _gunPoints;
         [Header("Recoil settings")]
         [SerializeField] private float recoilDistance = 0.3f;
@@ -22,15 +23,15 @@ namespace Assets.Source.Scripts.Upgrades
         [SerializeField] private float returnDuration = 0.12f;
 
         private TypeHeroSpawn _typeHeroSpawn;
-        private IShootingStrategy _shootingStrategy;
+        private IAnimationShootingStrategy _animationShootingStrategy;
         private bool _isFiring = false;
         private Coroutine _fireCoroutine;
 
-        public void Initialize(TankData tankData, AudioPlayer audioPlayer, Transform firePoint, TypeHeroSpawn typeHeroSpawn)
+        public void Initialize(TankData tankData, AudioPlayer audioPlayer, TypeHeroSpawn typeHeroSpawn)
         {
-            _shootingStrategy = tankData.ShootingStrategy;
             _typeHeroSpawn = typeHeroSpawn;
-            _shootingStrategy.Construct(tankData.ProjectileData, audioPlayer, _gunPoints);
+            _animationShootingStrategy = tankData.AnimationShootingStrategy;
+            _animationShootingStrategy.Construct(tankData.ProjectileData, audioPlayer, _gunPoints);
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -53,7 +54,7 @@ namespace Assets.Source.Scripts.Upgrades
         private IEnumerator Firing()
         {
             _isFiring = true;
-            _shootingStrategy.ShootWithEnergy(false);
+            _animationShootingStrategy.Shoot();
             DoRecoil();
 
             yield return new WaitForSeconds(_shotInterval);

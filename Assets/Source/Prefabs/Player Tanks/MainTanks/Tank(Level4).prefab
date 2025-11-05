@@ -754,6 +754,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f835dbedec9ede844aea67556c10bf4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _prefabProjectile: {fileID: 2903255447097771883, guid: 09c861aeb2d10cf41925ddaca25ba644, type: 3}
   _gunPoints:
   - {fileID: 6933390469973823403}
   - {fileID: 3224902316242585273}

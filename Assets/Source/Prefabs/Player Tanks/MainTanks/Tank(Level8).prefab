@@ -149,6 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f835dbedec9ede844aea67556c10bf4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _prefabProjectile: {fileID: 59923466940495365, guid: 922ca6616daf1be40b85ca23dfe27314, type: 3}
   _gunPoints:
   - {fileID: 4243190231864045514}
   - {fileID: 6401889573981460047}

@@ -16,6 +16,7 @@ namespace Assets.Source.Scripts.ScriptableObjects
         [SerializeField] private string _name;
         [SerializeField] private ProjectileData _projectileData;
         [SerializeReference] private IShootingStrategy _shootingStrategy;
+        [SerializeReference] private IAnimationShootingStrategy _animationShootingStrategy;
 
         public int StarCount => _starCount;
         public int Level => _level;
@@ -26,5 +27,6 @@ namespace Assets.Source.Scripts.ScriptableObjects
         public Sprite Icon => _icon;
         public ProjectileData ProjectileData => _projectileData;
         public IShootingStrategy ShootingStrategy => _shootingStrategy;
+        public IAnimationShootingStrategy AnimationShootingStrategy => _animationShootingStrategy;
     }
 }
