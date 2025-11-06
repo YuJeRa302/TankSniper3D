@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5cf2345421a609f449675269e7379c4d, type: 3}
-  m_Name: Level
+  m_Name: Level 1
   m_EditorClassIdentifier: 
   _id: 0
   _nameScene: Forest_Default_1
   _specialSprite: {fileID: 0}
   _typeLevel: 0
+  _typeReward: 0

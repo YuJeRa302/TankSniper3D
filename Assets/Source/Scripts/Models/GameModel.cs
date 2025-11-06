@@ -1,5 +1,6 @@
 using Assets.Source.Game.Scripts.Enemy;
 using Assets.Source.Game.Scripts.States;
+using Assets.Source.Scripts.Saves;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
 using UniRx;
@@ -16,25 +17,21 @@ namespace Assets.Source.Scripts.Models
         private readonly GameData _gameData;
         private readonly UpgradeConfig _upgradeConfig;
         private readonly PersistentDataService _persistentDataService;
+        private readonly SaveAndLoader _saveAndLoader;
 
-        private LevelData _levelData;
         private int _currentDroneCount;
         private int _moneyEarned = 0;
 
-        //public GameModel(PersistentDataService persistentDataService, UpgradeConfig upgradeConfig, GameData gameData, LevelData levelData) // для теста
-        //{
-        //    _persistentDataService = persistentDataService;
-        //    _upgradeConfig = upgradeConfig;
-        //    _gameData = gameData;
-        //    _currentDroneCount = _maxDroneCount;
-        //    _levelData = levelData;
-        //}
-
-        public GameModel(PersistentDataService persistentDataService, UpgradeConfig upgradeConfig, GameData gameData)
+        public GameModel(
+            PersistentDataService persistentDataService,
+            UpgradeConfig upgradeConfig,
+            GameData gameData,
+            SaveAndLoader saveAndLoader)
         {
             _persistentDataService = persistentDataService;
             _upgradeConfig = upgradeConfig;
             _gameData = gameData;
+            _saveAndLoader = saveAndLoader;
             _currentDroneCount = _maxDroneCount;
         }
 
@@ -50,11 +47,6 @@ namespace Assets.Source.Scripts.Models
 
             return false;
         }
-
-        //public LevelData GetLevelData() // для тестирования
-        //{
-        //    return _levelData;
-        //}
 
         public LevelData GetLevelData()
         {
@@ -142,7 +134,13 @@ namespace Assets.Source.Scripts.Models
         {
             IsGameEnded = true;
             _persistentDataService.PlayerProgress.CurrentLevel++;
-            _persistentDataService.PlayerProgress.CurrentLevelId++;
+
+            _saveAndLoader.SaveGameProgerss(
+                _moneyEarned,
+                _persistentDataService.PlayerProgress.CurrentBiomId,
+                _persistentDataService.PlayerProgress.CurrentLevelId,
+                true);
+
             SceneManager.LoadScene(_upgradeSceneName);
         }
     }

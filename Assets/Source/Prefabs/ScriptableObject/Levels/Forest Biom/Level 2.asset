@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cf2345421a609f449675269e7379c4d, type: 3}
   m_Name: Level 2
   m_EditorClassIdentifier: 
-  _id: 2
-  _nameScene: 
-  _specialSprite: {fileID: 0}
-  _typeLevel: 0
+  _id: 1
+  _nameScene: Forest_Default_2
+  _specialSprite: {fileID: 21300000, guid: 327c1691fb634ce43a150f04fefd5504, type: 3}
+  _typeLevel: 2
+  _typeReward: 0

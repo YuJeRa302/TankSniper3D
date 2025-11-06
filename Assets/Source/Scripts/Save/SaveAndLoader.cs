@@ -90,11 +90,11 @@ namespace Assets.Source.Scripts.Saves
             PlayerPrefs.Save();
         }
 
-        public void SaveGameProgerss(int score, int money, int biomId, int levelId, bool isComplete)
+        public void SaveGameProgerss(int money, int biomId, int levelId, bool isComplete)
         {
-            _persistentDataService.PlayerProgress.Score += score;
             _persistentDataService.PlayerProgress.Money += money;
             _persistentDataService.PlayerProgress.LevelService.AddLevelState(levelId, biomId, isComplete);
+            _persistentDataService.PlayerProgress.CurrentLevelId++;
             SaveData();
         }
 

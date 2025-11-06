@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace Assets.Source.Scripts.Game
 {
-    public class CrosshairButtonView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+    public class CrosshairButtonView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
     {
         private readonly int _loopTweenValue = -1;
         private readonly float _stopDurationValue = 0.3f;
@@ -23,6 +23,7 @@ namespace Assets.Source.Scripts.Game
 
         public event Action<PointerEventData> ButtonPressed;
         public event Action<PointerEventData> ButtonReleased;
+        public event Action<PointerEventData> ButtonDragged;
 
         private void OnDestroy()
         {
@@ -43,6 +44,11 @@ namespace Assets.Source.Scripts.Game
         public void OnPointerDown(PointerEventData eventData)
         {
             ButtonPressed?.Invoke(eventData);
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            ButtonDragged?.Invoke(eventData);
         }
 
         public void OnPointerUp(PointerEventData eventData)

@@ -36,11 +36,12 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private List<EndGameTabView> _endGameTabViews;
         [Space(20)]
         [SerializeField] private Transform _scopeParent;
-        //[SerializeField] private LevelData _levelData; //для тестирования дрона
         [Space(20)]
         [SerializeField] private Button _sniperScopeButton;
         [Space(20)]
         [SerializeField] private AudioPlayer _audioPlayer;
+        [Space(20)]
+        [SerializeField] private MotionChanger _motionChanger;
 
         private GamePauseService _gamePauseService;
         private SaveAndLoader _saveAndLoader;
@@ -106,7 +107,7 @@ namespace Assets.Source.Scripts.Game
 
         private void Construct()
         {
-            _gameModel = new GameModel(_persistentDataService, _upgradeConfig, _gameData);
+            _gameModel = new GameModel(_persistentDataService, _upgradeConfig, _gameData, _saveAndLoader);
             _levelModel = new LevelModel(_persistentDataService, _gameData.BiomsConfig);
             _settingsModel = new SettingsModel(_persistentDataService, _audioPlayer, _gamePauseService);
             _levelData = _gameModel.GetLevelData();
@@ -117,6 +118,8 @@ namespace Assets.Source.Scripts.Game
                 InitEnemy(_gamePanelView.TransformPlayerDrone);
             else
                 InitEnemy(_gamePanelView.TransformPlayerTank);
+
+            _motionChanger.Initialize(_enemies);
         }
 
         private void LoadData()
@@ -124,7 +127,6 @@ namespace Assets.Source.Scripts.Game
             _persistentDataService = new PersistentDataService();
             _saveAndLoader = new(_persistentDataService, _configData);
             _saveAndLoader.LoadDataFromPrefs();
-            //_saveAndLoader.LoadDataFromConfig(); для тестирования дрона
         }
 
         private void InitEndGameTabs()

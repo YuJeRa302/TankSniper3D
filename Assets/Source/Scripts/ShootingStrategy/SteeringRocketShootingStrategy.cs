@@ -13,14 +13,14 @@ namespace Assets.Source.Scripts.ShootingStrategy
 {
     public class SteeringRocketShootingStrategy : BaseShootingStrategy
     {
+        private readonly float _targetHeightOffset = 1.0f;
         private readonly float _radius = 150f;
         private readonly float _multiplier = 100f;
         private readonly int _leftPosition = -1;
         private readonly int _rightPosition = 1;
         private readonly int _divider = 2;
-        private readonly float _sideOffset = 0.5f;
         private readonly float _delayBetweenShots = 0.4f;
-
+        private readonly float _sideOffset = 0.5f;
         private int _currentBarrelIndex = 0;
         private ICoroutineRunner _coroutineRunner;
         private ProjectileData _projectileData;
@@ -80,9 +80,6 @@ namespace Assets.Source.Scripts.ShootingStrategy
 
         private IEnumerator CreateEnergyProjectile(List<Transform> firePoints)
         {
-            // Смещение по высоте, чтобы ракета летела в центр врага
-            float targetHeightOffset = 1.0f; // можно настроить под размер врага
-
             List<Transform> availableTargets = FindClosestTargets(_projectileData.EnergyProjectileCount);
             bool startRight = (_currentBarrelIndex % _divider == 0);
             int baseSign = startRight ? _rightPosition : _leftPosition;
@@ -103,20 +100,13 @@ namespace Assets.Source.Scripts.ShootingStrategy
                 Vector3 finalTargetPoint;
 
                 if (target != null)
-                {
-                    // Добавляем смещение по Y к цели
-                    finalTargetPoint = target.position + Vector3.up * targetHeightOffset;
-                }
+                    finalTargetPoint = target.position + Vector3.up * _targetHeightOffset;
                 else
-                {
                     finalTargetPoint = GetAimPoint();
-                }
 
-                // Вычисляем направление после смещения
                 Vector3 direction = (finalTargetPoint - spawnPos).normalized;
                 Quaternion rotation = Quaternion.LookRotation(direction);
 
-                // Создаём снаряд
                 var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, spawnPos, rotation);
                 projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
 
@@ -128,42 +118,6 @@ namespace Assets.Source.Scripts.ShootingStrategy
 
             _currentBarrelIndex++;
         }
-
-        //private IEnumerator CreateEnergyProjectile(List<Transform> firePoints)
-        //{
-        //    List<Transform> availableTargets = FindClosestTargets(_projectileData.EnergyProjectileCount);
-        //    bool startRight = (_currentBarrelIndex % _divider == 0);
-        //    int baseSign = startRight ? _rightPosition : _leftPosition;
-
-        //    for (int i = 0; i < _projectileData.EnergyProjectileCount; i++)
-        //    {
-        //        Transform point = firePoints[i % firePoints.Count];
-        //        Vector3 spawnPos = point.position;
-        //        Vector3 rightDir = point.right;
-
-        //        int sign = (i == 0) ? baseSign : -baseSign;
-        //        spawnPos += rightDir * (_sideOffset * sign);
-
-        //        Transform target = (i < availableTargets.Count)
-        //            ? availableTargets[i]
-        //            : (availableTargets.Count > 0 ? availableTargets[0] : null);
-
-        //        Vector3 finalTargetPoint = target != null ? target.position : GetAimPoint();
-
-        //        Vector3 direction = (finalTargetPoint - spawnPos).normalized;
-        //        Quaternion rotation = Quaternion.LookRotation(direction);
-
-        //        var projectile = GameObject.Instantiate(_projectileData.BaseProjectile, spawnPos, rotation);
-        //        projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
-
-        //        CreateFireSound(_projectileData, _audioPlayer, firePoints);
-        //        CreateMuzzleFlash(_projectileData, firePoints);
-
-        //        yield return new WaitForSeconds(_delayBetweenShots);
-        //    }
-
-        //    _currentBarrelIndex++;
-        //}
 
         private List<Transform> FindClosestTargets(int maxTargets)
         {

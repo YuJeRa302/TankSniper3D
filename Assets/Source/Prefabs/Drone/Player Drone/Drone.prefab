@@ -3144,7 +3144,6 @@ GameObject:
   - component: {fileID: 4298727927137169056}
   - component: {fileID: 272564715847281911}
   - component: {fileID: 4612081754905242533}
-  - component: {fileID: 6154160107062341645}
   - component: {fileID: -6906110502239272926}
   m_Layer: 0
   m_Name: Drone
@@ -3195,6 +3194,7 @@ MonoBehaviour:
   _damage: 100
   _health: 250
   _droneHealth: {fileID: 4612081754905242533}
+  _findEnemyRange: 1.4
 --- !u!114 &4612081754905242533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3207,27 +3207,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3434d7240a2be9a499ff5b81c8b1172e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!135 &6154160107062341645
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9208423865304491136}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &-6906110502239272926
 Rigidbody:
   m_ObjectHideFlags: 0

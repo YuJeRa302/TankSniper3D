@@ -83,12 +83,11 @@ namespace Assets.Source.Scripts.Upgrades
         {
             _persistentDataService = new PersistentDataService();
             _saveAndLoader = new(_persistentDataService, _configData);
-            _saveAndLoader.LoadDataFromConfig();
 
-            //if (_saveAndLoader.TryGetGameData())
-            //    _saveAndLoader.LoadDataFromCloud();
-            //else
-            //    _saveAndLoader.LoadDataFromConfig();
+            if (_saveAndLoader.TryGetGameData())
+                _saveAndLoader.LoadDataFromCloud();
+            else
+                _saveAndLoader.LoadDataFromConfig();
         }
     }
 }

@@ -1,13 +1,10 @@
 using Assets.Source.Game.Scripts.Enemy;
-using UniRx;
 using UnityEngine;
 
 namespace Assets.Source.Scripts.Game
 {
     public class DroneView : MonoBehaviour
     {
-        public static readonly IMessageBroker Message = new MessageBroker();
-
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private AudioClip _hitSound;
         [SerializeField] private AudioClip _moveSound;
@@ -24,66 +21,88 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private int _health = 250;
         [Space(20)]
         [SerializeField] private DroneHealth _droneHealth;
+        [Space(20)]
+        [SerializeField] private float _findEnemyRange = 2f;
+
+        private Collider[] _foundEnemyColliders = new Collider[50];
 
         public Camera DroneCamera => _droneCamera;
         public float DroneSpeed => _droneSpeed;
         public float RotationSpeed => _rotationSpeed;
 
-        private void OnDestroy()
+        private void OnDrawGizmosSelected()
         {
-            CreateHitEffect(transform.position);
-            CreateSoundEffect(transform.position);
-            Message.Publish(new M_DeathDrone());
+            Gizmos.DrawWireSphere(transform.position, _findEnemyRange);
         }
 
-        private void OnCollisionEnter(Collision collision)
+        private void Update()
         {
-            if (collision.collider.TryGetComponent(out IndestructibleObject indestructibleObject))
+            CheckForCollisions();
+        }
+
+        private void CheckForCollisions()
+        {
+            int count = Physics.OverlapSphereNonAlloc(
+                transform.position,
+                _findEnemyRange,
+                _foundEnemyColliders
+            );
+
+            for (int i = 0; i < count; i++)
             {
-                ContactPoint contact = collision.GetContact(0);
-                Vector3 hitPoint = contact.point;
-                CreateHitEffect(hitPoint);
-                CreateSoundEffect(hitPoint);
-                UpdateDroneEntities();
-                Destroy(gameObject);
+                Collider collider = _foundEnemyColliders[i];
+
+                if (collider == null)
+                    continue;
+
+                Vector3 hitPoint = collider.ClosestPoint(transform.position);
+
+                if (collider.TryGetComponent(out DamageableArea damageableArea))
+                {
+                    OnEnemyHit(damageableArea, hitPoint);
+                    return;
+                }
+
+                if (collider.TryGetComponent(out DestructibleObjectView destructible))
+                {
+                    destructible.ApplyDamage(hitPoint);
+                    OnDestroyDrone(hitPoint);
+                    return;
+                }
+
+                if (collider.TryGetComponent(out IndestructibleObject indestructible))
+                {
+                    OnDestroyDrone(hitPoint);
+                    return;
+                }
             }
         }
 
-        private void OnTriggerEnter(Collider collider)
+        private void OnEnemyHit(DamageableArea damageableArea, Vector3 hitPoint)
         {
-            Vector3 hitPoint = transform.position;
+            damageableArea.ApplyDamage(_damage, hitPoint);
+            OnDestroyDrone(hitPoint);
+        }
 
-            if (collider.TryGetComponent(out DestructibleObjectView destructibleObjectView))
-            {
-                hitPoint = collider.ClosestPoint(transform.position);
-                destructibleObjectView.ApplyDamage(hitPoint);
-            }
-
-            if (collider.TryGetComponent(out DamageableArea damageableArea))
-            {
-                hitPoint = collider.ClosestPoint(transform.position);
-                damageableArea.ApplyDamage(_damage, hitPoint);
-            }
-
+        private void OnDestroyDrone(Vector3 hitPoint)
+        {
             CreateHitEffect(hitPoint);
             CreateSoundEffect(hitPoint);
             UpdateDroneEntities();
             Destroy(gameObject);
         }
 
-        public void Initialize()
-        {
-            _droneHealth.Initialize(_health);
-        }
-
         private void UpdateDroneEntities()
         {
-            _droneHealth.TakeDamage(_health);
+            _droneHealth.TakeDamage();
             _droneCamera.enabled = false;
         }
 
         private void CreateHitEffect(Vector3 hitPoint)
         {
+            if (gameObject == null)
+                return;
+
             if (_exploudParticle == null)
                 return;
 

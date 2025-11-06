@@ -9,6 +9,7 @@ namespace Assets.Source.Scripts.ShootingStrategy
 {
     public class BaseShootingStrategy : IShootingStrategy
     {
+        private readonly float _cameraOffset = 0.5f;
         private readonly float _maxDistance = 100f;
         private readonly float _radius = 150f;
         private readonly float _multiplier = 100f;
@@ -104,7 +105,7 @@ namespace Assets.Source.Scripts.ShootingStrategy
         public Vector3 GetAimPoint()
         {
             Camera camera = Camera.main;
-            Ray ray = camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+            Ray ray = camera.ViewportPointToRay(new Vector3(_cameraOffset, _cameraOffset, 0f));
 
             if (Physics.Raycast(ray, out RaycastHit hit, _maxDistance))
                 return hit.point;

@@ -5,6 +5,7 @@ namespace Assets.Source.Game.Scripts.Enemy
     public class DamageableArea : MonoBehaviour
     {
         [SerializeField] private int _damageMultiplier;
+        [SerializeField] private BoxCollider _boxCollider;
         [SerializeField] private DetachablePart _detachablePart;
 
         private EnemyHealth _enemyHealth;
@@ -24,6 +25,12 @@ namespace Assets.Source.Game.Scripts.Enemy
 
             if (_detachablePart != null)
                 _detachablePart.Detach(hitPoint);
+        }
+
+        public void DestroyCollider()
+        {
+            if (_boxCollider != null)
+                _boxCollider.enabled = false;
         }
     }
 }

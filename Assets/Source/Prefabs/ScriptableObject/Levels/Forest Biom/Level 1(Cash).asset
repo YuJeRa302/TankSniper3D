@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cf2345421a609f449675269e7379c4d, type: 3}
   m_Name: Level 1(Cash)
   m_EditorClassIdentifier: 
-  _id: 1
+  _id: 6
   _nameScene: 
   _specialSprite: {fileID: 21300000, guid: ed8528f8cf69dc044bcce3b1913090ad, type: 3}
   _typeLevel: 1
+  _typeReward: 0

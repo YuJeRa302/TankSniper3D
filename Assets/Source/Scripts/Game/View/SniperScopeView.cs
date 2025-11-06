@@ -37,7 +37,6 @@ namespace Assets.Source.Scripts.Game
 
         private Image _crosshairButtonImage;
         private CrosshairButtonView _crosshairButton;
-        private Button _sniperScopeButton;
         private bool _isAiming = false;
         private bool _isReloading = false;
         private bool _isFirstShoot = true;
@@ -55,9 +54,8 @@ namespace Assets.Source.Scripts.Game
             gameObject.SetActive(false);
             _sniperCamera = Camera.main;
             _sniperCrosshairView.Initialize(enemies);
-            _sniperScopeButton = sniperScopeButton;
-            _crosshairButton = _sniperScopeButton.GetComponent<CrosshairButtonView>();
-            _crosshairButtonImage = _sniperScopeButton.GetComponent<Image>();
+            _crosshairButton = sniperScopeButton.GetComponent<CrosshairButtonView>();
+            _crosshairButtonImage = sniperScopeButton.GetComponent<Image>();
             AddListeners();
             Fill();
         }
@@ -114,6 +112,11 @@ namespace Assets.Source.Scripts.Game
 
             MessageBroker.Default
                 .Receive<M_FinishGame>()
+                .Subscribe(m => OnCloseButtonClicked())
+                .AddTo(_disposables);
+
+            MotionChanger.Message
+                .Receive<M_SlowMotionStarted>()
                 .Subscribe(m => OnCloseButtonClicked())
                 .AddTo(_disposables);
         }

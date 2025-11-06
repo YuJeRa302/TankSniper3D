@@ -43,7 +43,7 @@ namespace Assets.Source.Scripts.Projectile
             transform.position += transform.forward * _speed * Time.deltaTime;
         }
 
-        protected void OnCollisionEnter(Collision collision)
+        protected virtual void OnCollisionEnter(Collision collision)
         {
             Vector3 hitPoint = transform.position;
 

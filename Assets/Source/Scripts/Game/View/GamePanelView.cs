@@ -31,6 +31,7 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private LevelsView _levelsView;
         [SerializeField] private GameObject _moneyBar;
         [Space(20)]
+        [SerializeField] private Transform _droneSpawnPoint;
         [SerializeField] private Transform _startPosition;
         [SerializeField] private Transform _firePosition;
         [SerializeField] private Transform _mainTankParent;
@@ -105,11 +106,6 @@ namespace Assets.Source.Scripts.Game
                 .Subscribe(m => OnDroneDeath())
                 .AddTo(_disposables);
 
-            DroneView.Message
-                .Receive<M_DeathDrone>()
-                .Subscribe(m => OnDroneDeath())
-                .AddTo(_disposables);
-
             TankHealth.Message
                 .Receive<M_DeathTank>()
                 .Subscribe(m => OnTankDeath())
@@ -133,6 +129,8 @@ namespace Assets.Source.Scripts.Game
 
             if (_gameModel.GetLevelData().TypeLevel == TypeLevel.Drone)
             {
+                _gameModel.RecoverDroneCount();
+
                 if (_gameModel.TryCreateDrone())
                     CreateDrone();
             }
@@ -200,12 +198,11 @@ namespace Assets.Source.Scripts.Game
         private void CreateDrone()
         {
             var drone = Instantiate(_gameData.DroneViewPrefab, new Vector3(
-                _firePosition.position.x,
-                _firePosition.position.y + _gameData.DroneViewPrefab.transform.position.y,
-                _firePosition.position.z),
+                _droneSpawnPoint.position.x,
+                _droneSpawnPoint.position.y + _gameData.DroneViewPrefab.transform.position.y,
+                _droneSpawnPoint.position.z),
                 Quaternion.identity);
 
-            drone.Initialize();
             Message.Publish(new M_CreateDrone(drone));
         }
 

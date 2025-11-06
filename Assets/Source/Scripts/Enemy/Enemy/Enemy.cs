@@ -111,6 +111,9 @@ namespace Assets.Source.Game.Scripts.Enemy
 
         public void DestroyParts()
         {
+            foreach (var damageableArea in _damageableAreas)
+                damageableArea.DestroyCollider();
+
             var maincollider = gameObject.GetComponent<BoxCollider>();
 
             if (maincollider != null)
