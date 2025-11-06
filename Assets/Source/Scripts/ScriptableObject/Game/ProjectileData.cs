@@ -9,6 +9,7 @@ namespace Assets.Source.Scripts.ScriptableObjects
         [SerializeField] private int _speed;
         [SerializeField] private int _damage;
         [SerializeField] private int _projectileCount;
+        [SerializeField] private int _energyProjectileCount;
         [SerializeField] private float _reloadTime;
         [SerializeField] private float _lifeTime;
         [SerializeField] private float _spread;
@@ -22,6 +23,7 @@ namespace Assets.Source.Scripts.ScriptableObjects
         public int Speed => _speed;
         public int Damage => _damage;
         public int ProjectileCount => _projectileCount;
+        public int EnergyProjectileCount => _energyProjectileCount;
         public float ReloadTime => _reloadTime;
         public float LifeTime => _lifeTime;
         public float Spread => _spread;

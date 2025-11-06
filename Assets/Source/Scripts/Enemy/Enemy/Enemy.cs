@@ -67,7 +67,7 @@ namespace Assets.Source.Game.Scripts.Enemy
             _gameModel = gameModel;
 
             Shooting.Message
-                .Receive<M_Shoot>()
+                .Receive<M_SuperShoot>()
                 .Subscribe(m => OnPlayerFirstShot())
                 .AddTo(_disposables);
 

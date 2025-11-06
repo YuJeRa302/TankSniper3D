@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 70
   _damage: 50
-  _projectileCount: 4
+  _projectileCount: 1
+  _energyProjectileCount: 4
   _reloadTime: 3
   _lifeTime: 0.5
   _spread: 0

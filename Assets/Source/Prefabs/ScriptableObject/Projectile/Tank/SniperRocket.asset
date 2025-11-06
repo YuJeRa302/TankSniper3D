@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8437857bac9a6845bcdf22d2077950f, type: 3}
   m_Name: SniperRocket
   m_EditorClassIdentifier: 
-  _speed: 70
+  _speed: 65
   _damage: 70
-  _projectileCount: 2
+  _projectileCount: 1
+  _energyProjectileCount: 2
   _reloadTime: 3
   _lifeTime: 5
   _spread: 0
@@ -23,4 +24,4 @@ MonoBehaviour:
   _fireSound: {fileID: 8300000, guid: 865e88b4b32e7c44298c5cffdb7a80af, type: 3}
   _hitSound: {fileID: 8300000, guid: 235db7e7f6d982140a4a5ac56629e519, type: 3}
   _baseProjectile: {fileID: 343521335498521136, guid: 09c861aeb2d10cf41925ddaca25ba644, type: 3}
-  _energyProjectile: {fileID: 343521335498521136, guid: 09c861aeb2d10cf41925ddaca25ba644, type: 3}
+  _energyProjectile: {fileID: 3580167177794198332, guid: a40cee965d2c4474b9ff737ac67a4d6f, type: 3}

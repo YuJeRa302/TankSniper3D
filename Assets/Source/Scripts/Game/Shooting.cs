@@ -13,6 +13,7 @@ namespace Assets.Source.Scripts.Game
         public static readonly IMessageBroker Message = new MessageBroker();
 
         private readonly int _maxProjectileCount = 4;
+        private readonly int _shotsForSuper = 3;
 
         [SerializeField] private List<Transform> _oneGunShotPoint;
         [SerializeField] private List<Transform> _twoGunsShotPoints;
@@ -22,7 +23,6 @@ namespace Assets.Source.Scripts.Game
         private GameModel _gameModel;
         private TankData _tankData;
         private int _shotsCount = 0;
-        private int _shotsForSuper = 3;
         private int _currentProjectileCount;
 
         private void Awake()
@@ -44,13 +44,12 @@ namespace Assets.Source.Scripts.Game
             _tankData = _gameModel.GetTankData();
             _currentProjectileCount = _maxProjectileCount;
             _shootingStrategy = _tankData.ShootingStrategy;
+            _shotsCount = _shotsForSuper;
 
             if (_tankData.GunsNumber > 1)
                 _shootingStrategy.Construct(_tankData.ProjectileData, audioPlayer, _twoGunsShotPoints);
             else
                 _shootingStrategy.Construct(_tankData.ProjectileData, audioPlayer, _oneGunShotPoint);
-
-            _shotsCount = _shotsForSuper;
         }
 
         private void OnShooting(bool isAiming)

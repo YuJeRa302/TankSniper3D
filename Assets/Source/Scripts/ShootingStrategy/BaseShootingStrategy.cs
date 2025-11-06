@@ -10,7 +10,7 @@ namespace Assets.Source.Scripts.ShootingStrategy
     public class BaseShootingStrategy : IShootingStrategy
     {
         private readonly float _maxDistance = 100f;
-        private readonly float _radius = 200f;
+        private readonly float _radius = 150f;
         private readonly float _multiplier = 100f;
         private readonly int _sizeDivider = 2;
 

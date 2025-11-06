@@ -15,6 +15,7 @@ MonoBehaviour:
   _speed: 85
   _damage: 50
   _projectileCount: 1
+  _energyProjectileCount: 1
   _reloadTime: 3
   _lifeTime: 5
   _spread: 0

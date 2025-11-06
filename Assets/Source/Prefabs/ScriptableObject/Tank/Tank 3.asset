@@ -23,15 +23,15 @@ MonoBehaviour:
   _name: "\u0423\u0440\u0430\u0433\u0430\u043D"
   _projectileData: {fileID: 11400000, guid: 35ec3f3c04e993342a2fc1b724194b41, type: 2}
   _shootingStrategy:
-    rid: 8893800087664197633
+    rid: 8893800171729059840
   _animationShootingStrategy:
     rid: 8893800146420367366
   references:
     version: 2
     RefIds:
-    - rid: 8893800087664197633
-      type: {class: SimpleShootingStrategy, ns: Assets.Source.Scripts.ShootingStrategy, asm: Assembly-CSharp}
-      data: 
     - rid: 8893800146420367366
       type: {class: SimpleAnimationShootingStrategy, ns: Assets.Source.Scripts.AnimationShootingStrategy, asm: Assembly-CSharp}
+      data: 
+    - rid: 8893800171729059840
+      type: {class: SimpleRocketShootingStrategy, ns: Assets.Source.Scripts.ShootingStrategy, asm: Assembly-CSharp}
       data: 

@@ -10,10 +10,16 @@ using UnityEngine.SceneManagement;
 
 namespace Assets.Source.Scripts.ShootingStrategy
 {
-    public class SimpleShootingStrategy : BaseShootingStrategy
+    public class SimpleRocketShootingStrategy : BaseShootingStrategy
     {
+        private readonly int _leftPosition = -1;
+        private readonly int _rightPosition = 1;
+        private readonly int _oppositePosition = 2;
+        private readonly int _divider = 2;
+        private readonly float _sideOffset = 0.5f;
         private readonly float _delayBetweenShots = 0.4f;
 
+        private int _currentBarrelIndex = 0;
         private ICoroutineRunner _coroutineRunner;
         private ProjectileData _projectileData;
         private List<Transform> _firePoints;
@@ -33,11 +39,7 @@ namespace Assets.Source.Scripts.ShootingStrategy
 
         public override void ShootWithEnergy(bool isVibroEnabled)
         {
-            _coroutineRunner.StartCoroutine(CreateProjectile(
-                _firePoints,
-                _projectileData.EnergyProjectileCount,
-                _projectileData.EnergyProjectile));
-
+            _coroutineRunner.StartCoroutine(CreateEnergyProjectile(_firePoints));
             CreateVibration(isVibroEnabled);
         }
 
@@ -72,6 +74,37 @@ namespace Assets.Source.Scripts.ShootingStrategy
 
                 yield return new WaitForSeconds(_delayBetweenShots);
             }
+        }
+
+        private IEnumerator CreateEnergyProjectile(List<Transform> firePoints)
+        {
+            Vector3 aimPoint = GetAimPoint();
+            bool startRight = (_currentBarrelIndex % _divider == 0);
+            int baseSign = startRight ? _rightPosition : _leftPosition;
+
+            for (int i = 0; i < _projectileData.EnergyProjectileCount; i++)
+            {
+                Transform point = firePoints[i % firePoints.Count];
+                Vector3 spawnPos = point.position;
+                Vector3 rightDir = point.right;
+
+                int positionIndex = i % _projectileData.EnergyProjectileCount;
+                int sign = (positionIndex == 0) ? baseSign : (positionIndex == _oppositePosition ? -baseSign : 0);
+                spawnPos += rightDir * (_sideOffset * sign);
+
+                Vector3 direction = (aimPoint - spawnPos).normalized;
+                Quaternion rotation = Quaternion.LookRotation(direction);
+
+                var projectile = GameObject.Instantiate(_projectileData.EnergyProjectile, spawnPos, rotation);
+                projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
+
+                CreateFireSound(_projectileData, _audioPlayer, firePoints);
+                CreateMuzzleFlash(_projectileData, firePoints);
+
+                yield return new WaitForSeconds(_delayBetweenShots);
+            }
+
+            _currentBarrelIndex++;
         }
     }
 }

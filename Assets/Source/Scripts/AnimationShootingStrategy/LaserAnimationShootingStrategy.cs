@@ -58,7 +58,7 @@ namespace Assets.Source.Scripts.AnimationShootingStrategy
 
         private IEnumerator SpawnLasersRoutine()
         {
-            int totalProjectiles = _projectileData.ProjectileCount;
+            int totalProjectiles = _projectileData.EnergyProjectileCount;
             int shotPointsCount = _shotPoints.Count;
             int shotIndex = 0;
 
@@ -150,7 +150,7 @@ namespace Assets.Source.Scripts.AnimationShootingStrategy
                     if (trailRenderer != null)
                         DoFadeTrail(trailRenderer, laser);
                     else
-                        GameObject.Destroy(laser);
+                        GameObject.Destroy(laser.gameObject);
                 }));
         }
 

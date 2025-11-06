@@ -14,7 +14,6 @@ namespace Assets.Source.Scripts.AnimationShootingStrategy
     {
         private readonly float _delayBetweenRockets = 0.15f;
 
-        private int _projectileCount;
         private AudioPlayer _audioPlayer;
         private ProjectileData _projectileData;
         private List<Transform> _shotPoints = new();
@@ -26,7 +25,6 @@ namespace Assets.Source.Scripts.AnimationShootingStrategy
             List<Transform> shotPoints)
         {
             _projectileData = projectileData;
-            _projectileCount = _projectileData.ProjectileCount;
             _audioPlayer = audioPlayer;
             _shotPoints = shotPoints;
             var container = SceneManager.GetActiveScene().GetSceneContainer();
@@ -69,13 +67,11 @@ namespace Assets.Source.Scripts.AnimationShootingStrategy
 
         private IEnumerator SpawnProjectile()
         {
-            int totalProjectiles = _projectileCount;
-            int shotPointsCount = _shotPoints.Count;
             int shotIndex = 0;
 
-            for (int i = 0; i < totalProjectiles; i++)
+            for (int i = 0; i < _projectileData.EnergyProjectileCount; i++)
             {
-                var point = _shotPoints[shotIndex % shotPointsCount];
+                var point = _shotPoints[shotIndex % _shotPoints.Count];
 
                 if (point != null)
                     CreateProjectile(point);

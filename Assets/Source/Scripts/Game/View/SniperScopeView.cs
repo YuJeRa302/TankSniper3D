@@ -14,7 +14,11 @@ namespace Assets.Source.Scripts.Game
     {
         public static readonly IMessageBroker Message = new MessageBroker();
 
-        private readonly float _endAimingDelay = 0.6f;
+        private readonly float _durationCameraShake = 0.15f;
+        private readonly float _minValueCameraShake = -1f;
+        private readonly float _maxValueCameraShake = 1f;
+        private readonly float _magnitudeCameraShake = 0.25f;
+        private readonly float _waitSniperScopeValue = 1f;
 
         [SerializeField] private List<Image> _bulletImages;
         [SerializeField] private List<Image> _energyImages;
@@ -31,13 +35,15 @@ namespace Assets.Source.Scripts.Game
         [Space(20)]
         [SerializeField] private SniperCrosshairView _sniperCrosshairView;
 
+        private Image _crosshairButtonImage;
+        private CrosshairButtonView _crosshairButton;
         private Button _sniperScopeButton;
         private bool _isAiming = false;
         private bool _isReloading = false;
-        private int _currentAmmo;
-        private int _maxAmmo;
+        private bool _isFirstShoot = true;
         private CompositeDisposable _disposables = new();
         private Camera _sniperCamera;
+        private Coroutine _waitOutOfAmmoCoroutine;
 
         private void OnDestroy()
         {
@@ -50,8 +56,8 @@ namespace Assets.Source.Scripts.Game
             _sniperCamera = Camera.main;
             _sniperCrosshairView.Initialize(enemies);
             _sniperScopeButton = sniperScopeButton;
-            _maxAmmo = _bulletImages.Count;
-            _currentAmmo = _maxAmmo;
+            _crosshairButton = _sniperScopeButton.GetComponent<CrosshairButtonView>();
+            _crosshairButtonImage = _sniperScopeButton.GetComponent<Image>();
             AddListeners();
             Fill();
         }
@@ -59,6 +65,9 @@ namespace Assets.Source.Scripts.Game
         public void OnPointerDown(PointerEventData eventData)
         {
             _isAiming = true;
+
+            if (_waitOutOfAmmoCoroutine != null)
+                StopCoroutine(_waitOutOfAmmoCoroutine);
         }
 
         public void OnPointerUp(PointerEventData eventData)
@@ -66,23 +75,16 @@ namespace Assets.Source.Scripts.Game
             if (!_isAiming || _isReloading)
                 return;
 
-            StartCoroutine(CameraShake(_sniperCamera.transform, 0.15f, 0.25f));
-
-            // Вызываем выстрел
+            StartCoroutine(CameraShake(_sniperCamera.transform, _durationCameraShake, _magnitudeCameraShake));
+            UpdateHandleOutOfAmmo();
             Message.Publish(new M_EndAiming());
-
-            // Проверяем, остались ли патроны
-            if (_currentAmmo <= 1)
-            {
-                StartCoroutine(HandleOutOfAmmo());
-            }
-
             _isAiming = false;
         }
 
         private void AddListeners()
         {
-            _sniperScopeButton.onClick.AddListener(OnSniperScopeButtonClicked);
+            _crosshairButton.ButtonPressed += OnSniperScopeButtonPressed;
+            _crosshairButton.ButtonReleased += OnSniperScopeButtonReleased;
             _closeScope.onClick.AddListener(OnCloseButtonClicked);
 
             Shooting.Message
@@ -118,13 +120,14 @@ namespace Assets.Source.Scripts.Game
 
         private void Fill()
         {
-            RefillImages(_energyImages, _noneEnergySprite, _energySprite);
+            RefillImages(_energyImages, _energySprite, _noneEnergySprite);
             RefillAmmo();
         }
 
         private void RemoveListeners()
         {
-            _sniperScopeButton.onClick.RemoveListener(OnSniperScopeButtonClicked);
+            _crosshairButton.ButtonPressed -= OnSniperScopeButtonPressed;
+            _crosshairButton.ButtonReleased -= OnSniperScopeButtonReleased;
             _closeScope.onClick.RemoveListener(OnCloseButtonClicked);
             _disposables?.Dispose();
         }
@@ -187,7 +190,7 @@ namespace Assets.Source.Scripts.Game
             _isAiming = false;
 
             if (_isReloading == false)
-                _sniperScopeButton.gameObject.SetActive(true);
+                ChangeSniperScopeImageState(true);
 
             gameObject.SetActive(false);
             _sniperCrosshairView.gameObject.SetActive(false);
@@ -199,30 +202,37 @@ namespace Assets.Source.Scripts.Game
             _sniperCrosshairView.gameObject.SetActive(false);
             gameObject.SetActive(false);
             _isAiming = false;
-            _sniperScopeButton.gameObject.SetActive(true);
+            ChangeSniperScopeImageState(true);
             Message.Publish(new M_CloseScope());
         }
 
-        private void OnSniperScopeButtonClicked()
+        private void OnSniperScopeButtonPressed(PointerEventData pointerEventData)
         {
-            _sniperScopeButton.gameObject.SetActive(false);
+            OnPointerDown(pointerEventData);
+            ChangeSniperScopeImageState(false);
             _sniperCrosshairView.gameObject.SetActive(true);
             gameObject.SetActive(true);
             Message.Publish(new M_Aiming(true));
-            SetSuperShotView();
+
+            if (_isFirstShoot == false)
+                SetSuperShotView();
+        }
+
+        private void OnSniperScopeButtonReleased(PointerEventData pointerEventData)
+        {
+            OnPointerUp(pointerEventData);
         }
 
         private void OnReloading()
         {
             _isReloading = true;
-            _sniperScopeButton.gameObject.SetActive(false);
-            _isAiming = false;
+            EndAiming();
         }
 
         private void OnReloaded()
         {
             _isReloading = false;
-            _sniperScopeButton.gameObject.SetActive(true);
+            ChangeSniperScopeImageState(true);
             RefillAmmo();
         }
 
@@ -239,21 +249,29 @@ namespace Assets.Source.Scripts.Game
             DecreaseAmmoCount();
             IncreaseEnergyCount();
             _sniperCrosshairView.SetPlayerShoot();
+            _isFirstShoot = false;
         }
 
-        private IEnumerator WaitEndingAiming()
+        private void UpdateHandleOutOfAmmo()
         {
-            Message.Publish(new M_EndAiming());
-            yield return new WaitForSeconds(_endAimingDelay);
-            EndAiming();
+            if (_waitOutOfAmmoCoroutine != null)
+                StopCoroutine(_waitOutOfAmmoCoroutine);
+
+            _waitOutOfAmmoCoroutine = StartCoroutine(WaitOutOfAmmo());
         }
 
-        private IEnumerator HandleOutOfAmmo()
+        private void ChangeSniperScopeImageState(bool state)
         {
-            // Небольшая задержка для эффекта выстрела
-            yield return new WaitForSeconds(0.2f);
+            if (_crosshairButtonImage == null)
+                return;
 
-            // Закрываем прицел и начинаем перезарядку
+            _crosshairButtonImage.raycastTarget = state;
+            _crosshairButtonImage.enabled = state;
+        }
+
+        private IEnumerator WaitOutOfAmmo()
+        {
+            yield return new WaitForSeconds(_waitSniperScopeValue);
             EndAiming();
         }
 
@@ -264,8 +282,8 @@ namespace Assets.Source.Scripts.Game
 
             while (elapsed < duration)
             {
-                float x = Random.Range(-1f, 1f) * magnitude;
-                float y = Random.Range(-1f, 1f) * magnitude;
+                float x = Random.Range(_minValueCameraShake, _maxValueCameraShake) * magnitude;
+                float y = Random.Range(_minValueCameraShake, _maxValueCameraShake) * magnitude;
 
                 camTransform.localPosition = originalPos + new Vector3(x, y, 0);
 

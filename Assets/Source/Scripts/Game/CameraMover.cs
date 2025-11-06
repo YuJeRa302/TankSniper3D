@@ -8,6 +8,8 @@ namespace Assets.Source.Scripts.Game
 {
     public class CameraMover : MonoBehaviour
     {
+        private readonly float _defaultXRotation = 9;
+        private readonly float _defaultYRotation = 24;
         private readonly float _cameraZoomMultiplier = 1f;
 
         [SerializeField] private Camera _mainCamera;
@@ -43,11 +45,8 @@ namespace Assets.Source.Scripts.Game
         public void Initialize(GamePauseService gamePauseService)
         {
             _gamePauseService = gamePauseService;
-            Vector3 angles = _mainCamera.transform.eulerAngles;
-            _rotationY = angles.y;
-            _rotationX = angles.x;
-
             AddListeners();
+            ResetCameraToDefault();
 
             if (_rotationCoroutine != null)
                 StopCoroutine(_rotationCoroutine);
@@ -207,6 +206,17 @@ namespace Assets.Source.Scripts.Game
                 .DORotateQuaternion(targetRotation, _cameraZoomMultiplier / _zoomSpeed)
                 .SetEase(Ease.InOutSine)
                 .SetLink(_mainCamera.gameObject);
+        }
+
+        private void ResetCameraToDefault()
+        {
+            _rotationX = _defaultXRotation;
+            _rotationY = _defaultYRotation;
+
+            Quaternion rotation = Quaternion.Euler(_rotationX, _rotationY, 0);
+            Vector3 position = _target.position - rotation * Vector3.forward * _distanceFromTarget;
+
+            _mainCamera.transform.SetPositionAndRotation(position, rotation);
         }
 
         private float NormalizeAngle(float angle)
