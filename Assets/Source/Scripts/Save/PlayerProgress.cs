@@ -8,6 +8,7 @@ namespace Assets.Source.Scripts.Saves
         public int Score;
         public int CurrentGridTankCost;
         public int CountBuyedGridTank;
+        public int CurrentGridTankLevel;
         public float AmbientVolume;
         public float SfxVolume;
         public bool IsMuted;

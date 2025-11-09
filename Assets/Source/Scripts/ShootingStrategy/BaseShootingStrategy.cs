@@ -1,19 +1,27 @@
 using Assets.Source.Game.Scripts.Enemy;
+using Assets.Source.Scripts.Game;
+using Assets.Source.Scripts.Projectile;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
 using Assets.Source.Scripts.Sound;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 namespace Assets.Source.Scripts.ShootingStrategy
 {
     public class BaseShootingStrategy : IShootingStrategy
     {
+        public static readonly IMessageBroker Message = new MessageBroker();
+
         private readonly float _cameraOffset = 0.5f;
         private readonly float _maxDistance = 100f;
         private readonly float _radius = 150f;
         private readonly float _multiplier = 100f;
         private readonly int _sizeDivider = 2;
+
+        private DamageableArea _criticalTarget;
+        private bool _isCriticalShot = false;
 
         public float FindTargetradius { get; private set; } = 300f;
 
@@ -30,6 +38,18 @@ namespace Assets.Source.Scripts.ShootingStrategy
 
         public virtual void ShootWithoutEnergy(bool isVibroEnabled)
         {
+        }
+
+        public void SetCriticalShot(DamageableArea damageableArea)
+        {
+            _isCriticalShot = true;
+            _criticalTarget = damageableArea;
+        }
+
+        public void GetCriticalProjectile(BaseProjectile baseProjectile)
+        {
+            if (_isCriticalShot)
+                Message.Publish(new M_GetCriticalProjectile(baseProjectile, _criticalTarget));
         }
 
         public void CreateVibration(bool isVibroEnabled)

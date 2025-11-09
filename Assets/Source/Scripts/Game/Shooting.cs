@@ -1,3 +1,4 @@
+using Assets.Source.Game.Scripts.Enemy;
 using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Services;
@@ -31,6 +32,11 @@ namespace Assets.Source.Scripts.Game
                 .Receive<M_EndAiming>()
                 .Subscribe(m => OnShooting(false))
                 .AddTo(_disposables);
+
+            SniperScopeView.Message
+                .Receive<M_CriticalShoot>()
+                .Subscribe(m => OnCriticalShoot(m.HitArea))
+                .AddTo(_disposables);
         }
 
         private void OnDestroy()
@@ -50,6 +56,11 @@ namespace Assets.Source.Scripts.Game
                 _shootingStrategy.Construct(_tankData.ProjectileData, audioPlayer, _twoGunsShotPoints);
             else
                 _shootingStrategy.Construct(_tankData.ProjectileData, audioPlayer, _oneGunShotPoint);
+        }
+
+        private void OnCriticalShoot(DamageableArea damageableArea)
+        {
+            _shootingStrategy.SetCriticalShot(damageableArea);
         }
 
         private void OnShooting(bool isAiming)

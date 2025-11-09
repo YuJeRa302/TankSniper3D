@@ -15,11 +15,14 @@ namespace Assets.Source.Scripts.Game
         private readonly Color _selectZone = new(1f, 0f, 0f, 130f / 255f);
         private readonly Color _deselectZone = new(1f, 0f, 0f, 0f);
 
+        [SerializeField] private float _maxDistance = 500f;
         [SerializeField] private RectTransform _crosshairBorder;
         [SerializeField] private EnemyDirectionIndicator _indicatorPrefab;
         [SerializeField] private Image[] _dangerZones;
         [SerializeField] private Image[] _superShootZones;
 
+        private Enemy _currentTargetEnemy;
+        private DamageableArea _currentTargetArea;
         private Camera _mainCamera;
         private List<Enemy> _enemies = new();
         private List<EnemyDirectionIndicator> _activeIndicators = new();
@@ -28,6 +31,9 @@ namespace Assets.Source.Scripts.Game
         private CompositeDisposable _disposables = new();
         private int[] _zoneEnemyCounts = new int[4];
         private bool _isPlayerShoot = false;
+
+        public Enemy GetCurrentTargetEnemy() => _currentTargetEnemy;
+        public DamageableArea GetTargetedDamageableArea() => _currentTargetArea;
 
         private void OnEnable()
         {
@@ -54,6 +60,27 @@ namespace Assets.Source.Scripts.Game
         private void OnDestroy()
         {
             _disposables?.Dispose();
+        }
+
+        private void Update()
+        {
+            if (_mainCamera == null)
+                return;
+
+            Ray ray = _mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+
+            if (Physics.Raycast(ray, out RaycastHit hit, _maxDistance))
+            {
+                if (hit.collider.TryGetComponent(out DamageableArea damageableArea))
+                {
+                    _currentTargetArea = damageableArea;
+                    _currentTargetEnemy = damageableArea.GetComponentInParent<Enemy>();
+                    return;
+                }
+            }
+
+            _currentTargetEnemy = null;
+            _currentTargetArea = null;
         }
 
         public void Initialize(List<Enemy> enemies)

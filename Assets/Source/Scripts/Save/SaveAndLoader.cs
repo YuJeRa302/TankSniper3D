@@ -20,11 +20,6 @@ namespace Assets.Source.Scripts.Saves
             _configData = configData;
         }
 
-        public SaveAndLoader(PersistentDataService persistentDataService)
-        {
-            _persistentDataService = persistentDataService;
-        }
-
         public bool TryGetGameData()
         {
             return YG2.saves.HasSave;
@@ -44,11 +39,12 @@ namespace Assets.Source.Scripts.Saves
             _persistentDataService.PlayerProgress.CurrentPlayerTankId = YG2.saves.CurrentPlayerTankId;
             _persistentDataService.PlayerProgress.CurrentGridTankCost = YG2.saves.CurrentGridTankCost;
             _persistentDataService.PlayerProgress.CountBuyedGridTank = YG2.saves.CountBuyedGridTank;
+            _persistentDataService.PlayerProgress.CurrentGridTankLevel = YG2.saves.CurrentGridTankLevel;
             _persistentDataService.PlayerProgress.LevelService.SetStates(YG2.saves.LevelStates);
             _persistentDataService.PlayerProgress.HeroService.SetStates(YG2.saves.HeroStates);
             _persistentDataService.PlayerProgress.TankService.SetStates(YG2.saves.TankStates);
-            _persistentDataService.PlayerProgress.DecorationService.SetStates(_configData.DecorationStates);
-            _persistentDataService.PlayerProgress.GridService.SetStates(_configData.GridTankStates);
+            _persistentDataService.PlayerProgress.DecorationService.SetStates(YG2.saves.DecorationStates);
+            _persistentDataService.PlayerProgress.GridService.SetStates(YG2.saves.GridTankStates);
         }
 
         public void LoadDataFromConfig()
@@ -65,6 +61,7 @@ namespace Assets.Source.Scripts.Saves
             _persistentDataService.PlayerProgress.CurrentLevel = _configData.CurrentLevel;
             _persistentDataService.PlayerProgress.CurrentGridTankCost = _configData.CurrentGridTankCost;
             _persistentDataService.PlayerProgress.CountBuyedGridTank = _configData.CountBuyedGridTank;
+            _persistentDataService.PlayerProgress.CurrentGridTankLevel = _configData.CurrentGridTankLevel;
             _persistentDataService.PlayerProgress.LevelService.SetStates(_configData.LevelStates);
             _persistentDataService.PlayerProgress.HeroService.SetStates(_configData.HeroStates);
             _persistentDataService.PlayerProgress.TankService.SetStates(_configData.TankStates);

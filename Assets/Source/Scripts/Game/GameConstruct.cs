@@ -95,7 +95,7 @@ namespace Assets.Source.Scripts.Game
         {
             var crosshairInstance = Instantiate(_gameData.SniperScopeView);
             crosshairInstance.transform.SetParent(_scopeParent, false);
-            crosshairInstance.Initialize(_enemies, sniperScopeButton);
+            crosshairInstance.Initialize(_enemies, sniperScopeButton, _gameModel);
         }
 
         private void CreateDroneScope(Button sniperScopeButton)

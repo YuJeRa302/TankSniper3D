@@ -67,6 +67,7 @@ namespace Assets.Source.Scripts.ShootingStrategy
                 var projectile = GameObject.Instantiate(baseProjectile, point.position, rotation);
                 projectile.Initialize(_projectileData, _audioPlayer.SfxAudioSource);
 
+                GetCriticalProjectile(projectile);
                 CreateFireSound(_projectileData, _audioPlayer, _firePoints);
                 CreateMuzzleFlash(_projectileData, _firePoints);
 

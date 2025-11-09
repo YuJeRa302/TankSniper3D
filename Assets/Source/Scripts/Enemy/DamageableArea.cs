@@ -10,6 +10,16 @@ namespace Assets.Source.Game.Scripts.Enemy
 
         private EnemyHealth _enemyHealth;
 
+        public EnemyHealth GetEnemyHealth()
+        {
+            return _enemyHealth;
+        }
+
+        public int GetDamageMultiplier()
+        {
+            return _damageMultiplier;
+        }
+
         public void Initialize(EnemyHealth enemyHealth)
         {
             _enemyHealth = enemyHealth;

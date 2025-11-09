@@ -8,11 +8,11 @@ namespace Assets.Source.Scripts.Projectile
 {
     public abstract class BaseProjectile : MonoBehaviour
     {
+        private readonly int _criticalShootSpeed = 30;
         private readonly float _lifeTimeHitEffect = 1f;
 
         [SerializeField] private Rigidbody _rigidbody;
 
-        private Transform _target;
         private int _speed;
         private float _lifeTime;
 
@@ -33,14 +33,9 @@ namespace Assets.Source.Scripts.Projectile
             Destroy(gameObject, _lifeTime);
         }
 
-        public void SetToTarget(Transform target)
+        public void SetSlowSpeed()
         {
-            _target = target;
-            Vector3 direction = (_target.position - transform.position).normalized;
-            Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.LookAt(target.position);
-            transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, _speed * Time.deltaTime);
-            transform.position += transform.forward * _speed * Time.deltaTime;
+            _speed = _criticalShootSpeed;
         }
 
         protected virtual void OnCollisionEnter(Collision collision)
@@ -65,6 +60,13 @@ namespace Assets.Source.Scripts.Projectile
                 ContactPoint contact = collision.GetContact(0);
                 hitPoint = contact.point;
                 destructibleObjectView.ApplyDamage(hitPoint);
+            }
+
+            if (collision.collider.TryGetComponent(out DestructibleBuildingView destructibleBuildingView))
+            {
+                ContactPoint contact = collision.GetContact(0);
+                hitPoint = contact.point;
+                destructibleBuildingView.ApplyDamage(hitPoint);
             }
 
             CreateHitEffect(ProjectileData, hitPoint);

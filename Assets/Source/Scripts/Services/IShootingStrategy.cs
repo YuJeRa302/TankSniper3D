@@ -1,3 +1,4 @@
+using Assets.Source.Game.Scripts.Enemy;
 using Assets.Source.Scripts.ScriptableObjects;
 using Assets.Source.Scripts.Sound;
 using System.Collections.Generic;
@@ -10,5 +11,6 @@ namespace Assets.Source.Scripts.Services
         public void Construct(ProjectileData projectileData, AudioPlayer audioPlayer, List<Transform> shotPoints);
         public void ShootWithoutEnergy(bool isVibroEnabled);
         public void ShootWithEnergy(bool isVibroEnabled);
+        public void SetCriticalShot(DamageableArea damageableArea);
     }
 }

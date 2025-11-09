@@ -9,6 +9,8 @@ using Assets.Source.Scripts.Services;
 using Assets.Source.Scripts.Sound;
 using Reflex.Core;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using YG;
 
 namespace Assets.Source.Scripts.Upgrades
@@ -32,6 +34,8 @@ namespace Assets.Source.Scripts.Upgrades
         [SerializeField] private AudioPlayer _audioPlayer;
         [Space(20)]
         [SerializeField] private BiomChanger _biomChanger;
+        [Space(20)]
+        [SerializeField] private Button _resetSaveButton;
 
         private SaveAndLoader _saveAndLoader;
         private PersistentDataService _persistentDataService;
@@ -40,9 +44,19 @@ namespace Assets.Source.Scripts.Upgrades
         private LevelModel _levelModel;
         private SettingsModel _settingsModel;
 
+        private void OnDestroy()
+        {
+            YG2.onDefaultSaves -= OnSaveReseted;
+            _resetSaveButton.onClick.RemoveListener(OnResetSaveButtonClicked);
+        }
+
         private void Awake()
         {
-            Init();
+            YG2.onDefaultSaves += OnSaveReseted;
+            _resetSaveButton.onClick.AddListener(OnResetSaveButtonClicked);
+
+            LoadData();
+            Construct();
 
             if (YG2.isGameplaying != true)
                 InitYandexGameEntities();
@@ -53,16 +67,22 @@ namespace Assets.Source.Scripts.Upgrades
             containerBuilder.AddSingleton(_coroutineRunner, typeof(ICoroutineRunner));
         }
 
+        private void OnSaveReseted()
+        {
+            _saveAndLoader.LoadDataFromConfig();
+            _saveAndLoader.SaveData();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        private void OnResetSaveButtonClicked()
+        {
+            YG2.SetDefaultSaves();
+        }
+
         private void InitYandexGameEntities()
         {
             YG2.GameReadyAPI();
             YG2.GameplayStart();
-        }
-
-        private void Init()
-        {
-            LoadData();
-            Construct();
         }
 
         private void Construct()

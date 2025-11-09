@@ -18,6 +18,7 @@ namespace Assets.Source.Scripts.ScriptableObjects
         [SerializeField] private bool _isVibro;
         [SerializeField] private int _currentGridTankCost;
         [SerializeField] private int _countBuyedGridTank;
+        [SerializeField] private int _currentGridTankLevel;
         [Space(20)]
         [SerializeField] private List<LevelState> _levelStates;
         [Space(20)]
@@ -36,6 +37,7 @@ namespace Assets.Source.Scripts.ScriptableObjects
         public int CurrentLevel => _currentLevel;
         public int CurrentGridTankCost => _currentGridTankCost;
         public int CountBuyedGridTank => _countBuyedGridTank;
+        public int CurrentGridTankLevel => _currentGridTankLevel;
         public float AmbientVolume => _ambientVolume;
         public float SfxVolumeVolume => _sfxVolumeVolume;
         public bool IsMuted => _isMuted;

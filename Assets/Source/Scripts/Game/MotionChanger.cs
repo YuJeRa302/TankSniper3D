@@ -12,6 +12,9 @@ namespace Assets.Source.Scripts.Game
     {
         public static readonly IMessageBroker Message = new MessageBroker();
 
+        private readonly float _maxValue = 1f;
+        private readonly float _multiplier = 0.02f;
+
         [SerializeField] private float _slowMotionScale = 0.25f;
         [SerializeField] private float _slowMotionDuration = 2.5f;
         [SerializeField] private float _pitchDuringSlowMo = 0.5f;
@@ -53,41 +56,34 @@ namespace Assets.Source.Scripts.Game
         private IEnumerator SlowMotionRoutine()
         {
             _isSlowMotionActive = true;
-
             Message.Publish(new M_SlowMotionStarted());
-
             Time.timeScale = _slowMotionScale;
             Time.fixedDeltaTime = 0.02f * Time.timeScale;
-            //AudioListener.pitch = _pitchDuringSlowMo;
 
             yield return new WaitForSecondsRealtime(_slowMotionDuration);
 
             yield return StartCoroutine(SmoothReturnToNormal(_returnMotion));
 
             Message.Publish(new M_SlowMotionEnded());
-
             _isSlowMotionActive = false;
         }
 
         private IEnumerator SmoothReturnToNormal(float duration)
         {
             float startScale = Time.timeScale;
-            //float startPitch = AudioListener.pitch;
             float elapsed = 0f;
 
             while (elapsed < duration)
             {
-                float t = elapsed / duration;
-                Time.timeScale = Mathf.Lerp(startScale, 1f, t);
-                //AudioListener.pitch = Mathf.Lerp(startPitch, 1f, t);
-                Time.fixedDeltaTime = 0.02f * Time.timeScale;
+                float time = elapsed / duration;
+                Time.timeScale = Mathf.Lerp(startScale, _maxValue, time);
+                Time.fixedDeltaTime = _multiplier * Time.timeScale;
                 elapsed += Time.unscaledDeltaTime;
                 yield return null;
             }
 
-            Time.timeScale = 1f;
-            //AudioListener.pitch = 1f;
-            Time.fixedDeltaTime = 0.02f;
+            Time.timeScale = _maxValue;
+            Time.fixedDeltaTime = _multiplier;
         }
     }
 }

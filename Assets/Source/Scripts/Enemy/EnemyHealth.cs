@@ -10,12 +10,14 @@ namespace Assets.Source.Game.Scripts.Enemy
 
         public ReactiveProperty<int> CurrentHealth { get; }
         public bool IsDead => _isDead.Value;
+        public int MaxHealth { get; private set; }
         public IObservable<Unit> OnDeath => _isDead.Where(dead => dead).AsUnitObservable();
 
         public EnemyHealth(Enemy enemy)
         {
             _enemy = enemy;
             CurrentHealth = new ReactiveProperty<int>(_enemy.Health);
+            MaxHealth = _enemy.Health;
         }
 
         public void TakeDamage(int damage)

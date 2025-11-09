@@ -156,6 +156,7 @@ namespace Assets.Source.Scripts.Game
             _isAiming = true;
             _freeLookCamera.enabled = false;
             _droneCamera.enabled = true;
+            _drone.DisableHover();
 
             _initialDronePosition = _drone.transform.position;
             _initialDroneRotation = _drone.transform.rotation;
@@ -210,6 +211,7 @@ namespace Assets.Source.Scripts.Game
             _rotationSpeed = droneView.RotationSpeed;
             _droneSpeed = droneView.DroneSpeed;
             _droneCamera = droneView.DroneCamera;
+            _drone.transform.forward = _freeLookCamera.transform.forward;
         }
     }
 }

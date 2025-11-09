@@ -1,4 +1,5 @@
 using Assets.Source.Game.Scripts.Enemy;
+using Assets.Source.Scripts.Models;
 using Assets.Source.Scripts.Upgrades;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace Assets.Source.Scripts.Game
     {
         public static readonly IMessageBroker Message = new MessageBroker();
 
+        private readonly int _lastEnemyValue = 1;
         private readonly float _durationCameraShake = 0.15f;
         private readonly float _minValueCameraShake = -1f;
         private readonly float _maxValueCameraShake = 1f;
@@ -35,24 +37,28 @@ namespace Assets.Source.Scripts.Game
         [Space(20)]
         [SerializeField] private SniperCrosshairView _sniperCrosshairView;
 
-        private Image _crosshairButtonImage;
-        private CrosshairButtonView _crosshairButton;
         private bool _isAiming = false;
         private bool _isReloading = false;
         private bool _isFirstShoot = true;
+        private List<Enemy> _enemies = new();
+        private Image _crosshairButtonImage;
+        private CrosshairButtonView _crosshairButton;
         private CompositeDisposable _disposables = new();
         private Camera _sniperCamera;
         private Coroutine _waitOutOfAmmoCoroutine;
+        private GameModel _gameModel;
 
         private void OnDestroy()
         {
             RemoveListeners();
         }
 
-        public void Initialize(List<Enemy> enemies, Button sniperScopeButton)
+        public void Initialize(List<Enemy> enemies, Button sniperScopeButton, GameModel gameModel)
         {
             gameObject.SetActive(false);
             _sniperCamera = Camera.main;
+            _enemies = enemies;
+            _gameModel = gameModel;
             _sniperCrosshairView.Initialize(enemies);
             _crosshairButton = sniperScopeButton.GetComponent<CrosshairButtonView>();
             _crosshairButtonImage = sniperScopeButton.GetComponent<Image>();
@@ -77,6 +83,7 @@ namespace Assets.Source.Scripts.Game
             UpdateHandleOutOfAmmo();
             Message.Publish(new M_EndAiming());
             _isAiming = false;
+            TryHandleSuperShot();
         }
 
         private void AddListeners()
@@ -119,6 +126,39 @@ namespace Assets.Source.Scripts.Game
                 .Receive<M_SlowMotionStarted>()
                 .Subscribe(m => OnCloseButtonClicked())
                 .AddTo(_disposables);
+        }
+
+        private void TryHandleSuperShot()
+        {
+            DamageableArea target = _sniperCrosshairView.GetTargetedDamageableArea();
+
+            if (target == null)
+                return;
+
+            EnemyHealth enemyHealth = target.GetEnemyHealth();
+
+            if (enemyHealth == null)
+                return;
+
+            if (!Mathf.Approximately(enemyHealth.CurrentHealth.Value, enemyHealth.MaxHealth))
+                return;
+
+            bool isLast = _enemies.Count(
+                enemy => enemy != null
+                && !enemy.IsDead
+                && enemy.gameObject.activeInHierarchy) == _lastEnemyValue;
+
+            if (!isLast)
+                return;
+
+            int damageMultiplier = target.GetDamageMultiplier();
+            int baseDamage = _gameModel.GetTankData().ProjectileData.Damage;
+            int totalDamage = baseDamage * damageMultiplier;
+
+            if (totalDamage >= enemyHealth.CurrentHealth.Value)
+                Message.Publish(new M_CriticalShoot(target));
+            else
+                return;
         }
 
         private void Fill()

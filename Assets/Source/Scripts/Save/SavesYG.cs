@@ -14,6 +14,7 @@ namespace YG
         public int Money;
         public int CurrentGridTankCost;
         public int CountBuyedGridTank;
+        public int CurrentGridTankLevel;
         public bool HasSave = false;
         public int CurrentPlayerTankId;
         public int CurrentBiomId;

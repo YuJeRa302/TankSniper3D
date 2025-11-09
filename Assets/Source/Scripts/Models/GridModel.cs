@@ -17,7 +17,7 @@ namespace Assets.Source.Scripts.Models
         private readonly SaveAndLoader _saveAndLoader;
         private readonly PersistentDataService _persistentDataService;
         private readonly int _addMoneyButtonValue = 5000;
-        private readonly int _maxCountBuyTank = 8;
+        private readonly int _maxCountBuyTank = 9;
         private readonly float _loadControlValue = 0.9f;
         private readonly int _defaultGridTankCost = 500;
 
@@ -36,6 +36,7 @@ namespace Assets.Source.Scripts.Models
             _saveAndLoader = saveAndLoader;
             _biomsConfig = biomsConfig;
             _currentTankState = _persistentDataService.PlayerProgress.TankService.GetStateByEquip();
+            UpdateTankLevel();
         }
 
         public int CurrentMainTankLevel { get; private set; } = 1;
@@ -126,7 +127,6 @@ namespace Assets.Source.Scripts.Models
         public void UpdateCurrentCountBuyTank()
         {
             _currentCountBuyTank++;
-            _persistentDataService.PlayerProgress.CountBuyedGridTank = _currentCountBuyTank;
         }
 
         public void ChangeEquippedTank(TankState tankState)
@@ -135,6 +135,7 @@ namespace Assets.Source.Scripts.Models
             _currentTankState = tankState;
             _currentTankState.ChangeEquippedState(true);
             _currentTankState.ChangeOpenState(true);
+            _persistentDataService.PlayerProgress.CurrentPlayerTankId = _currentTankState.Id;
         }
 
         public void LoadGameScene()
@@ -151,7 +152,20 @@ namespace Assets.Source.Scripts.Models
                 _persistentDataService.PlayerProgress.CurrentGridTankCost += _defaultGridTankCost;
                 _currentCountBuyTank = 0;
                 _persistentDataService.PlayerProgress.CountBuyedGridTank = _currentCountBuyTank;
+                _persistentDataService.PlayerProgress.CurrentGridTankLevel = CurrentGridTankLevel;
             }
+        }
+
+        private void UpdateTankLevel()
+        {
+            if (_currentTankState == null)
+                return;
+
+            if (_currentTankState.Level > CurrentMainTankLevel)
+                CurrentMainTankLevel = _currentTankState.Level;
+
+            if (_persistentDataService.PlayerProgress.CurrentGridTankLevel > CurrentGridTankLevel)
+                CurrentGridTankLevel = _persistentDataService.PlayerProgress.CurrentGridTankLevel;
         }
 
         private LevelData GetCurrentLevelData()

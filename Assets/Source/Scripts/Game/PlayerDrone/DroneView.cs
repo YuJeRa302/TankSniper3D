@@ -1,10 +1,15 @@
 using Assets.Source.Game.Scripts.Enemy;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Assets.Source.Scripts.Game
 {
     public class DroneView : MonoBehaviour
     {
+        private readonly float _droneYpostionValue = 3f;
+        private readonly float _divider = 1.5f;
+        private readonly int _loopTweenValue = -1;
+
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private AudioClip _hitSound;
         [SerializeField] private AudioClip _moveSound;
@@ -23,12 +28,29 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private DroneHealth _droneHealth;
         [Space(20)]
         [SerializeField] private float _findEnemyRange = 2f;
+        [Header("Spawn Animation Settings")]
+        [SerializeField] private float _spawnHeight = 6f;
+        [SerializeField] private float _flyUpDuration = 1.5f;
+        [SerializeField] private float _hoverAmplitude = 0.15f;
+        [SerializeField] private float _hoverFrequency = 0.5f;
+        [SerializeField] private float _tiltAngle = 3f;
 
+        private Transform _droneSpawnPoint;
         private Collider[] _foundEnemyColliders = new Collider[50];
+        private Tween _hoverTween;
+        private Camera _freeLookCamera;
+        private float _baseY;
+        private bool _isHovering;
+        private bool _isFlying = false;
 
         public Camera DroneCamera => _droneCamera;
         public float DroneSpeed => _droneSpeed;
         public float RotationSpeed => _rotationSpeed;
+
+        private void OnDestroy()
+        {
+            _hoverTween?.Kill();
+        }
 
         private void OnDrawGizmosSelected()
         {
@@ -38,6 +60,23 @@ namespace Assets.Source.Scripts.Game
         private void Update()
         {
             CheckForCollisions();
+
+            if (_isFlying == false)
+                RotateToCameraCenter();
+        }
+
+        public void Initialize(Transform spawnPoint)
+        {
+            _droneSpawnPoint = spawnPoint;
+            _freeLookCamera = Camera.main;
+            AnimateDroneSpawn();
+        }
+
+        public void DisableHover()
+        {
+            _hoverTween?.Kill();
+            _isHovering = true;
+            _isFlying = true;
         }
 
         private void CheckForCollisions()
@@ -116,6 +155,52 @@ namespace Assets.Source.Scripts.Game
                 return;
 
             AudioSource.PlayClipAtPoint(_hitSound, hitPoint);
+        }
+
+        private void AnimateDroneSpawn()
+        {
+            _hoverTween?.Kill();
+
+            Vector3 startPos = _droneSpawnPoint.position;
+            startPos.y = _spawnHeight;
+            transform.position = startPos;
+
+            float targetY = _droneSpawnPoint.position.y + _droneYpostionValue;
+
+            transform.DOMoveY(targetY, _flyUpDuration)
+                .SetEase(Ease.OutSine)
+                .OnComplete(() =>
+                {
+                    _baseY = targetY;
+                    StartHoverEffect();
+                });
+        }
+
+        private void StartHoverEffect()
+        {
+            if (_isHovering)
+                return;
+
+            _isHovering = true;
+            _hoverTween?.Kill();
+            _baseY = transform.position.y;
+
+            _hoverTween = transform
+                .DOMoveY(_baseY + _hoverAmplitude, _divider / _hoverFrequency)
+                .SetEase(Ease.InOutSine)
+                .SetLoops(_loopTweenValue, LoopType.Yoyo);
+        }
+
+        private void RotateToCameraCenter()
+        {
+            if (_freeLookCamera == null)
+                return;
+
+            Ray ray = _freeLookCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+            Vector3 targetDir = ray.direction;
+
+            Quaternion targetRotation = Quaternion.LookRotation(targetDir, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * _rotationSpeed);
         }
     }
 }

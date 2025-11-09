@@ -199,10 +199,11 @@ namespace Assets.Source.Scripts.Game
         {
             var drone = Instantiate(_gameData.DroneViewPrefab, new Vector3(
                 _droneSpawnPoint.position.x,
-                _droneSpawnPoint.position.y + _gameData.DroneViewPrefab.transform.position.y,
+                _droneSpawnPoint.position.y,
                 _droneSpawnPoint.position.z),
                 Quaternion.identity);
 
+            drone.Initialize(_droneSpawnPoint);
             Message.Publish(new M_CreateDrone(drone));
         }
 

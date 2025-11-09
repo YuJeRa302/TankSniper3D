@@ -1,0 +1,347 @@
+{
+    "intExample": 5,
+    "strExample": "Hello!",
+    "boolExample": [
+        false,
+        false,
+        false,
+        false
+    ],
+    "idSave": 1,
+    "AmbientVolume": 0.0,
+    "SfxVolumeVolume": 0.0,
+    "IsMuted": false,
+    "IsVibro": false,
+    "Score": 0,
+    "Level": 0,
+    "Money": 500,
+    "CurrentGridTankCost": 500,
+    "CountBuyedGridTank": 0,
+    "CurrentGridTankLevel": 0,
+    "HasSave": true,
+    "CurrentPlayerTankId": 0,
+    "CurrentBiomId": 0,
+    "CurrentLevelId": 0,
+    "CurrentLevel": 0,
+    "TankStates": [
+        {
+            "_id": 0,
+            "_level": 1,
+            "_isOpened": false,
+            "_isEquipped": false,
+            "_decalId": 0,
+            "_patternId": 0,
+            "_heroId": 1
+        },
+        {
+            "_id": 1,
+            "_level": 2,
+            "_isOpened": false,
+            "_isEquipped": false,
+            "_decalId": 0,
+            "_patternId": 0,
+            "_heroId": 1
+        },
+        {
+            "_id": 2,
+            "_level": 3,
+            "_isOpened": false,
+            "_isEquipped": false,
+            "_decalId": 0,
+            "_patternId": 0,
+            "_heroId": 1
+        },
+        {
+            "_id": 3,
+            "_level": 4,
+            "_isOpened": false,
+            "_isEquipped": false,
+            "_decalId": 0,
+            "_patternId": 0,
+            "_heroId": 1
+        },
+        {
+            "_id": 4,
+            "_level": 5,
+            "_isOpened": false,
+            "_isEquipped": false,
+            "_decalId": 0,
+            "_patternId": 0,
+            "_heroId": 1
+        },
+        {
+            "_id": 5,
+            "_level": 6,
+            "_isOpened": false,
+            "_isEquipped": false,
+            "_decalId": 0,
+            "_patternId": 0,
+            "_heroId": 1
+        },
+        {
+            "_id": 6,
+            "_level": 7,
+            "_isOpened": false,
+            "_isEquipped": false,
+            "_decalId": 0,
+            "_patternId": 0,
+            "_heroId": 1
+        },
+        {
+            "_id": 7,
+            "_level": 8,
+            "_isOpened": false,
+            "_isEquipped": false,
+            "_decalId": 0,
+            "_patternId": 0,
+            "_heroId": 1
+        }
+    ],
+    "DecorationStates": [
+        {
+            "_id": 0,
+            "_isBuyed": true,
+            "_typeCard": 0
+        },
+        {
+            "_id": 1,
+            "_isBuyed": true,
+            "_typeCard": 0
+        },
+        {
+            "_id": 2,
+            "_isBuyed": false,
+            "_typeCard": 0
+        },
+        {
+            "_id": 3,
+            "_isBuyed": false,
+            "_typeCard": 0
+        },
+        {
+            "_id": 4,
+            "_isBuyed": false,
+            "_typeCard": 0
+        },
+        {
+            "_id": 5,
+            "_isBuyed": false,
+            "_typeCard": 0
+        },
+        {
+            "_id": 6,
+            "_isBuyed": false,
+            "_typeCard": 0
+        },
+        {
+            "_id": 7,
+            "_isBuyed": false,
+            "_typeCard": 0
+        },
+        {
+            "_id": 8,
+            "_isBuyed": false,
+            "_typeCard": 0
+        },
+        {
+            "_id": 9,
+            "_isBuyed": false,
+            "_typeCard": 0
+        },
+        {
+            "_id": 10,
+            "_isBuyed": false,
+            "_typeCard": 0
+        },
+        {
+            "_id": 11,
+            "_isBuyed": false,
+            "_typeCard": 0
+        },
+        {
+            "_id": 12,
+            "_isBuyed": false,
+            "_typeCard": 0
+        },
+        {
+            "_id": 13,
+            "_isBuyed": false,
+            "_typeCard": 0
+        },
+        {
+            "_id": 14,
+            "_isBuyed": false,
+            "_typeCard": 0
+        },
+        {
+            "_id": 0,
+            "_isBuyed": false,
+            "_typeCard": 1
+        },
+        {
+            "_id": 1,
+            "_isBuyed": true,
+            "_typeCard": 1
+        },
+        {
+            "_id": 2,
+            "_isBuyed": false,
+            "_typeCard": 1
+        },
+        {
+            "_id": 3,
+            "_isBuyed": false,
+            "_typeCard": 1
+        },
+        {
+            "_id": 4,
+            "_isBuyed": false,
+            "_typeCard": 1
+        },
+        {
+            "_id": 5,
+            "_isBuyed": false,
+            "_typeCard": 1
+        },
+        {
+            "_id": 6,
+            "_isBuyed": false,
+            "_typeCard": 1
+        },
+        {
+            "_id": 7,
+            "_isBuyed": false,
+            "_typeCard": 1
+        },
+        {
+            "_id": 8,
+            "_isBuyed": false,
+            "_typeCard": 1
+        },
+        {
+            "_id": 9,
+            "_isBuyed": false,
+            "_typeCard": 1
+        },
+        {
+            "_id": 10,
+            "_isBuyed": false,
+            "_typeCard": 1
+        },
+        {
+            "_id": 11,
+            "_isBuyed": false,
+            "_typeCard": 1
+        },
+        {
+            "_id": 12,
+            "_isBuyed": false,
+            "_typeCard": 1
+        },
+        {
+            "_id": 13,
+            "_isBuyed": false,
+            "_typeCard": 1
+        },
+        {
+            "_id": 14,
+            "_isBuyed": false,
+            "_typeCard": 1
+        },
+        {
+            "_id": 15,
+            "_isBuyed": false,
+            "_typeCard": 1
+        }
+    ],
+    "LevelStates": [
+        {
+            "_id": 0,
+            "_biomId": 0,
+            "_isComplete": false
+        },
+        {
+            "_id": 1,
+            "_biomId": 0,
+            "_isComplete": false
+        },
+        {
+            "_id": 2,
+            "_biomId": 0,
+            "_isComplete": false
+        },
+        {
+            "_id": 3,
+            "_biomId": 0,
+            "_isComplete": false
+        },
+        {
+            "_id": 4,
+            "_biomId": 0,
+            "_isComplete": false
+        },
+        {
+            "_id": 5,
+            "_biomId": 0,
+            "_isComplete": false
+        },
+        {
+            "_id": 6,
+            "_biomId": 0,
+            "_isComplete": false
+        }
+    ],
+    "GridTankStates": [],
+    "HeroStates": [
+        {
+            "_id": 1,
+            "_isBuyed": true,
+            "_isOpened": true
+        },
+        {
+            "_id": 2,
+            "_isBuyed": false,
+            "_isOpened": true
+        },
+        {
+            "_id": 3,
+            "_isBuyed": false,
+            "_isOpened": true
+        },
+        {
+            "_id": 4,
+            "_isBuyed": false,
+            "_isOpened": true
+        },
+        {
+            "_id": 5,
+            "_isBuyed": false,
+            "_isOpened": true
+        },
+        {
+            "_id": 6,
+            "_isBuyed": false,
+            "_isOpened": true
+        },
+        {
+            "_id": 7,
+            "_isBuyed": false,
+            "_isOpened": true
+        },
+        {
+            "_id": 8,
+            "_isBuyed": false,
+            "_isOpened": true
+        },
+        {
+            "_id": 9,
+            "_isBuyed": false,
+            "_isOpened": true
+        },
+        {
+            "_id": 10,
+            "_isBuyed": false,
+            "_isOpened": true
+        }
+    ]
+}

@@ -21,8 +21,9 @@ MonoBehaviour:
   _sfxVolumeVolume: 0
   _isMuted: 0
   _isVibro: 0
-  _currentGridTankCost: 0
+  _currentGridTankCost: 500
   _countBuyedGridTank: 0
+  _currentGridTankLevel: 1
   _levelStates:
   - _id: 0
     _biomId: 0
@@ -40,6 +41,9 @@ MonoBehaviour:
     _biomId: 0
     _isComplete: 0
   - _id: 5
+    _biomId: 0
+    _isComplete: 0
+  - _id: 6
     _biomId: 0
     _isComplete: 0
   _tankStates:

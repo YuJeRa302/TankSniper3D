@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f758367595aec4a4b86258f78bcfc9d2, type: 3}
   m_Name: Enemy Soldier
   m_EditorClassIdentifier: 
-  _health: 100
+  _health: 50
   _moveSpeed: 2
   _rotateSpeed: 5
   _moneyReward: 350

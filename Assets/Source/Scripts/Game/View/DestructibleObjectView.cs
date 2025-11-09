@@ -35,7 +35,9 @@ namespace Assets.Source.Scripts.Game
             if (_isBroken)
                 return;
 
-            Destroy(_mainObject);
+            if (_mainObject != null)
+                Destroy(_mainObject);
+
             SetPartsObjectVisible();
 
             _isBroken = true;
