@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f758367595aec4a4b86258f78bcfc9d2, type: 3}
   m_Name: BossChopper
   m_EditorClassIdentifier: 
-  _health: 250
+  _health: 450
   _moveSpeed: 2
   _rotateSpeed: 4
   _moneyReward: 2500

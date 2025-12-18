@@ -43,38 +43,9 @@ namespace Assets.Source.Scripts.Levels
             {
                 LevelIndicatorView view = Instantiate(_levelIndicatorView, _levelIndicatorContainer);
                 _levelIndicatorViews.Add(view);
-                LevelState levelState;
-
-                if (TrySetSpecialLevel(levelData.Id))
-                {
-                    levelState = _levelModel.GetLevelState(
-                        _biomsConfig.BiomDatas[_levelModel.GetCurrentBiomIndex()].HeroLevel);
-
-                    view.Initialize(
-                        _biomsConfig.BiomDatas[_levelModel.GetCurrentBiomIndex()].HeroLevel,
-                        levelState,
-                        _levelModel.GetCurrentLevelId());
-
-                    continue;
-                }
-                else
-                {
-                    levelState = _levelModel.GetLevelState(levelData);
-                }
-
+                LevelState levelState = _levelModel.GetLevelState(levelData);
                 view.Initialize(levelData, levelState, _levelModel.GetCurrentLevelId());
             }
-        }
-
-        private bool TrySetSpecialLevel(int id)
-        {
-            if (id == _biomsConfig.BiomDatas[_levelModel.GetCurrentBiomIndex()].HeroLevel.Id)
-            {
-                if (_levelModel.TryGetUnopenedHero())
-                    return true;
-            }
-
-            return false;
         }
 
         private void ClearLevelIndicators()

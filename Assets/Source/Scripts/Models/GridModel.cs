@@ -35,6 +35,7 @@ namespace Assets.Source.Scripts.Models
             _coroutineRunner = coroutineRunner;
             _saveAndLoader = saveAndLoader;
             _biomsConfig = biomsConfig;
+            _currentCountBuyTank = _persistentDataService.PlayerProgress.CountBuyedGridTank;
             _currentTankState = _persistentDataService.PlayerProgress.TankService.GetStateByEquip();
             UpdateTankLevel();
         }
@@ -60,7 +61,7 @@ namespace Assets.Source.Scripts.Models
 
         public int GetCountBuyedTanks()
         {
-            return _persistentDataService.PlayerProgress.CountBuyedGridTank;
+            return _currentCountBuyTank;
         }
 
         public int GetCurrentTankCost()

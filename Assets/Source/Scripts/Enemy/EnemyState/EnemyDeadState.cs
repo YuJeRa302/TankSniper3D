@@ -6,6 +6,8 @@ namespace Assets.Source.Scripts.Services
 {
     public class EnemyDeadState : BaseEnemyState
     {
+        private readonly float _destroyTime = 3.0f;
+
         private Enemy _enemy;
 
         public override TypeEnemyState TypeEnemyState => TypeEnemyState.Death;
@@ -22,7 +24,7 @@ namespace Assets.Source.Scripts.Services
             _enemy.EnemyAnimation.SetDeathAnimation();
             _enemy.CreateExplosionEffect();
             _enemy.DestroyParts();
-            GameObject.Destroy(_enemy.gameObject, 3f);
+            GameObject.Destroy(_enemy.gameObject, _destroyTime);
         }
     }
 }

@@ -8,6 +8,8 @@ namespace Assets.Source.Scripts.Game
 {
     public class CameraMover : MonoBehaviour
     {
+        private readonly float _halfAngleValue = 180f;
+        private readonly float _fullAngleValue = 360f;
         private readonly float _defaultXRotation = 9;
         private readonly float _defaultYRotation = 24;
         private readonly float _cameraZoomMultiplier = 1f;
@@ -221,8 +223,8 @@ namespace Assets.Source.Scripts.Game
 
         private float NormalizeAngle(float angle)
         {
-            if (angle > 180f)
-                angle -= 360f;
+            if (angle > _halfAngleValue)
+                angle -= _fullAngleValue;
 
             return angle;
         }

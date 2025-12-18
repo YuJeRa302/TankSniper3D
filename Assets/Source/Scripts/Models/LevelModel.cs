@@ -18,6 +18,9 @@ namespace Assets.Source.Scripts.Models
 
         public int GetCurrentBiomIndex()
         {
+            if (_persistentDataService.PlayerProgress.CurrentBiomId >= _biomsConfig.BiomDatas.Count)
+                _persistentDataService.PlayerProgress.CurrentBiomId = 0;
+
             return _persistentDataService.PlayerProgress.CurrentBiomId;
         }
 
@@ -25,7 +28,7 @@ namespace Assets.Source.Scripts.Models
         {
             int nextBiomIndex = GetCurrentBiomIndex() + 1;
 
-            if (nextBiomIndex > _biomsConfig.BiomDatas.Count)
+            if (nextBiomIndex >= _biomsConfig.BiomDatas.Count)
                 nextBiomIndex = 0;
 
             return nextBiomIndex;
@@ -34,22 +37,6 @@ namespace Assets.Source.Scripts.Models
         public int GetCurrentLevelId()
         {
             return _persistentDataService.PlayerProgress.CurrentLevelId;
-        }
-
-        public bool TryGetUnopenedHero()
-        {
-            if (_persistentDataService.PlayerProgress.HeroService.HeroStates.Count > 0)
-            {
-                foreach (var heroState in _persistentDataService.PlayerProgress.HeroService.HeroStates)
-                {
-                    if (heroState.IsOpened != true)
-                        return true;
-                }
-
-                return false;
-            }
-
-            return false;
         }
 
         public LevelState GetLevelState(LevelData levelData)
@@ -61,9 +48,10 @@ namespace Assets.Source.Scripts.Models
         {
             var currentLevelIndex = GetCurrentLevelId();
 
-            if (currentLevelIndex > _biomsConfig.BiomDatas[GetCurrentBiomIndex()].LevelDatas.Count)
+            if (currentLevelIndex >= _biomsConfig.BiomDatas[GetCurrentBiomIndex()].LevelDatas.Count)
             {
                 _persistentDataService.PlayerProgress.CurrentLevelId = 0;
+                _persistentDataService.PlayerProgress.LevelService.ResetLevelStates(_persistentDataService.PlayerProgress.CurrentBiomId);
                 _persistentDataService.PlayerProgress.CurrentBiomId++;
             }
         }

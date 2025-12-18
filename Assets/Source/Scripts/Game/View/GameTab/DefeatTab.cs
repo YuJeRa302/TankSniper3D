@@ -33,6 +33,9 @@ namespace Assets.Source.Scripts.Game
 
         public override void Open()
         {
+            if (this == null || gameObject == null)
+                return;
+
             gameObject.SetActive(true);
             _gameButtonAdsWaiter.Initialize(TypeReward);
             _moneyEarnedText.text = "Награда: " + GameModel.GetEarnedMoney().ToString();

@@ -21,7 +21,6 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private Image[] _dangerZones;
         [SerializeField] private Image[] _superShootZones;
 
-        private Enemy _currentTargetEnemy;
         private DamageableArea _currentTargetArea;
         private Camera _mainCamera;
         private List<Enemy> _enemies = new();
@@ -32,7 +31,6 @@ namespace Assets.Source.Scripts.Game
         private int[] _zoneEnemyCounts = new int[4];
         private bool _isPlayerShoot = false;
 
-        public Enemy GetCurrentTargetEnemy() => _currentTargetEnemy;
         public DamageableArea GetTargetedDamageableArea() => _currentTargetArea;
 
         private void OnEnable()
@@ -74,12 +72,10 @@ namespace Assets.Source.Scripts.Game
                 if (hit.collider.TryGetComponent(out DamageableArea damageableArea))
                 {
                     _currentTargetArea = damageableArea;
-                    _currentTargetEnemy = damageableArea.GetComponentInParent<Enemy>();
                     return;
                 }
             }
 
-            _currentTargetEnemy = null;
             _currentTargetArea = null;
         }
 

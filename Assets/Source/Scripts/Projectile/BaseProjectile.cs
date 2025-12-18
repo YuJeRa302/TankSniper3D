@@ -62,13 +62,6 @@ namespace Assets.Source.Scripts.Projectile
                 destructibleObjectView.ApplyDamage(hitPoint);
             }
 
-            if (collision.collider.TryGetComponent(out DestructibleBuildingView destructibleBuildingView))
-            {
-                ContactPoint contact = collision.GetContact(0);
-                hitPoint = contact.point;
-                destructibleBuildingView.ApplyDamage(hitPoint);
-            }
-
             CreateHitEffect(ProjectileData, hitPoint);
             CreateSoundEffect(ProjectileData, hitPoint);
             Destroy(gameObject);

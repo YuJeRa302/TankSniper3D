@@ -26,6 +26,7 @@ namespace Assets.Source.Game.Scripts.Enemy
         public void Initialize(EnemyHealth enemyHealth)
         {
             _playerCamera = Camera.main;
+            _enemyHealth = enemyHealth;
             SetSliderValue(enemyHealth.CurrentHealth.Value);
 
             _enemyHealth.CurrentHealth

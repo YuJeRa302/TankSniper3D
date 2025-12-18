@@ -27,7 +27,7 @@
         {
             "_id": 0,
             "_level": 1,
-            "_isOpened": false,
+            "_isOpened": true,
             "_isEquipped": false,
             "_decalId": 0,
             "_patternId": 0,
@@ -36,8 +36,8 @@
         {
             "_id": 1,
             "_level": 2,
-            "_isOpened": false,
-            "_isEquipped": false,
+            "_isOpened": true,
+            "_isEquipped": true,
             "_decalId": 0,
             "_patternId": 0,
             "_heroId": 1

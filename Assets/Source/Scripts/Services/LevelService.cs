@@ -38,6 +38,18 @@ namespace Assets.Source.Scripts.Services
             return levelState;
         }
 
+        public void ResetLevelStates(int biomId)
+        {
+            if (_levelStates != null)
+            {
+                foreach (LevelState levelState in _levelStates)
+                {
+                    if (levelState.BiomId == biomId)
+                        levelState.SetComplete(false);
+                }
+            }
+        }
+
         private LevelState FindState(int id, int biomId)
         {
             if (_levelStates != null)

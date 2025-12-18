@@ -1,5 +1,4 @@
 using Assets.Source.Game.Scripts.Enums;
-using Assets.Source.Game.Scripts.Utility;
 using Assets.Source.Scripts.Models;
 using DG.Tweening;
 using System.Collections;
@@ -31,8 +30,17 @@ namespace Assets.Source.Scripts.Game
 
         public override TypeReward TypeReward => TypeReward.Default;
 
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            StopCoroutine(TransferMoney());
+        }
+
         public override void Open()
         {
+            if (this == null || gameObject == null) 
+                return;
+
             if (TryExecute(LevelData))
                 return;
 
@@ -81,13 +89,13 @@ namespace Assets.Source.Scripts.Game
             {
                 startReward = x;
                 _moneyEarnedText.text = $"Награда: {startReward}";
-            }, 0, _transferDuration).SetEase(Ease.OutCubic);
+            }, 0, _transferDuration).SetEase(Ease.OutCubic).SetLink(gameObject);
 
             DOTween.To(() => _currentMoney, x =>
             {
                 _currentMoney = x;
                 _moneyText.text = $"{_currentMoney}";
-            }, targetMoney, _transferDuration).SetEase(Ease.OutCubic);
+            }, targetMoney, _transferDuration).SetEase(Ease.OutCubic).SetLink(gameObject);
 
             yield return new WaitForSeconds(_transferDuration);
 
@@ -109,7 +117,7 @@ namespace Assets.Source.Scripts.Game
                     Destroy(icon);
                 });
 
-            icon.transform.DOScale(0.3f, duration).SetEase(Ease.InQuad);
+            icon.transform.DOScale(0.3f, duration).SetEase(Ease.InQuad).SetLink(gameObject);
         }
     }
 }

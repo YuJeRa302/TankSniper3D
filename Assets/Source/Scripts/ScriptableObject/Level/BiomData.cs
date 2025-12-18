@@ -8,12 +8,10 @@ namespace Assets.Source.Scripts.ScriptableObjects
     {
         [SerializeField] private int _id;
         [SerializeField] private List<LevelData> _levelDatas;
-        [SerializeField] private LevelData _heroLevel;
         [SerializeField] private Sprite _icon;
 
         public int Id => _id;
         public List<LevelData> LevelDatas => _levelDatas;
-        public LevelData HeroLevel => _heroLevel;
         public Sprite Icon => _icon;
 
         public LevelData GetLevelDataById(int id)

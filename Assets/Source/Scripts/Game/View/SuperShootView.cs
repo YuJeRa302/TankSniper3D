@@ -25,6 +25,8 @@ namespace Assets.Source.Scripts.Game
         private bool _isOrbiting = false;
         private bool _hasCriticalTarget = false;
 
+        private void OnDestroy() => _disposables?.Dispose();
+
         private void Awake()
         {
             _mainCamera = Camera.main;
@@ -68,85 +70,29 @@ namespace Assets.Source.Scripts.Game
 
             while (projectile != null)
             {
-                // Позиция, где камера должна находиться
                 Vector3 desiredPos = projectile.transform.position
                     + projectile.transform.forward * cameraOffset.z
                     + Vector3.up * cameraOffset.y;
 
-                // Чем дальше камера от снаряда, тем быстрее она догоняет
                 float distance = Vector3.Distance(_mainCamera.transform.position, desiredPos);
                 float dynamicSpeed = Mathf.Clamp(cameraFollowSpeed + distance * 8f, cameraFollowSpeed, 120f);
 
-                // Плавное приближение к нужной позиции
                 _mainCamera.transform.position = Vector3.MoveTowards(
                     _mainCamera.transform.position,
                     desiredPos,
                     dynamicSpeed * Time.unscaledDeltaTime
                 );
 
-                // Камера смотрит не прямо на снаряд, а немного вперёд его траектории
                 Vector3 predictedPos = projectile.transform.position + projectile.transform.forward * 2f;
                 _mainCamera.transform.LookAt(predictedPos);
 
                 yield return null;
-
-                //Vector3 desiredPos = projectile.transform.position
-                //    + projectile.transform.forward * cameraOffset.z
-                //    + Vector3.up * cameraOffset.y;
-
-                //_mainCamera.transform.position = Vector3.MoveTowards(
-                //    _mainCamera.transform.position,
-                //    desiredPos,
-                //    cameraFollowSpeed * Time.unscaledDeltaTime
-                //);
-
-                //_mainCamera.transform.LookAt(projectile.transform);
-
-                //yield return null;
             }
 
             yield return new WaitForSecondsRealtime(explosionWaitTime);
             MotionChanger.Message.Publish(new M_SlowMotionEnded());
             StartCoroutine(OrbitAroundExplosion(_targetPosition));
         }
-
-        //private IEnumerator FollowProjectile(Transform projectile)
-        //{
-        //    // Ждём, пока мы действительно получили цель
-        //    float waitTime = 0f;
-        //    while (!_hasCriticalTarget && waitTime < 1f)
-        //    {
-        //        waitTime += Time.deltaTime;
-        //        yield return null;
-        //    }
-
-        //    if (projectile == null || !_hasCriticalTarget)
-        //        yield break;
-
-        //    MotionChanger.Message.Publish(new M_SlowMotionStarted());
-
-        //    while (projectile != null)
-        //    {
-        //        Vector3 desiredPos = projectile.position
-        //            + projectile.forward * cameraOffset.z
-        //            + Vector3.up * cameraOffset.y;
-
-        //        _mainCamera.transform.position = Vector3.Lerp(
-        //            _mainCamera.transform.position,
-        //            desiredPos,
-        //            Time.deltaTime * cameraFollowSpeed
-        //        );
-
-        //        _mainCamera.transform.LookAt(projectile);
-        //        yield return null;
-        //    }
-
-        //    Vector3 explosionPoint = _target != null ? _target.transform.position : _targetPosition;
-        //    yield return new WaitForSecondsRealtime(explosionWaitTime);
-
-        //    MotionChanger.Message.Publish(new M_SlowMotionEnded());
-        //    StartCoroutine(OrbitAroundExplosion(explosionPoint));
-        //}
 
         private IEnumerator OrbitAroundExplosion(Vector3 center)
         {
@@ -174,7 +120,5 @@ namespace Assets.Source.Scripts.Game
                 yield return null;
             }
         }
-
-        private void OnDestroy() => _disposables?.Dispose();
     }
 }

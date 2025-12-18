@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Desert
   m_EditorClassIdentifier: 
   _id: 1
-  _levelDatas: []
-  _heroLevel: {fileID: 0}
+  _levelDatas:
+  - {fileID: 11400000, guid: 06cf3a9345dbcc74fab8fd31380afbc6, type: 2}
+  - {fileID: 11400000, guid: 67d866071d9b06e47afe2ce2318f497b, type: 2}
+  - {fileID: 11400000, guid: 637bc2b1163c48d498a0370a94805a9d, type: 2}
   _icon: {fileID: 21300000, guid: 3c3ed9c0f4046014ca232cf3182222e8, type: 3}

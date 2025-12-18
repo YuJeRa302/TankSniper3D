@@ -11,6 +11,7 @@ namespace Assets.Source.Scripts.Game
         [SerializeField] private float _pieceForce;
         [SerializeField] private float _pieceUpwards;
         [SerializeField] private float _pieceTorque;
+        [SerializeField] private float _destroyTime = 3.0f;
 
         private bool _isBroken = false;
 
@@ -60,6 +61,8 @@ namespace Assets.Source.Scripts.Game
                     rigidbody.AddTorque(Random.insideUnitSphere * _pieceTorque, ForceMode.Impulse);
                 }
             }
+
+            Destroy(gameObject, _destroyTime);
         }
     }
 }

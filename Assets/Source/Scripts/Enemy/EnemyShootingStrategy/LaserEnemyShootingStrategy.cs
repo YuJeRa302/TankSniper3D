@@ -69,10 +69,8 @@ namespace Assets.Source.Game.Scripts.Enemy
         {
             if (Physics.Raycast(firePoint.position, direction, out RaycastHit hit, _attackRange))
             {
-                if (hit.collider.TryGetComponent(out TankView tankView))
-                {
-                    //tankView.ApplyDamage(_projectileData.Damage);
-                }
+                if (hit.collider.TryGetComponent(out TankHealth tankHealth))
+                    tankHealth.TakeDamage(_projectileData.Damage, hit.point);
             }
         }
 

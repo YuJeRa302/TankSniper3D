@@ -23,7 +23,7 @@ MonoBehaviour:
   _isVibro: 0
   _currentGridTankCost: 500
   _countBuyedGridTank: 0
-  _currentGridTankLevel: 1
+  _currentGridTankLevel: 0
   _levelStates:
   - _id: 0
     _biomId: 0

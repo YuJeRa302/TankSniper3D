@@ -21,7 +21,7 @@ namespace Assets.Source.Scripts.Game
 
         public abstract TypeReward TypeReward { get; }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             RemoveListeners();
         }
@@ -65,10 +65,10 @@ namespace Assets.Source.Scripts.Game
 
         protected virtual void RemoveListeners()
         {
+            _disposables?.Dispose();
             YG2.onOpenInterAdv -= OnOpenFullscreenAdCallback;
             YG2.onCloseInterAdv -= OnCloseFullscreenAdCallback;
             YG2.onErrorInterAdv -= OnErrorFullAdCallback;
-            _disposables?.Dispose();
         }
 
         protected virtual void OpenFullscreenAds()

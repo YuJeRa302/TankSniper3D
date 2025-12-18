@@ -5,6 +5,7 @@ namespace Assets.Source.Scripts.Game
 {
     public class EnemyDirectionIndicator : MonoBehaviour
     {
+        private readonly float _divider = 2f;
         private readonly float _screenCenterValue = 0.5f;
         private readonly float _angleRotation = 90f;
 
@@ -44,7 +45,7 @@ namespace Assets.Source.Scripts.Game
                     Vector2 screenCenter = new(_screenCenterValue, _screenCenterValue);
                     Vector2 dir = ((Vector2)viewportPos - screenCenter).normalized;
                     float pulse = Mathf.Sin(Time.time * _pulseSpeed) * _pulseAmplitude;
-                    float radius = (_crosshair.sizeDelta.x / 2f) - _edgeOffset + pulse;
+                    float radius = (_crosshair.sizeDelta.x / _divider) - _edgeOffset + pulse;
                     Vector2 finalPos = dir * radius;
                     _rectTransform.anchoredPosition = finalPos;
                     float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
